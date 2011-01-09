@@ -1,7 +1,10 @@
 #! /usr/bin/python
-from pylab import *
-import Gnuplot
-import m3.toolbox as m3t
+import time
+import os
+import roslib; roslib.load_manifest('mic_array')
+import rospy
+from mic_array.msg import MicArray
+from mic_array.srv import MicArrayParam
 import u3
 from time import sleep
 from datetime import datetime
@@ -11,13 +14,6 @@ import sys
 from scipy.signal import convolve, remez
 from scipy import array
 from threading import Thread
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gtk.gdk
-import gtk.glade
-import gobject
-
 
 class RingBuffer:
     def __init__(self, size):
@@ -33,15 +29,13 @@ class RingBuffer:
     
 class mic_array_thread(Thread):
     def __init__(self):
-        Thread.__init__(self)
-        self.plot_mic = False
-        self.plot_e = True
+        Thread.__init__(self)        
         self.num_chan = 6
         self.gain = [2.2,0.8,1.0,1.8,1.0,0.5]
         self.dac_map = [2,1,6,5,4,3]
         self.thresh = 100000 #150
         self.mic_array_done = False
-        
+        self.pub = rospy.Publisher('mic_array', MicArray)
         samp_freq=int(math.floor(10000/self.num_chan))
         self.filt = remez(numtaps=40, bands=[0, 70, 71, 270, 271, math.floor(samp_freq/2)], desired=[0, 1, 0], Hz = samp_freq)
         
@@ -73,41 +67,17 @@ class mic_array_thread(Thread):
         self.buf = [None]*self.num_chan
         for i in range(self.num_chan):
             self.buf[i] = RingBuffer(self.mem_size)
-        
-        self.x=range(self.mem_size)
+                
         self.energy_mic = [0.0] * self.num_chan
         self.energy = [0.0] * self.num_chan
-        y=[0.0]*len(self.x)
-        self.y_lim=[0.0, 1500.0]
-        #y_lim=[0.0, 150.0]
         
-        if self.plot_mic:
-            self.g = [None]*self.num_chan        
-            for i in range(self.num_chan):
-                self.g[i] = m3t.gplot(y,self.x,self.g[i],self.y_lim,persist_in=0)
-                self.g[i].title('mic ' + str(i))
-                
-        if self.plot_e:
-            yrange = [-100,100]
-            xrange = [-100,100]
-            self.e = Gnuplot.Gnuplot(persist = 0)
-            self.e.title('mic energy')
-            self.e('set data style vectors')
-            #self.e('set style line 1 linecolor rgb "blue"')
-            self.e('set term x11 noraise')
-            self.e('set xrange ['+str(xrange[0])+':'+str(xrange[1])+']')
-            self.e('set yrange ['+str(yrange[0])+':'+str(yrange[1])+']')
-            self.x0 = [0.0]*self.num_chan
-            self.y0 = [0.0]*self.num_chan
-            self.xd = [0.0]*self.num_chan
-            self.yd = [0.0]*self.num_chan            
-            for i in range(self.num_chan):
-                t = (2*math.pi/self.num_chan)*i
-                self.xd[i] = math.sin(t)
-                self.yd[i] = math.cos(t)
-            
-            self.e.plot(zip(self.x0,self.y0,self.xd,self.yd))
-        
+        self.xd = [0.0]*self.num_chan
+        self.yd = [0.0]*self.num_chan            
+        for i in range(self.num_chan):
+            t = (2*math.pi/self.num_chan)*i
+            self.xd[i] = math.sin(t)
+            self.yd[i] = math.cos(t)
+    
                 
     def stop(self):
         self.mic_array_done = True
@@ -141,23 +111,24 @@ class mic_array_thread(Thread):
                     
                     for j in range(self.num_chan):
                         for i in range(len(r['AIN'+str(self.dac_map[j])])):                                        
-                            self.buf[j].append(((r['AIN'+str(self.dac_map[j])][i])*self.scale*self.gain[j]))
-                        #g[j] = m3t.gplot(buf[j].get(),x,g[j],y_lim,persist_in=1)
+                            self.buf[j].append(((r['AIN'+str(self.dac_map[j])][i])*self.scale*self.gain[j]))                        
                         self.buf_filt[j] = convolve(self.filt, self.buf[j].get())
                         for i in range(len(self.buf_filt[j])):
-                            self.buf_filt[j][i] = self.buf_filt[j][i] ** self.p
-                        if self.plot_mic:
-                            self.g[j] = m3t.gplot(self.buf_filt[j],self.x,self.g[j],self.y_lim,persist_in=0)
+                            self.buf_filt[j][i] = self.buf_filt[j][i] ** self.p                        
                         self.energy_mic[j] = sum(self.buf_filt[j])/len(self.buf_filt[j])
-                    if self.plot_e:
-                        xd_p = []
-                        yd_p = []
-                        for i in range(self.num_chan):
-                            xd_p.append(self.xd[i] * self.energy_mic[i])
-                            yd_p.append(self.yd[i] * self.energy_mic[i])
-                        self.e.plot(zip(self.x0,self.y0,xd_p,yd_p))
-                        self.e.replot([[0,0,sum(xd_p),sum(yd_p)]])
 
+                    xd_p = []
+                    yd_p = []
+                    for i in range(self.num_chan):
+                        xd_p.append(self.xd[i] * self.energy_mic[i])
+                        yd_p.append(self.yd[i] * self.energy_mic[i])
+                    xd_src = sum(xd_p)
+                    yd_src = sum(yd_p)
+                    angle_src = math.atan2(yd_src,xd_src)
+                    mag_src = math.sqrt(xd_src**2 + yd_src**2)
+
+                    self.pub.publish(self.energy_mic, angle_src, mag_src)
+                    
                     if False:
                         T_all = []
                         Max_E_all = []
@@ -238,104 +209,18 @@ class mic_array_thread(Thread):
             stop = datetime.now()
             self.d.streamStop()
             self.d.close()
-            if self.plot_mic:
-                for i in range(self.num_chan):
-                    self.g[i].close()
+            
+###################################################################
 
+rospy.init_node('mic_array', anonymous=True)
 
-##############################
-
-class mic_array_viz(Thread):
-    def __init__(self,stride_ms=100):
-        Thread.__init__(self)
-        self.window = gtk.Window()
-        self.window.set_title('M3DemoTacile')
-        self.window.set_border_width(5)
-        self.window.connect('destroy', self.quit)
-        self.sw = gtk.ScrolledWindow()
-        self.sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-        self.sw.set_policy(gtk.POLICY_AUTOMATIC,gtk.POLICY_AUTOMATIC)
-        self.vbox = gtk.VBox()		
-        self.window.add(self.vbox)
-        
-        self.first_update=1        
-        self.update_source_id = gobject.timeout_add(stride_ms, self.update)
-        
-    def run(self):
-        self.start_me(self.step)
-        
-    def step(self):
-        pass
-
-    def start_me(self,process_cb):        
-        self.process_cb=process_cb        
-        gtk.main()
-        
-
-    def update(self):
-        apply(self.process_cb)
-        if (self.first_update):
-                self.first_update=0 
-                self.build()        
-                self.window.set_default_size(500, 450)
-                self.window.show_all()
-        self.step()
-        return True
-
-    def build(self):		
-        pass    
-
-    def quit(self,win):
-        print 'Closing MicArrayViz'
-        gtk.main_quit()
-        
-
-##########################
-
-class MicArray:
-    def __init__(self):
-        self.mic = mic_array_thread()
-        #print 'Mic samp time:', self.mic.samp_time        
-        self.viz = mic_array_viz(stride_ms = int(math.floor(self.mic.samp_time*1000)))
-        #self.viz = mic_array_viz(stride_ms = 1000)
-        
-        
-    def step(self):
-        pass
-
-    def start(self):
-        self.mic.start()
-        #self.viz.start(self.step)
-        self.viz.start()
-        
-    def stop(self):        
-        self.mic.stop()
-
-############################
-
-gobject.threads_init()
-
-
-ma = MicArray()
-ma.start()
+mic = mic_array_thread()
+mic.start()
 
 try:
     while True:
-        sleep(1.0)
-except (KeyboardInterrupt):
+        rospy.sleep(0.1)
+except:
     pass
 
-ma.stop()
-
-
-'''total = dataCount * d.packetsPerRequest * d.streamSamplesPerPacket
-print "%s requests with %s packets per request with %s samples per request = %s samples total." % ( dataCount, d.packetsPerRequest, d.streamSamplesPerPacket, total )
-print "%s samples were lost due to errors." % missed
-total -= missed
-print "Adjusted number of samples = %s" % total
-
-runTime = (stop-start).seconds + float((stop-start).microseconds)/1000000
-print "The experiment took %s seconds." % runTime
-print "%s samples / %s seconds = %s Hz" % ( total, runTime, float(total)/runTime )'''
-    
-    
+mic.stop()
