@@ -1,6 +1,7 @@
 #! /usr/bin/python
 import time
 import os
+import yaml
 import roslib; roslib.load_manifest('mic_array')
 import rospy
 from mic_array.msg import MicArray
@@ -31,17 +32,40 @@ class mic_array_thread(Thread):
     def __init__(self):
         Thread.__init__(self)        
         self.num_chan = 6
-        self.gain = [2.2,0.8,1.0,1.8,1.0,0.5]
+        #self.gain = [2.2,0.8,1.0,1.8,1.0,0.5]
+        self.gain = [1.0]*self.num_chan
         self.dac_map = [2,1,6,5,4,3]
         self.thresh = 100000 #150
         self.mic_array_done = False
+        rospy.init_node('mic_array', anonymous=True)
         self.pub = rospy.Publisher('mic_array', MicArray)
         samp_freq=int(math.floor(10000/self.num_chan))
         self.filt = remez(numtaps=40, bands=[0, 70, 71, 270, 271, math.floor(samp_freq/2)], desired=[0, 1, 0], Hz = samp_freq)
-        
+        #self.s = rospy.Service('mic_array_param', MicArrayParam, self.mic_array_param)
         self.p = 2
-        self.scale = 100.0
+        self.scale = 100.0        
+        self.window_time = 0.1
+        self.slew_rate = 1.0 # not used yet
         
+        # get yml file name from param server and parse for values
+        config_file_name = rospy.get_param("/mic_array_config")
+        try:
+            f=file(config_file_name,'r')
+            config= yaml.safe_load(f.read())
+        except (IOError, EOFError):
+            print 'Config file not present:',config_file_name
+            sys.exit()
+            
+        if config.has_key('gains'):
+            for i in range(self.num_chan):
+                self.gain[i] = config['gains'][i]
+        if config.has_key('threshold'):            
+                self.thresh = config['threshold']
+        if config.has_key('window_time'):            
+                self.window_time = config['window_time']
+        if config.has_key('slew_rate'):            
+                self.slew_rate = config['slew_rate']
+
         self.d = u3.U3()
         self.d.configIO( FIOAnalog = 0x7E )
             
@@ -54,8 +78,8 @@ class mic_array_thread(Thread):
         self.samp_time = float(self.buf_size) / float(samp_freq)
         self.mem_size = int(math.floor(self.buf_size * 1.5))
         
-        window_time = 0.1
-        self.window_size = int(math.floor(window_time*samp_freq))
+        
+        self.window_size = int(math.floor(self.window_time*samp_freq))
         
         if self.mem_size < int(math.floor(self.window_size * 1.5)):
             self.mem_size = int(math.floor(self.window_size * 1.5))
@@ -78,7 +102,17 @@ class mic_array_thread(Thread):
             self.xd[i] = math.sin(t)
             self.yd[i] = math.cos(t)
     
-                
+    def mic_array_param(self, req):
+        self.window_time = req.window_time
+        self.thresh = req.threshold
+        for i in range(len(self.gain)):
+            self.gain[i] = req.gains[i]
+        self.slew_rate = req.slew_rate
+        
+        print req
+        
+        return (1)
+
     def stop(self):
         self.mic_array_done = True
 
@@ -124,7 +158,7 @@ class mic_array_thread(Thread):
                         yd_p.append(self.yd[i] * self.energy_mic[i])
                     xd_src = sum(xd_p)
                     yd_src = sum(yd_p)
-                    angle_src = math.atan2(yd_src,xd_src)
+                    angle_src = math.degrees(math.atan2(yd_src,xd_src))
                     mag_src = math.sqrt(xd_src**2 + yd_src**2)
 
                     self.pub.publish(self.energy_mic, angle_src, mag_src)
@@ -212,15 +246,15 @@ class mic_array_thread(Thread):
             
 ###################################################################
 
-rospy.init_node('mic_array', anonymous=True)
+
 
 mic = mic_array_thread()
 mic.start()
 
 try:
     while True:
-        rospy.sleep(0.1)
-except:
+        sleep(0.1)
+except (KeyboardInterrupt):
     pass
 
 mic.stop()
