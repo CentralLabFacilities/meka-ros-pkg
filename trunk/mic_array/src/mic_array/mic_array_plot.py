@@ -1,4 +1,5 @@
 #! /usr/bin/python
+# -*- coding: utf-8 -*-
 
 import Gnuplot
 from time import sleep
@@ -26,7 +27,10 @@ def callback(data):
         xd_p.append(xd[i] * data.mic_energy[i])
         yd_p.append(yd[i] * data.mic_energy[i])
     e.plot(zip(x0, y0, xd_p, yd_p))
-    e.replot([[0,0,sum(xd_p),sum(yd_p)]])
+    m=data.mag
+    a=data.angle
+    e.replot([[0,0,m*math.cos(math.radians(a)),m*math.sin(math.radians(a))]])
+
     
 
 yrange = [-100,100]

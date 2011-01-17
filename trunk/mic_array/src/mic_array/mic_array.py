@@ -1,4 +1,5 @@
 #! /usr/bin/python
+# -*- coding: utf-8 -*-
 import time
 import os
 import yaml
@@ -28,25 +29,30 @@ class RingBuffer:
     def get(self):
         return self.data
     
+#TODO: find solution with largest resultant vector (for given window) from readings and trig if above thresh
+# save button and zero button to save bias for ambient noise
+    
 class mic_array_thread(Thread):
     def __init__(self):
         Thread.__init__(self)        
         self.num_chan = 6
         #self.gain = [2.2,0.8,1.0,1.8,1.0,0.5]
+        self.bias = [0.0]*self.num_chan
         self.gain = [1.0]*self.num_chan
         self.dac_map = [2,1,6,5,4,3]
         self.thresh = 100000 #150
         self.mic_array_done = False
-        rospy.init_node('mic_array', anonymous=True)
+        
         self.pub = rospy.Publisher('mic_array', MicArray)
         samp_freq=int(math.floor(10000/self.num_chan))
         self.filt = remez(numtaps=40, bands=[0, 70, 71, 270, 271, math.floor(samp_freq/2)], desired=[0, 1, 0], Hz = samp_freq)
-        #self.s = rospy.Service('mic_array_param', MicArrayParam, self.mic_array_param)
+        self.s = rospy.Service('mic_array_param', MicArrayParam, self.mic_array_param)
         self.p = 2
         self.scale = 100.0        
         self.window_time = 0.1
-        self.slew_rate = 1.0 # not used yet
-        
+        self.slew_rate = 1.0
+        self.slew_val_x=0.0
+        self.slew_val_y=0.0
         # get yml file name from param server and parse for values
         config_file_name = rospy.get_param("/mic_array_config")
         try:
@@ -59,13 +65,15 @@ class mic_array_thread(Thread):
         if config.has_key('gains'):
             for i in range(self.num_chan):
                 self.gain[i] = config['gains'][i]
+        if config.has_key('bias'):
+            for i in range(self.num_chan):
+                self.bias[i] = config['bias'][i]
         if config.has_key('threshold'):            
                 self.thresh = config['threshold']
         if config.has_key('window_time'):            
                 self.window_time = config['window_time']
         if config.has_key('slew_rate'):            
-                self.slew_rate = config['slew_rate']
-
+                self.slew_rate= config['slew_rate']
         self.d = u3.U3()
         self.d.configIO( FIOAnalog = 0x7E )
             
@@ -101,15 +109,16 @@ class mic_array_thread(Thread):
             t = (2*math.pi/self.num_chan)*i
             self.xd[i] = math.sin(t)
             self.yd[i] = math.cos(t)
-    
+        print 'bias:', self.bias
     def mic_array_param(self, req):
         self.window_time = req.window_time
         self.thresh = req.threshold
+        #print req.bias
         for i in range(len(self.gain)):
             self.gain[i] = req.gains[i]
+            self.bias[i] = req.bias[i]
         self.slew_rate = req.slew_rate
-        
-        print req
+        #print req
         
         return (1)
 
@@ -144,12 +153,16 @@ class mic_array_thread(Thread):
                     dataCount += 1                    
                     
                     for j in range(self.num_chan):
-                        for i in range(len(r['AIN'+str(self.dac_map[j])])):                                        
-                            self.buf[j].append(((r['AIN'+str(self.dac_map[j])][i])*self.scale*self.gain[j]))                        
+                        for i in range(len(r['AIN'+str(self.dac_map[j])])):
+                            mic_adc = r['AIN'+str(self.dac_map[j])][i]
+                            #print 'adc', mic_adc, 'bias', self.bias[j], 'j',j
+                            self.buf[j].append(mic_adc * self.scale)                        
                         self.buf_filt[j] = convolve(self.filt, self.buf[j].get())
                         for i in range(len(self.buf_filt[j])):
-                            self.buf_filt[j][i] = self.buf_filt[j][i] ** self.p                        
-                        self.energy_mic[j] = sum(self.buf_filt[j])/len(self.buf_filt[j])
+                            self.buf_filt[j][i] = (self.buf_filt[j][i] - self.bias[j]) * self.gain[j]
+                        '''for i in range(len(self.buf_filt[j])):
+                            self.buf_filt[j][i] = self.buf_filt[j][i] ** self.p'''
+                        self.energy_mic[j] = (sum(self.buf_filt[j])/len(self.buf_filt[j])) ** 2
 
                     xd_p = []
                     yd_p = []
@@ -158,10 +171,24 @@ class mic_array_thread(Thread):
                         yd_p.append(self.yd[i] * self.energy_mic[i])
                     xd_src = sum(xd_p)
                     yd_src = sum(yd_p)
-                    angle_src = math.degrees(math.atan2(yd_src,xd_src))
-                    mag_src = math.sqrt(xd_src**2 + yd_src**2)
+                    
+                    if self.slew_val_x<xd_src:
+			    self.slew_val_x=min(xd_src,self.slew_val_x+self.slew_rate)
+		    else:
+			    self.slew_val_x=max(xd_src,self.slew_val_x-self.slew_rate)
+			   
+		    if self.slew_val_y<yd_src:
+			    self.slew_val_y=min(yd_src,self.slew_val_y+self.slew_rate)
+		    else:
+			    self.slew_val_y=max(yd_src,self.slew_val_y-self.slew_rate)
+			    
+                    angle_src = math.degrees(math.atan2(self.slew_val_y,self.slew_val_x))
+                    mag_src = math.sqrt(self.slew_val_x**2 + self.slew_val_y**2)
+                    
+		   
 
-                    self.pub.publish(self.energy_mic, angle_src, mag_src)
+		  
+                    self.pub.publish(self.energy_mic, angle_src,mag_src)
                     
                     if False:
                         T_all = []
@@ -237,7 +264,7 @@ class mic_array_thread(Thread):
                         '''if len(T_all) > 0:
                             print "Max Detected: T:", T_all[max_i_window], "i:", Max_I_all[max_i_window]
                             print "Max Energy:", max_e_window'''
-
+        
         finally:
             print 'Stopping LabJack capture.'
             stop = datetime.now()
@@ -247,14 +274,9 @@ class mic_array_thread(Thread):
 ###################################################################
 
 
-
+rospy.init_node('mic_array', anonymous=True)
 mic = mic_array_thread()
+rospy.on_shutdown(mic.stop)
 mic.start()
 
-try:
-    while True:
-        sleep(0.1)
-except (KeyboardInterrupt):
-    pass
-
-mic.stop()
+rospy.spin()
