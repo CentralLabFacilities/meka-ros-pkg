@@ -64,7 +64,7 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="r_shoulder_geom">
-		      <mesh filename="package://${MESH}/A2R2_shoulderupper_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A2R2/A2R2_shoulderupper_RIGHT.mesh" />
 	      </geometry>  
       </visual>
 

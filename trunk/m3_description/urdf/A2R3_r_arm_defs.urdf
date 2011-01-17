@@ -64,7 +64,7 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="r_shoulder_geom">
-		      <mesh filename="package://${MESH}/A2R3_shoulderupper_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3_shoulderupper_RIGHT.mesh" />
 	      </geometry>  
       </visual>
 
@@ -105,7 +105,7 @@
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="shoulderpitch_RIGHT">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_shoulderpitch_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3/A2R3_shoulderpitch_RIGHT.mesh" />
 	      </geometry>  
       </visual>
       
@@ -143,7 +143,7 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="bicep_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_bicep_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3/A2R3_bicep_RIGHT.mesh" />
 	      </geometry>  
       </visual>
       
@@ -190,7 +190,7 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="elbowclevis_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_elbowclevis_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3/A2R3_elbowclevis_RIGHT.mesh" />
 	      </geometry>  
       </visual>
       
@@ -229,7 +229,7 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="wrist_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_wrist.mesh" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3/A2R3_wrist.mesh" />
 	      </geometry>  
       </visual>
       
@@ -271,7 +271,7 @@
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="w_differential_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_w_differential.mesh" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3/A2R3_w_differential.mesh" />
 	      </geometry>  
       </visual>
       
@@ -308,7 +308,7 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="handmount_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_handmount.mesh" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3/A2R3_handmount.mesh" />
 	      </geometry>  
       </visual>
       
