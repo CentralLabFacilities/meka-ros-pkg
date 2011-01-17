@@ -52,7 +52,7 @@
       <material name="GreyA" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="panplate_geom">
-	      <mesh filename="package://${MESH}/T2R2_panplate.mesh" />
+	      <mesh filename="package://${MESH}/T2R2/T2R2_panplate.mesh" />
       </geometry>  
     </visual>     
     <collision>

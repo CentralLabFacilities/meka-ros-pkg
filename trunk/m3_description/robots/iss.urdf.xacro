@@ -54,7 +54,7 @@
       <material name="GreyA" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="panplate_geom">
-	      <mesh filename="package://${MESH}/T2R2_panplate.mesh" />
+	      <mesh filename="package://${MESH}/T2R2/T2R2_panplate.mesh" />
       </geometry>  
     </visual>     
     <collision>
@@ -80,7 +80,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="torso_geom">
-	      <mesh filename="package://${MESH}/T2R2_torso.mesh" />
+	      <mesh filename="package://${MESH}/T2R2/T2R2_torso.mesh" />
       </geometry>  
     </visual>
     <collision>
@@ -107,7 +107,7 @@
       <material name="GreyB" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="mid_geom">
-	      <mesh filename="package://${MESH}/T2R2_mid.mesh" />
+	      <mesh filename="package://${MESH}/T2R2/T2R2_mid.mesh" />
       </geometry>
     </visual>
     <collision>
@@ -134,7 +134,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 3.14159" />
       <geometry name="upper_geom">
-	      <mesh filename="package://${MESH}/T2R2_upper.mesh" />
+	      <mesh filename="package://${MESH}/T2R2/T2R2_upper.mesh" />
       </geometry>
     </visual>
     <collision>
@@ -146,4 +146,3 @@
   </link>
 
 </robot>
-  
