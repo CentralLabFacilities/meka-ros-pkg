@@ -6,12 +6,14 @@
        name="m3" >
 
  <property name="M_PI" value="3.1415926535897931" />
- <property name="R_ARM" value="ma10" />
- <property name="TORSO" value="mt3" />
- <property name="MESH" value="low_res" />
+ <property name="R_ARM" value="ma8" />
+ <property name="L_ARM" value="ma9" />
+ <property name="TORSO" value="mt2" />
+ <property name="MESH" value="m3_description/meshes/low_res" />
 
 <!-- M3 Arm -->
   <include filename="$(find m3_description)/urdf/A2R2_r_arm_defs.urdf.xacro" />
+  <include filename="$(find m3_description)/urdf/A2R2_l_arm_defs.urdf.xacro" />
   
   
   <material name="GreyA"> <!-- darkest -->

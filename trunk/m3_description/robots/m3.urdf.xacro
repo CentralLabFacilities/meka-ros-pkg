@@ -1,22 +1,20 @@
 <?xml version="1.0"?>
-<robot name="m3"
-       xmlns:xi="http://www.w3.org/2001/XInclude"
-       xmlns:gazebo="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz"
-       xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model"
-       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
-       xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body"
-       xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom"
-       xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#joint"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
-       xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering"
-       xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable"
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics">  
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       name="m3" >
 
-	<include filename="$(find m3_defs_ros)/defs/A2R2_r_arm_defs.urdf.xacro" />
+ <property name="M_PI" value="3.1415926535897931" />
+ <property name="R_ARM" value="ma8" />
+ <property name="L_ARM" value="ma9" />
+ <property name="TORSO" value="mt2" />
+ <property name="MESH" value="m3_description/meshes/low_res" />
 
+<!-- M3 Arm -->
+  <include filename="$(find m3_description)/urdf/A2R2_r_arm_defs.urdf.xacro" />
+  <include filename="$(find m3_description)/urdf/A2R2_l_arm_defs.urdf.xacro" />
   
-  <property name="M_PI" value="3.1415926535897931" />
   
   <material name="GreyA"> <!-- darkest -->
 	  <color rgba="0.3 0.3 0.3 1.0"/>
@@ -38,6 +36,7 @@
 	  <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
   </m3_l_arm>
   
+  <link name="world" />
   
   <!-- Solid Base -->
   <joint name="base_joint" type="fixed">
@@ -55,7 +54,7 @@
       <material name="GreyA" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="panplate_geom">
-	      <mesh filename="package://m3_defs_ros/meshes/T2R2_panplate.mesh" />
+	      <mesh filename="package://${MESH}/T2R2_panplate.mesh" />
       </geometry>  
     </visual>     
     <collision>
@@ -65,7 +64,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="m3joint_mt3_j0" type="continuous">
+  <joint name="m3joint_${TORSO}_j0" type="continuous">
     <axis xyz="0 0 1"/>
     <origin xyz="0 0 0.1493" rpy="0 0 0" />
     <parent link="panplate" />
@@ -81,7 +80,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="torso_geom">
-	      <mesh filename="package://m3_defs_ros/meshes/T2R2_torso.mesh" />
+	      <mesh filename="package://${MESH}/T2R2_torso.mesh" />
       </geometry>  
     </visual>
     <collision>
@@ -92,7 +91,7 @@
     </collision>
   </link>
   
-  <joint name="m3joint_mt3_j1" type="continuous">
+  <joint name="m3joint_${TORSO}_j1" type="continuous">
     <axis xyz="0 1 0"/>
     <origin xyz="0 0 0" rpy="0 0 0" />    
     <parent link="torso" />
@@ -108,7 +107,7 @@
       <material name="GreyB" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="mid_geom">
-	      <mesh filename="package://m3_defs_ros/meshes/T2R2_mid.mesh" />
+	      <mesh filename="package://${MESH}/T2R2_mid.mesh" />
       </geometry>
     </visual>
     <collision>
@@ -119,7 +118,7 @@
     </collision>
   </link>
   
-  <joint name="m3joint_slave_mt3_j2" type="continuous">
+  <joint name="m3joint_slave_${TORSO}_j2" type="continuous">
     <axis xyz="0 1 0"/>
     <origin xyz="0 0 0.1397" rpy="0 0 0" />    
     <parent link="mid" />
@@ -135,7 +134,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 3.14159" />
       <geometry name="upper_geom">
-	      <mesh filename="package://m3_defs_ros/meshes/T2R2_upper.mesh" />
+	      <mesh filename="package://${MESH}/T2R2_upper.mesh" />
       </geometry>
     </visual>
     <collision>
