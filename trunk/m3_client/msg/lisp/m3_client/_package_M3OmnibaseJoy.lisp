@@ -3,4 +3,5 @@
           Y-VAL
           YAW-VAL
           BUTTON-VAL
+          Z-VAL
 ))

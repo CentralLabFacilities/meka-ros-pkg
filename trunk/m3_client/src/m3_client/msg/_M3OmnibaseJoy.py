@@ -4,19 +4,19 @@ import struct
 
 
 class M3OmnibaseJoy(roslib.message.Message):
-  _md5sum = "286660b3e8b8841f173c9b2be33e1938"
+  _md5sum = "6719502035b93742f7b2585c261584a9"
   _type = "m3_client/M3OmnibaseJoy"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """float32 x
 float32 y
 float32 yaw
 float32 button
-
+float32 z
 
 
 """
-  __slots__ = ['x','y','yaw','button']
-  _slot_types = ['float32','float32','float32','float32']
+  __slots__ = ['x','y','yaw','button','z']
+  _slot_types = ['float32','float32','float32','float32','float32']
 
   def __init__(self, *args, **kwds):
     """
@@ -26,7 +26,7 @@ float32 button
     changes.  You cannot mix in-order arguments and keyword arguments.
     
     The available fields are:
-       x,y,yaw,button
+       x,y,yaw,button,z
     
     @param args: complete set of field values, in .msg order
     @param kwds: use keyword arguments corresponding to message field names
@@ -43,11 +43,14 @@ float32 button
         self.yaw = 0.
       if self.button is None:
         self.button = 0.
+      if self.z is None:
+        self.z = 0.
     else:
       self.x = 0.
       self.y = 0.
       self.yaw = 0.
       self.button = 0.
+      self.z = 0.
 
   def _get_types(self):
     """
@@ -63,7 +66,7 @@ float32 button
     """
     try:
       _x = self
-      buff.write(_struct_4f.pack(_x.x, _x.y, _x.yaw, _x.button))
+      buff.write(_struct_5f.pack(_x.x, _x.y, _x.yaw, _x.button, _x.z))
     except struct.error, se: self._check_types(se)
     except TypeError, te: self._check_types(te)
 
@@ -77,8 +80,8 @@ float32 button
       end = 0
       _x = self
       start = end
-      end += 16
-      (_x.x, _x.y, _x.yaw, _x.button,) = _struct_4f.unpack(str[start:end])
+      end += 20
+      (_x.x, _x.y, _x.yaw, _x.button, _x.z,) = _struct_5f.unpack(str[start:end])
       return self
     except struct.error, e:
       raise roslib.message.DeserializationError(e) #most likely buffer underfill
@@ -94,7 +97,7 @@ float32 button
     """
     try:
       _x = self
-      buff.write(_struct_4f.pack(_x.x, _x.y, _x.yaw, _x.button))
+      buff.write(_struct_5f.pack(_x.x, _x.y, _x.yaw, _x.button, _x.z))
     except struct.error, se: self._check_types(se)
     except TypeError, te: self._check_types(te)
 
@@ -110,11 +113,11 @@ float32 button
       end = 0
       _x = self
       start = end
-      end += 16
-      (_x.x, _x.y, _x.yaw, _x.button,) = _struct_4f.unpack(str[start:end])
+      end += 20
+      (_x.x, _x.y, _x.yaw, _x.button, _x.z,) = _struct_5f.unpack(str[start:end])
       return self
     except struct.error, e:
       raise roslib.message.DeserializationError(e) #most likely buffer underfill
 
 _struct_I = roslib.message.struct_I
-_struct_4f = struct.Struct("<4f")
+_struct_5f = struct.Struct("<5f")

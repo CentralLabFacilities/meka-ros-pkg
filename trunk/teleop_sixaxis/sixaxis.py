@@ -1,4 +1,5 @@
 #! /usr/bin/python
+# -*- coding: utf-8 -*-
 
 # -*- coding: utf-8 -*-
 #M3 -- Meka Robotics Robot Components
@@ -23,8 +24,8 @@ import roslib; roslib.load_manifest('m3_defs_ros')
 import rospy
 import roslib; roslib.load_manifest('joy')
 from joy.msg import Joy
-import roslib; roslib.load_manifest('m3ros')
-from m3ros.msg import M3OmnibaseJoy
+import roslib; roslib.load_manifest('m3_client')
+from m3_client.msg import M3OmnibaseJoy
 
 #from sensor_msgs.msg import JointState
 #from roslib.msg import Header
@@ -52,6 +53,7 @@ class M3SixAxis:
         self.scale_xy = 1.0
         self.scale_rot = 1.0
         self.joy_max = -1.0
+ 
         
 #        self.p1 = subprocess.Popen(['sudo', 'ps3joy.py'])
 #        self.p2 = subprocess.Popen(['roslaunch', 'm3_defs_ros', 'joy.launch'])
@@ -67,9 +69,18 @@ class M3SixAxis:
         
     def callback(self, data):
         
-        self.pub.publish(self.get_x(data.axes), self.get_y(data.axes), self.get_yaw(data.axes), self.get_button(data.buttons))
+        self.pub.publish(self.get_x(data.axes), self.get_y(data.axes), self.get_yaw(data.axes), self.get_button(data.buttons),self.get_z(data.axes))
         
-    
+    def get_z(self,axes):
+        
+        axis_up = float(axes[self.circ_but])/self.joy_max
+        axis_down = float(axes[self.sqr_but])/self.joy_max
+        if (axis_up > axis_down):
+            z = axis_up * self.scale_xy
+        else:
+            z = -axis_down * self.scale_xy
+        return z
+        
     def get_y(self,axes):
         
         axis_left = float(axes[self.left])/self.joy_max        
