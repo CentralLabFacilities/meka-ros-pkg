@@ -6,14 +6,14 @@
        name="m3" >
 
  <property name="M_PI" value="3.1415926535897931" />
- <property name="R_ARM" value="ma8" />
- <property name="L_ARM" value="ma9" />
- <property name="TORSO" value="mt2" />
+ <property name="R_ARM" value="ma12" />
+ <property name="L_ARM" value="ma14" />
+ <property name="TORSO" value="mt4" />
  <property name="MESH" value="m3_description/meshes/low_res" />
 
 <!-- M3 Arm -->
-  <include filename="$(find m3_description)/urdf/A2R2_r_arm_defs.urdf.xacro" />
-  <include filename="$(find m3_description)/urdf/A2R2_l_arm_defs.urdf.xacro" />
+  <include filename="$(find m3_description)/urdf/A2R3_r_arm_defs.urdf.xacro" />
+  <include filename="$(find m3_description)/urdf/A2R3_l_arm_defs.urdf.xacro" />
   
   
   <material name="GreyA"> <!-- darkest -->
@@ -54,7 +54,7 @@
       <material name="GreyA" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="panplate_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_panplate.mesh" />
+	      <mesh filename="package://${MESH}/T2R3/T2R3_panplate.mesh" />
       </geometry>  
     </visual>     
     <collision>
@@ -80,7 +80,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="torso_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_torso.mesh" />
+	      <mesh filename="package://${MESH}/T2R3/T2R3_torso.mesh" />
       </geometry>  
     </visual>
     <collision>
@@ -107,7 +107,7 @@
       <material name="GreyB" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="mid_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_mid.mesh" />
+	      <mesh filename="package://${MESH}/T2R3/T2R3_mid.mesh" />
       </geometry>
     </visual>
     <collision>
@@ -134,7 +134,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 3.14159" />
       <geometry name="upper_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_upper.mesh" />
+	      <mesh filename="package://${MESH}/T2R3/T2R3_upper.mesh" />
       </geometry>
     </visual>
     <collision>
@@ -146,3 +146,4 @@
   </link>
 
 </robot>
+  
