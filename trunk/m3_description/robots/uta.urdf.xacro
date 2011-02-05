@@ -30,9 +30,9 @@
 	  <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
   </m3_r_arm>
   
-  <m3_l_arm side="l" reflect="1" parent="upper">
+  <!--<m3_l_arm side="l" reflect="1" parent="upper">
 	  <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
-  </m3_l_arm>
+  </m3_l_arm>-->
   
   <link name="world" />
   
@@ -64,15 +64,16 @@
   </link>
   <joint name="m3joint_${TORSO}_j0" type="continuous">
     <axis xyz="0 0 1"/>
-    <origin xyz="0 0 0.1493" rpy="0 0 0" />
+    <origin xyz="0 0 0.1678" rpy="0 0 0" />
     <parent link="panplate" />
     <child link="torso" />
+    <limit effort="25" velocity="${25.0*M_PI/180}" lower="${-120*M_PI/180}" upper="${120*M_PI/180}" />
   </joint>
   <link name="torso">
     <inertial>
-      <mass value="1000" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="1000"  ixy="0"  ixz="0" iyy="1000" iyz="0" izz="1000" />
+      <mass value="4.411" />
+      <origin xyz="0.00011774 0.0038073 -0.0522753" />
+      <inertia ixx="0.026360"  ixy="-0.0000024"  ixz="-0.0000508" iyy="0.0134266" iyz="0.0006839" izz="0.0229879" />
     </inertial>
     <visual>
       <material name="GreyC" />
@@ -94,12 +95,18 @@
     <origin xyz="0 0 0" rpy="0 0 0" />    
     <parent link="torso" />
     <child link="mid" />
+    <limit effort="200" velocity="${10.0*M_PI/180}" lower="${-11.79349*M_PI/180}" upper="${53.29349*M_PI/180}" />
   </joint>
   <link name="mid">
     <inertial>
-      <mass value="1000" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="1000"  ixy="0"  ixz="0" iyy="1000" iyz="0" izz="1000" />
+      <mass value="4.934" />
+      <origin xyz="0.001179 -0.002993 0.046259"/>
+      <inertia ixx="0.041106"
+      iyy="0.026009"
+      izz="0.025902"
+      ixy="0.000135"
+      ixz="0.000505"
+      iyz="0.002396" />
     </inertial>
     <visual>
       <material name="GreyB" />
@@ -121,16 +128,23 @@
     <origin xyz="0 0 0.1397" rpy="0 0 0" />    
     <parent link="mid" />
     <child link="upper" />
+    <limit effort="200" velocity="${10.0*M_PI/180}" lower="${-11.79349*M_PI/180}" upper="${53.29349*M_PI/180}" />
   </joint>
+
   <link name="upper">
     <inertial>
-      <mass value="1000" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="1000"  ixy="0"  ixz="0" iyy="1000" iyz="0" izz="1000" />
+      <mass value="6.245" />
+      <origin xyz="0.008700 0.011470 0.129740"/>
+      <inertia ixx="0.069760"
+      iyy="0.048010"
+      izz="0.040590"
+      ixy="-0.000400"
+      ixz="0.001300"
+      iyz="0.005100" />
     </inertial>
     <visual>
       <material name="GreyC" />
-      <origin xyz="0 0 0" rpy="0 0 3.14159" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="upper_geom">
 	      <mesh filename="package://${MESH}/T2R2/T2R2_upper.mesh" />
       </geometry>
