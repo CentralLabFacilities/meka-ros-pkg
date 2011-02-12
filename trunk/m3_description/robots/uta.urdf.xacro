@@ -8,12 +8,15 @@
  <property name="M_PI" value="3.1415926535897931" />
  <property name="R_ARM" value="ma10" />
  <property name="TORSO" value="mt3" />
+ <property name="HEAD" value="ms2" />
  <property name="MESH" value="m3_description/meshes/low_res" />
 
-<!-- M3 Arm -->
+<!-- Meka Arm -->
   <include filename="$(find m3_description)/urdf/A2R2_r_arm_defs.urdf.xacro" />
+<!-- Meka Head -->
+  <include filename="$(find m3_description)/urdf/S2R1_head_defs.urdf.xacro" />
   
-  
+   <property name="M_PI" value="3.1415926535897931" />
   <material name="GreyA"> <!-- darkest -->
 	  <color rgba="0.3 0.3 0.3 1.0"/>
   </material>
@@ -29,6 +32,10 @@
  <m3_r_arm side="r" reflect="1" parent="upper">
 	  <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
   </m3_r_arm>
+
+  <m3_head side="r" reflect="1" parent="upper">
+	  <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
+  </m3_head>
   
   <!--<m3_l_arm side="l" reflect="1" parent="upper">
 	  <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
@@ -67,7 +74,7 @@
     <origin xyz="0 0 0.1678" rpy="0 0 0" />
     <parent link="panplate" />
     <child link="torso" />
-    <limit effort="25" velocity="${25.0*M_PI/180}" lower="${-120*M_PI/180}" upper="${120*M_PI/180}" />
+    <limit effort="25" velocity="${25.0*M_PI/180}" lower="${-120*M_PI/180.0}" upper="${120*M_PI/180}" />
   </joint>
   <link name="torso">
     <inertial>
@@ -133,7 +140,7 @@
 
   <link name="upper">
     <inertial>
-      <mass value="6.245" />
+      <mass value="6.534" /> <!-- torso with motors, bottom pullies, and neck mount -->
       <origin xyz="0.008700 0.011470 0.129740"/>
       <inertia ixx="0.069760"
       iyy="0.048010"
@@ -146,7 +153,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="upper_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_upper.mesh" />
+	      <mesh filename="package://${MESH}/T2R2/T2R2_upper_neck.mesh" />
       </geometry>
     </visual>
     <collision>
