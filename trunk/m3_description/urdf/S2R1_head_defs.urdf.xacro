@@ -13,7 +13,7 @@
       <insert_block name="origin" /> <!-- transform from parent link to this joint frame -->
       <parent link="${parent}"/>
       <child link="neck_tilt"/>
-      <limit effort="40" velocity="${30.0*M_PI/180}" lower="${-80*M_PI/180}" upper="${200*M_PI/180}" />
+      <limit velocity="${20.0*M_PI/180}" lower="${-40*M_PI/180}" upper="${15*M_PI/180}" />
     </joint>
     <link name="neck_tilt">
       <inertial>
@@ -46,7 +46,7 @@
      
     <joint name="m3joint_${HEAD}_j1" type="revolute">
       <axis xyz="0 0 1"/>
-     <limit effort="40" velocity="${30*M_PI/180}" lower="${-24*M_PI/180}" upper="${150*M_PI/180}" />    
+     <limit velocity="${75*M_PI/180}" lower="${-80.919*M_PI/180}" upper="${80.91*M_PI/180}" />    
       <origin xyz="0 0 0.13849" rpy="0 0 0" />
       <parent link="neck_tilt"/>
       <child link="neck_roll"/>
@@ -78,7 +78,7 @@
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="neck_roll" />
       <child link="neck_yaw"/>
-      <limit effort="20" velocity="${50*M_PI/180}" lower="${-85*M_PI/180}" upper="${85*M_PI/180}" />    
+      <limit velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
     </joint>
     <link name="neck_yaw">
       <inertial>        
@@ -112,7 +112,7 @@
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="neck_yaw" />
       <child link="head_shell"/>
-	<limit effort="20" velocity="${50*M_PI/180}" lower="${ 0.182*M_PI/180}" upper="${132.8175*M_PI/180}" />    
+	<limit velocity="${50*M_PI/180}" lower="${-7.072*M_PI/180}" upper="${37.072*M_PI/180}" />    
     </joint>
     <link name="head_shell">
 
@@ -149,7 +149,7 @@
 
     <joint name="m3joint_${HEAD}_j4" type="revolute">
 	    <axis xyz="0 -1 0" />
-      <limit effort="4" velocity="${150*M_PI/180}" lower="${-49.4*M_PI/180}" upper="${229.4*M_PI/180}" /> 
+      <limit velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
       <origin xyz="0.12508 0 0" rpy="0 0 0" />
       <parent link="head_shell"/>
       <child link="eye_tilt"/>
@@ -174,7 +174,7 @@
 
     <joint name="m3joint_${HEAD}_j5" type="revolute">
 	    <axis xyz="0 0 1" />
-      <limit effort="4" velocity="${150*M_PI/180}" lower="${-49.4*M_PI/180}" upper="${229.4*M_PI/180}" /> 
+      <limit velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 -0.053 0" rpy="0 0 0" />
       <parent link="eye_tilt"/>
       <child link="right_eye"/>
@@ -199,7 +199,7 @@
 
     <joint name="m3joint_${HEAD}_j6" type="revolute">
 	    <axis xyz="0 0 1" />
-      <limit effort="4" velocity="${150*M_PI/180}" lower="${-49.4*M_PI/180}" upper="${229.4*M_PI/180}" /> 
+      <limit velocity="${1600*M_PI/180}" lower="${-35.12*M_PI/180}" upper="${35.125*M_PI/180}" /> 
       <origin xyz="0 0.053 0" rpy="0 0 0" />
       <parent link="eye_tilt"/>
       <child link="left_eye"/>
