@@ -287,8 +287,6 @@
     </m3_r_shoulder>
     <m3_r_upper_arm side="${side}" reflect="${reflect}" parent="bicep_RIGHT" />
     <m3_r_forearm side="${side}" reflect="${reflect}" parent="wrist_RIGHT" />
-
-    
   </macro>
 
 

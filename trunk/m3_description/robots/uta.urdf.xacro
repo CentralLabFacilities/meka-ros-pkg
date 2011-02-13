@@ -7,12 +7,15 @@
 
  <property name="M_PI" value="3.1415926535897931" />
  <property name="R_ARM" value="ma10" />
+ <property name="R_HAND" value="mh8" />
  <property name="TORSO" value="mt3" />
  <property name="HEAD" value="ms2" />
  <property name="MESH" value="m3_description/meshes/low_res" />
 
 <!-- Meka Arm -->
   <include filename="$(find m3_description)/urdf/A2R2_r_arm_defs.urdf.xacro" />
+<!-- Meka Hand -->
+  <include filename="$(find m3_description)/urdf/H2R2_r_hand_defs.urdf.xacro" />
 <!-- Meka Head -->
   <include filename="$(find m3_description)/urdf/S2R1_head_defs.urdf.xacro" />
   
@@ -36,11 +39,18 @@
   <m3_head side="r" reflect="1" parent="upper">
 	  <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
   </m3_head>
+
+  <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
+	  <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+  </m3_r_hand>
   
   <!--<m3_l_arm side="l" reflect="1" parent="upper">
 	  <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
   </m3_l_arm>-->
   
+
+
+
   <link name="world" />
   
   <!-- Solid Base -->
