@@ -132,6 +132,7 @@
       <parent link="${parent}"/>
       <child link="elbowclevis_RIGHT"/>
 	<limit effort="20" velocity="${50*M_PI/180}" lower="${ 0.182*M_PI/180}" upper="${132.8175*M_PI/180}" />    
+      <dynamics damping="10.0" />
     </joint>
     <link name="elbowclevis_RIGHT">
 
@@ -210,6 +211,7 @@
   <macro name="m3_r_forearm" params="side parent reflect">
 
 	  <joint name="m3joint_${R_ARM}_j5" type="revolute">
+      <dynamics damping="1.0" />
 		  <axis xyz="0 -1 0" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="${parent}"/>
