@@ -15,6 +15,7 @@
       <parent link="${parent}"/>
       <child link="shoulderupper_RIGHT"/>
       <limit effort="40" velocity="${30.0*M_PI/180}" lower="${-80*M_PI/180}" upper="${200*M_PI/180}" />
+      <dynamics damping="1.0"/>
     </joint>
     <link name="shoulderupper_RIGHT">
       <inertial>
@@ -51,6 +52,7 @@
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="shoulderupper_RIGHT"/>
       <child link="shoulderpitch_RIGHT"/>
+      <dynamics damping="1.0"/>
     </joint>
     <link name="shoulderpitch_RIGHT">
 
@@ -89,6 +91,7 @@
       <parent link="shoulderpitch_RIGHT" />
       <child link="bicep_RIGHT"/>
       <limit effort="20" velocity="${50*M_PI/180}" lower="${-85*M_PI/180}" upper="${85*M_PI/180}" />    
+      <dynamics damping="1.0"/>
     </joint>
     <link name="bicep_RIGHT">
       <inertial>        
@@ -172,6 +175,7 @@
       <origin xyz="0 0 -0.27747" rpy="0 0 0" />
       <parent link="elbowclevis_RIGHT"/>
       <child link="wrist_RIGHT"/>
+      <dynamics damping="1.0"/>
     </joint>
     <link name="wrist_RIGHT">
 
@@ -217,6 +221,7 @@
       <parent link="${parent}"/>
       <child link="w_differential_RIGHT"/>
 	<limit effort="8" velocity="${40*M_PI/180}" lower="${-58.83*M_PI/180}" upper="${58.83*M_PI/180}" /> 
+      <dynamics damping="1.0"/>
     </joint>
     <link name="w_differential_RIGHT">
 
@@ -252,6 +257,7 @@
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="w_differential_RIGHT"/>
       <child link="handmount_RIGHT"/>
+      <dynamics damping="1.0"/>
     </joint>
     <link name="handmount_RIGHT">
 
