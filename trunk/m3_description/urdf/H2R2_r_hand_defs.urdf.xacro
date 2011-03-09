@@ -117,7 +117,17 @@
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
     </joint>
 
-    <link name="thumb2">          
+    <link name="thumb2">  
+      <inertial>
+        <mass value="0.01" />
+	<origin xyz="0.0 0.0 0.0"/>
+	<inertia ixx="0.0"
+	iyy="0.0"
+	izz="0.0"
+	ixy="0.0"
+	ixz="0.0"
+	iyz="0.0" />
+      </inertial>        
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
@@ -144,6 +154,16 @@
     </joint>
 
     <link name="index0">
+      <inertial>
+        <mass value="0.01" />
+	<origin xyz="0.0 0.0 0.0"/>
+	<inertia ixx="0.0"
+	iyy="0.0"
+	izz="0.0"
+	ixy="0.0"
+	ixz="0.0"
+	iyz="0.0" />
+      </inertial>        
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
@@ -202,6 +222,16 @@
     </joint>
 
     <link name="index2">
+      <inertial>
+        <mass value="0.01" />
+	<origin xyz="0.0 0.0 0.0"/>
+	<inertia ixx="0.0"
+	iyy="0.0"
+	izz="0.0"
+	ixy="0.0"
+	ixz="0.0"
+	iyz="0.0" />
+      </inertial>        
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
@@ -227,6 +257,16 @@
     </joint>
 
     <link name="ring0">
+      <inertial>
+        <mass value="0.01" />
+	<origin xyz="0.0 0.0 0.0"/>
+	<inertia ixx="0.0"
+	iyy="0.0"
+	izz="0.0"
+	ixy="0.0"
+	ixz="0.0"
+	iyz="0.0" />
+      </inertial>        
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
@@ -285,6 +325,16 @@
     </joint>
 
     <link name="ring2">
+      <inertial>
+        <mass value="0.01" />
+	<origin xyz="0.0 0.0 0.0"/>
+	<inertia ixx="0.0"
+	iyy="0.0"
+	izz="0.0"
+	ixy="0.0"
+	ixz="0.0"
+	iyz="0.0" />
+      </inertial>        
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
@@ -310,6 +360,16 @@
     </joint>
 
     <link name="pinky0">
+      <inertial>
+        <mass value="0.01" />
+	<origin xyz="0.0 0.0 0.0"/>
+	<inertia ixx="0.0"
+	iyy="0.0"
+	izz="0.0"
+	ixy="0.0"
+	ixz="0.0"
+	iyz="0.0" />
+      </inertial>        
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
@@ -368,6 +428,16 @@
     </joint>
 
     <link name="pinky2">
+      <inertial>
+        <mass value="0.01" />
+	<origin xyz="0.0 0.0 0.0"/>
+	<inertia ixx="0.0"
+	iyy="0.0"
+	izz="0.0"
+	ixy="0.0"
+	ixz="0.0"
+	iyz="0.0" />
+      </inertial>        
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
