@@ -30,15 +30,15 @@
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="neck_tilt_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_SH1_neckTilt.mesh" />
+	      <geometry name="neck_tilt_geom">		
+		      <mesh filename="package://${MESH}/S2R1/S2R1_SH1_neckTilt.dae" />
 	      </geometry>  
       </visual>
 
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="neck_tilt_geom_collison">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/S2R1/S2R1_SH1_neckTilt.stl" />
 	      </geometry>
       </collision>
     </link>
@@ -68,7 +68,7 @@
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="neck_roll_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_SH2_neckRoll.mesh" />
+		      <mesh filename="package://${MESH}/S2R1/S2R1_SH2_neckRoll.dae" />
 	      </geometry>  
       </visual>
       
@@ -102,7 +102,7 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="S2R1_H3_neckYaw_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_H3_neckYaw.mesh" />
+		      <mesh filename="package://${MESH}/S2R1/S2R1_H3_neckYaw.dae" />
 	      </geometry>  
       </visual>
       
@@ -138,14 +138,14 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="head_shell_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_H4_UTA_head.mesh" />
+		      <mesh filename="package://${MESH}/S2R1/S2R1_H4_UTA_head.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="head_shell_collision">
-		      <box size="0.01 0.01 0.01" />
+	      <geometry name="head_shell_collision">		      
+		      <mesh filename="package://${MESH_COLL}/S2R1/S2R1_H4_UTA_head.stl" />
 	      </geometry>
       </collision>
 
@@ -167,7 +167,7 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="eye_tilt_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_SH5_eyeTilt.mesh" />
+		      <mesh filename="package://${MESH}/S2R1/S2R1_SH5_eyeTilt.dae" />
 	      </geometry>  
       </visual>
       
@@ -192,14 +192,14 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="right_eye_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_eye.mesh" />
+		      <mesh filename="package://${MESH}/S2R1/S2R1_eye.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="right_eye_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/S2R1/S2R1_eye.stl" />
 	      </geometry>
       </collision>
     </link>
@@ -217,14 +217,14 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="left_eye_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_eye.mesh" />
+		      <mesh filename="package://${MESH}/S2R1/S2R1_eye.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="left_eye_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/S2R1/S2R1_eye.stl" />
 	      </geometry>
       </collision>
     </link>
