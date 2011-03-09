@@ -10,7 +10,12 @@
  <property name="R_HAND" value="mh8" />
  <property name="TORSO" value="mt3" />
  <property name="HEAD" value="ms2" />
- <property name="MESH" value="m3_description/meshes/low_res" />
+ <property name="MESH" value="m3_description/meshes/mid_res" />
+ <property name="MESH_COLL" value="m3_description/meshes/low_res" />
+
+<!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
+  <include filename="$(find m3_full_description)/gazebo/gazebo.urdf.xacro" />
+  <include filename="$(find m3_full_description)/transmissions/uta.transmission.xacro" />
 
 <!-- Meka Arm -->
   <include filename="$(find m3_description)/urdf/A2R2_r_arm_defs.urdf.xacro" />
@@ -18,34 +23,46 @@
   <include filename="$(find m3_description)/urdf/H2R2_r_hand_defs.urdf.xacro" />
 <!-- Meka Head -->
   <include filename="$(find m3_description)/urdf/S2R1_head_defs.urdf.xacro" />
-  
+
+
+  <!-- john added transmissions -->
+  <include filename="$(find m3_full_description)/transmissions/A2R2_r_arm_defs.transmission.xacro" />
+  <include filename="$(find m3_full_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />
+  <include filename="$(find m3_full_description)/transmissions/S2R1_head_defs.transmission.xacro" />
+
+
    <property name="M_PI" value="3.1415926535897931" />
   <material name="GreyA"> <!-- darkest -->
-	  <color rgba="0.3 0.3 0.3 1.0"/>
+    <color rgba="0.3 0.3 0.3 1.0"/>
   </material>
   
   <material name="GreyB">
-	  <color rgba="0.5 0.5 0.5 1.0"/>
+    <color rgba="0.5 0.5 0.5 1.0"/>
   </material>
   
   <material name="GreyC">
-	  <color rgba="0.7 0.7 0.7 1.0"/>
+    <color rgba="0.7 0.7 0.7 1.0"/>
   </material>
   
  <m3_r_arm side="r" reflect="1" parent="upper">
-	  <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
+    <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
   </m3_r_arm>
 
+  <!-- john added transmissions -->
+  <m3_r_arm_transmission side="r" reflect="1" parent="upper"/>
+  <m3_r_hand_transmission/>
+  <m3_head_transmission/>
+  
   <m3_head side="r" reflect="1" parent="upper">
-	  <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
+    <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
   </m3_head>
 
   <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
-	  <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_r_hand>
   
   <!--<m3_l_arm side="l" reflect="1" parent="upper">
-	  <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
+    <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
   </m3_l_arm>-->
   
 
@@ -55,27 +72,28 @@
   
   <!-- Solid Base -->
   <joint name="base_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0" />
+    <origin xyz="0 0 1" rpy="0 0 0" />
     <parent link="world" />
     <child link="panplate" />
+    <dynamics damping="1.0"/>
   </joint>
   <link name="panplate">
     <inertial>
       <mass value="1000" />
       <origin xyz="0 0 0" />
-      <inertia ixx="1000"  ixy="0"  ixz="0" iyy="1000" iyz="0" izz="1000" />
+      <inertia ixx="100"  ixy="0"  ixz="0" iyy="100" iyz="0" izz="100" />
     </inertial>
     <visual>
       <material name="GreyA" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="panplate_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_panplate.mesh" />
+        <mesh filename="package://${MESH}/T2R3/T2R3_TJ0_base.dae" />
       </geometry>  
     </visual>     
     <collision>
       <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
       <geometry name="base_collision_geom">
-        <box size="0.01 0.01 0.01" />
+        <mesh filename="package://${MESH_COLL}/T2R3/T2R3_TJ0_base.stl" />
       </geometry>
     </collision>
   </link>
@@ -85,6 +103,7 @@
     <parent link="panplate" />
     <child link="torso" />
     <limit effort="25" velocity="${25.0*M_PI/180}" lower="${-120*M_PI/180.0}" upper="${120*M_PI/180}" />
+    <dynamics damping="1.0"/>
   </joint>
   <link name="torso">
     <inertial>
@@ -96,13 +115,13 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
       <geometry name="torso_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_torso.mesh" />
+        <mesh filename="package://${MESH}/T2R3/T2R3_TJ1_pan.dae" />
       </geometry>  
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
       <geometry name="torso_collision_geom">
-        <box size="0.01 0.01 0.01" />
+        <mesh filename="package://${MESH_COLL}/T2R3/T2R3_TJ1_pan.stl" />
       </geometry>
     </collision>
   </link>
@@ -113,6 +132,7 @@
     <parent link="torso" />
     <child link="mid" />
     <limit effort="200" velocity="${10.0*M_PI/180}" lower="${-11.79349*M_PI/180}" upper="${53.29349*M_PI/180}" />
+    <dynamics damping="1.0"/>
   </joint>
   <link name="mid">
     <inertial>
@@ -129,13 +149,13 @@
       <material name="GreyB" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="mid_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_mid.mesh" />
+        <mesh filename="package://${MESH}/T2R3/T2R3_TJ2.dae" />
       </geometry>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
       <geometry name="mid_collision_geom">
-        <box size="0.01 0.01 0.01" />
+        <mesh filename="package://${MESH_COLL}/T2R3/T2R3_TJ2.stl" />
       </geometry>
     </collision>
   </link>
@@ -146,6 +166,7 @@
     <parent link="mid" />
     <child link="upper" />
     <limit effort="200" velocity="${10.0*M_PI/180}" lower="${-11.79349*M_PI/180}" upper="${53.29349*M_PI/180}" />
+    <dynamics damping="1.0"/>
   </joint>
 
   <link name="upper">
@@ -163,13 +184,13 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="upper_geom">
-	      <mesh filename="package://${MESH}/T2R2/T2R2_upper_neck.mesh" />
+        <mesh filename="package://${MESH}/T2R3/T2R3_TJ3_chest_waist_neck.dae" />
       </geometry>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
       <geometry name="upper_collision_geom">
-        <box size="0.01 0.01 0.01" />
+        <mesh filename="package://${MESH_COLL}/T2R3/T2R3_TJ3_chest_waist_neck.stl" />
       </geometry>
     </collision>
   </link>
