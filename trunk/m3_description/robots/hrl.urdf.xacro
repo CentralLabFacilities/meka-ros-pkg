@@ -8,25 +8,15 @@
  <property name="M_PI" value="3.1415926535897931" />
  <property name="R_ARM" value="ma1" />
  <property name="L_ARM" value="ma2" />
- <!--<property name="R_HAND" value="mh8" />--> 
- <property name="MESH" value="m3_description/meshes/low_res" />
+ 
+ <property name="MESH" value="m3_description/meshes/mid_res" />
 
-<!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
-  <!--<include filename="$(find m3_full_description)/gazebo/gazebo.urdf.xacro" />-->
-  <!--<include filename="$(find m3_full_description)/transmissions/uta.transmission.xacro" />-->
 
 <!-- Meka Arm -->
   <include filename="$(find m3_description)/urdf/A1R1_r_arm_defs.urdf.xacro" />
   <include filename="$(find m3_description)/urdf/A1R1_l_arm_defs.urdf.xacro" />
-<!-- Meka Hand -->
-<!--  <include filename="$(find m3_description)/urdf/H2R2_r_hand_defs.urdf.xacro" />-->
 
-
-  <!-- john added transmissions -->
-  <!--<include filename="$(find m3_full_description)/transmissions/A2R2_r_arm_defs.transmission.xacro" />
-  <include filename="$(find m3_full_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />
-  <include filename="$(find m3_full_description)/transmissions/S2R1_head_defs.transmission.xacro" />-->
-
+  
 
    <property name="M_PI" value="3.1415926535897931" />
   <material name="GreyA"> <!-- darkest -->
@@ -72,7 +62,7 @@
   
   <!-- Solid Base -->
   <joint name="base_joint" type="fixed">
-	  <origin xyz="0 0 -0.2341" rpy="0 0 0" />
+	  <origin xyz="0 0 -0.2337" rpy="0 0 0" />
     <parent link="world" />
     <child link="upper" />
   </joint>
@@ -86,7 +76,8 @@
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
 		  <geometry name="upper_geom">
-			  <mesh filename="package://${MESH}/A1R1/A1R1_upper.mesh" />
+			  <!--<mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest.mesh" />-->
+			  <mesh filename="package://${MESH}/A2R2/A2R2_upper.mesh" />
 		  </geometry>
 	  </visual>
 	  <collision>
