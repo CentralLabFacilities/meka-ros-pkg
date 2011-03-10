@@ -8,10 +8,10 @@
  <property name="M_PI" value="3.1415926535897931" />
  <property name="R_ARM" value="ma11" />
 
- <property name="MESH" value="m3_description/meshes/low_res" />
+ <property name="MESH" value="m3_description/meshes/mid_res" />
 
 <!-- M3 Arm -->
-  <include filename="$(find m3_description)/urdf/A2R3_r_arm_defs.urdf.xacro" />
+  <include filename="$(find m3_description)/urdf/A1R1_r_arm_defs.urdf.xacro" />
  
   
   <property name="M_PI" value="3.1415926535897931" />
@@ -54,7 +54,7 @@
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
 		  <geometry name="upper_geom">
-			  <mesh filename="package://${MESH}/A2R3/A2R3_upper.mesh" />
+			  <mesh filename="package://${MESH}/A2R2/A2R2_upper.mesh" />
 		  </geometry>
 	  </visual>
 	  <collision>
