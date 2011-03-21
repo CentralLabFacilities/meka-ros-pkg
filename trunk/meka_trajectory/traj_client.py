@@ -52,13 +52,13 @@ def traj_client():
     
     # Creates a goal to send to the action server.
     goal = simple_traj_server.msg.TrajGoal()
-    goal.trajectory.joint_names.append('joint0')
-    goal.trajectory.joint_names.append('joint1')
-    goal.trajectory.joint_names.append('joint2')
-    goal.trajectory.joint_names.append('joint3')
-    goal.trajectory.joint_names.append('joint4')
-    goal.trajectory.joint_names.append('joint5')
-    goal.trajectory.joint_names.append('joint6')
+    goal.trajectory.joint_names.append('m3joint_ma10_j0')
+    goal.trajectory.joint_names.append('m3joint_ma10_j1')
+    goal.trajectory.joint_names.append('m3joint_ma10_j2')
+    goal.trajectory.joint_names.append('m3joint_ma10_j3')
+    goal.trajectory.joint_names.append('m3joint_ma10_j4')
+    goal.trajectory.joint_names.append('m3joint_ma10_j5')
+    goal.trajectory.joint_names.append('m3joint_ma10_j6')
     
     for i in range(2):
         goal.trajectory.points.append(trajectory_msgs.msg.JointTrajectoryPoint())
