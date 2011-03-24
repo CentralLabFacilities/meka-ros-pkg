@@ -27,7 +27,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import roslib; roslib.load_manifest('simple_traj_server')
+import roslib; roslib.load_manifest('meka_trajectory')
 
 import rospy
 
@@ -36,7 +36,7 @@ import actionlib
 
 # Brings in the messages used by the fibonacci action, including the
 # goal message and the result message.
-import simple_traj_server.msg
+import meka_trajectory.msg
 import trajectory_msgs.msg
 
 def traj_client():
@@ -44,14 +44,14 @@ def traj_client():
     # (FibonacciAction) to the constructor.
     ndof = 7
     
-    client = actionlib.SimpleActionClient('traj', simple_traj_server.msg.TrajAction)
+    client = actionlib.SimpleActionClient('traj', meka_trajectory.msg.TrajAction)
     
     # Waits until the action server has started up and started
     # listening for goals.
     client.wait_for_server()
     
     # Creates a goal to send to the action server.
-    goal = simple_traj_server.msg.TrajGoal()
+    goal = meka_trajectory.msg.TrajGoal()
     goal.trajectory.joint_names.append('m3joint_ma10_j0')
     goal.trajectory.joint_names.append('m3joint_ma10_j1')
     goal.trajectory.joint_names.append('m3joint_ma10_j2')
