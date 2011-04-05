@@ -1,3 +1,1 @@
-float32[6] mic_energy
-float32 angle
-float32 mag
+int32[12] tactile_value
