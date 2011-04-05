@@ -39,6 +39,10 @@ open_port(void)
 }
 
 
+// TODO:  have main process spawn new thread that reads serial and updates shared array of values
+//     use semaphore to copy in and out of array and then have main thread publish as ros node.
+
+
 int main(int argc, char **argv)
 {
   int fd = open_port();
