@@ -33,14 +33,14 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="r_shoulder_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_shoulderupper_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_RT1_shoulderRoll.dae" />
 	      </geometry>  
       </visual>
 
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="r_shoulder_collision_geom">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_RT1_shoulderRoll.dae" />
 	      </geometry>
       </collision>
     </link>
@@ -71,14 +71,14 @@
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="shoulderpitch_RIGHT">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_shoulderpitch_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_RT2_shoulderPitch.dae" />		      
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="shoulderpitch_RIGHT_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_RT2_shoulderPitch.dae" />
 	      </geometry>
       </collision>
     </link>
@@ -87,7 +87,7 @@
 
     <joint name="m3joint_${R_ARM}_j2" type="revolute">
       <axis xyz="0 0 -1" />
-      <origin xyz="0 -0.03175 -0.27857" rpy="0 0 0" />
+      <origin xyz="0 -0.03175 -0.278" rpy="0 0 0" />
       <parent link="shoulderpitch_RIGHT" />
       <child link="bicep_RIGHT"/>
       <limit effort="20" velocity="${50*M_PI/180}" lower="${-85*M_PI/180}" upper="${85*M_PI/180}" />    
@@ -108,14 +108,14 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="bicep_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_bicep_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_RT3_bicep.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="bicep_RIGHT_geom_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_RT3_bicep.dae" />
 	      </geometry>
       </collision>
     </link>
@@ -131,7 +131,7 @@
 
 	  <joint name="m3joint_${R_ARM}_j3" type="revolute">
 		  <axis xyz="0 -1 0" />
-		  <origin xyz="0.00502 0  0" rpy="0 0 0" />
+		  <origin xyz="0.00635 0  0" rpy="0 0 0" />
       <parent link="${parent}"/>
       <child link="elbowclevis_RIGHT"/>
 	<limit effort="20" velocity="${50*M_PI/180}" lower="${ 0.182*M_PI/180}" upper="${132.8175*M_PI/180}" />    
@@ -154,14 +154,14 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="elbowclevis_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_elbowclevis_RIGHT.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_RT4_elbow.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="elbowclevis_RIGHT_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_RT4_elbow.dae" />
 	      </geometry>
       </collision>
 
@@ -194,14 +194,14 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="wrist_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_wrist.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_RT5_forearmRoll.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="wrist_RIGHT_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_RT5_forearmRoll.dae" />
 	      </geometry>
       </collision>
     </link>
@@ -237,7 +237,7 @@
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="w_differential_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_w_differential.mesh" />
+		      <box size="0.01 0.01 0.01" />
 	      </geometry>  
       </visual>
       
@@ -273,14 +273,14 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="handmount_RIGHT_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_handmount.mesh" />
+		       <mesh filename="package://${MESH}/A1R1/A1R1_T7_wristYaw.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="handmount_RIGHT_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_T7_wristYaw.dae" />
 	      </geometry>
       </collision>
     </link>

@@ -65,14 +65,14 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="l_shoulder_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_shoulderupper_LEFT.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_LT1_shoulderRoll.dae" />
 	      </geometry>  
       </visual>
 
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="l_shoulder_collision_geom">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_LT1_shoulderRoll.dae" />
 	      </geometry>
       </collision>
     </link>
@@ -106,14 +106,14 @@
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="shoulderpitch_LEFT">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_shoulderpitch_LEFT.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_LT2_shoulderPitch.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="shoulderpitch_LEFT_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_LT2_shoulderPitch.dae" />
 	      </geometry>
       </collision>
     </link>
@@ -144,14 +144,14 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="bicep_l_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_bicep_LEFT.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_LT3_bicep.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="bicep_l_geom_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_LT3_bicep.dae" />
 	      </geometry>
       </collision>
     </link>
@@ -192,14 +192,14 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="elbowclevis_l_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_elbowclevis_LEFT.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_LT4_elbow.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="elbowclevis_l_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_LT4_elbow.dae" />
 	      </geometry>
       </collision>
 
@@ -230,14 +230,14 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="wrist_l_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_wrist.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_LT5_forearmRoll.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="wrist_l_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_LT5_forearmRoll.dae" />
 	      </geometry>
       </collision>
     </link>
@@ -273,7 +273,7 @@
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="w_differential_l_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_w_differential.mesh" />
+		      <box size="0.01 0.01 0.01" />
 	      </geometry>  
       </visual>
       
@@ -310,14 +310,14 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="handmount_l_geom">
-		      <mesh filename="package://${MESH}/A2R2/A2R2_handmount.mesh" />
+		      <mesh filename="package://${MESH}/A1R1/A1R1_T7_wristYaw.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="handmount_l_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A1R1/A1R1_T7_wristYaw.dae" />
 	      </geometry>
       </collision>
     </link>
