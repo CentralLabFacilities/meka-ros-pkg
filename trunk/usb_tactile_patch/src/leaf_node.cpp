@@ -7,9 +7,19 @@
 #include "ros/ros.h"
 #include "usb_tactile_patch/UsbTactilePatch.h"
 #include <sstream>
+#include <stdlib.h>
+#include <pthread.h>
+#include <signal.h>
 
 #define BUF_SIZE 200
-#define MSG_SIZE 24
+#define NUM_SENSOR 12
+//#define MSG_SIZE (NUM_SENSOR * 2 + 1)
+#define MSG_SIZE 26
+
+unsigned char shared_buf[BUF_SIZE];
+int shared_tactiles[NUM_SENSOR];
+bool stop_thread;
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
 /*
   * 'open_port()' - Open serial port 1.
@@ -39,111 +49,159 @@ open_port(void)
 }
 
 
-// TODO:  have main process spawn new thread that reads serial and updates shared array of values
-//     use semaphore to copy in and out of array and then have main thread publish as ros node.
-
-
-int main(int argc, char **argv)
-{
-  int fd = open_port();
-  
-  ros::init(argc, argv, "talker");
-  ros::NodeHandle n;
-  
-  ros::Publisher chatter_pub = n.advertise<usb_tactile_patch::UsbTactilePatch>("chatter", 1000);
-  
-  
-  struct termios options;
-
-    /*
+void *read_serial_thread(void *threadid)
+{   
+   int fd = open_port();
+   struct termios options;
+   /*
      * Get the current options for the port...
      */
-
     tcgetattr(fd, &options);
-
     /*
      * Set the baud rates to 19200...
      */
-
-    cfsetispeed(&options, B115200);
-    cfsetospeed(&options, B115200);
-
+    cfsetispeed(&options, B57600);
+    cfsetospeed(&options, B57600);
     /*
      * Enable the receiver and set local mode...
      */
-
     options.c_cflag |= (CLOCAL | CREAD);
     /*  8N1 */
     options.c_cflag &= ~PARENB;
     options.c_cflag &= ~CSTOPB;
     options.c_cflag &= ~CSIZE;
     options.c_cflag |= CS8;
-    
     /*
      * Set the new options for the port...
      */        
     tcsetattr(fd, TCSANOW, &options);
-    
-    int tactiles[12];
+            
     unsigned char buf[BUF_SIZE];
-    int cnt = 0;
-    int buf_start = 0;
-    int buf_filled;    
-    int buf_reader = 0;
+    unsigned char buf_msg[MSG_SIZE];    
+    bool starting_read = false;
+    bool finalizing_read = false;
     int bytes_read;
+    int msg_buf_cnt = 0;
+     int shared_buf_cnt = 0;
     
-    while (1)
+    // now read until told to stop
+    while (!stop_thread)
     {
-      bytes_read = read(fd, &buf[buf_start], BUF_SIZE);
-      if (cnt != -1)
+      bytes_read = read(fd, buf, BUF_SIZE);     	            
+      if (bytes_read != -1)
       {
-	buf_filled = bytes_read + buf_start;
-	if (buf_filled >= MSG_SIZE * 2) // make sure we have at least one msg
-	{
-	  // parse buf
-	  while (buf_reader < buf_filled)
-	  {	    
-	    if (buf[buf_reader] == 115)  // starting
+	  // test to just copy to shared buf..
+	  /*pthread_mutex_lock( &mutex1 ); 	  	  
+	  for (int i = 0; i < bytes_read; i++)
+	  {
+	    if (shared_buf_cnt < BUF_SIZE)
 	    {
-	      if (buf_reader < buf_filled - MSG_SIZE) // parse the msg we should have a whole one
-	      {
-		if (buf[buf_reader+25] == 102) // make sure we have a msg and not a false pos
-		{
-		  for (int i = 0; i < 12; i++) // parse the values...
-		  {
-		      unsigned int value;
-		      unsigned char * ptr;
-		      ptr = (unsigned char*)(&value);
-		      ptr[0] = buf[buf_reader+i*2];
-		      ptr[1] = buf[buf_reader+i*2+1];
-		      tactiles[i] = value;
-		  }
-		  buf_reader += MSG_SIZE - 1;
-		}
-		buf_reader++;
-	      } else { // to close to end of buf copy to front and get it next time..
-		int j = 0;
-		for (int i = buf_reader; buf_reader < buf_filled; i++)
-		{
-		    buf[j] = buf[i];
-		    j++;
-		}
-		buf_reader = buf_filled - MSG_SIZE;
-	      }
-	    }	    
+	      shared_buf[shared_buf_cnt] = buf[i];
+	      shared_buf_cnt++;
+	    }
 	  }	  
-	  buf_start = 0;
-	} else {
-	  buf_start += cnt;
+	  if (shared_buf_cnt >= BUF_SIZE)	  
+	  {
+	    shared_buf_cnt = 0;
+	     for (int i = 0; i < BUF_SIZE; i++)
+	      shared_buf[i] = 77;
+	  }
+	  pthread_mutex_unlock( &mutex1 );*/	  			
+	
+	for (int i = 0; i < bytes_read; i++)
+	{
+	  if (!starting_read && !finalizing_read) // waiting for the start byte..
+	  {
+	    if (buf[i] == 115)
+	    {
+	      starting_read = true;
+	    }
+	  } else if (finalizing_read) { // we should now be on stop byte and then send it off
+	    if (buf[i] == 102)
+	    {
+	      pthread_mutex_lock( &mutex1 ); 
+	      for (int i = 0; i < NUM_SENSOR; i++) // start parse the values...
+	      {
+		  unsigned short value;
+		  unsigned char * ptr;
+		  ptr = (unsigned char*)(&value);
+		  ptr[0] = buf_msg[i*2];
+		  ptr[1] = buf_msg[i*2+1];		  
+		  shared_tactiles[i] = (int)value;			      
+	      }	      	      	      
+	      pthread_mutex_unlock( &mutex1 );
+	    }
+	    finalizing_read = false;
+	  } else if (starting_read) {	    
+	    buf_msg[msg_buf_cnt] = buf[i];
+	    msg_buf_cnt++;	    
+	    if (msg_buf_cnt == MSG_SIZE)
+	    {
+	      msg_buf_cnt = 0;
+	      starting_read = false;
+	      finalizing_read = true;
+	    }
+	  }
 	}
-      } else
+      } else {
 	printf("error reading usb\n");
+      }
     }
     
-    //chatter_pub.publish(msg);
+    close(fd);
+   
+   pthread_exit(NULL);
+}
 
+void sigproc(int sig)
+{ 		   
+  stop_thread = true;
+}
+
+int main(int argc, char **argv)
+{
+  for (int i = 0; i < NUM_SENSOR; i++)
+    shared_tactiles[i] = 0;
+  
+  stop_thread = false;
+  ros::init(argc, argv, "talker");
+  ros::NodeHandle n;
+  
+  ros::Publisher chatter_pub = n.advertise<usb_tactile_patch::UsbTactilePatch>("usb_tactile_patch", 1000);
+  
+   int rc1;
+   pthread_t thread1;
+   
+   printf("starting, press CTRL-C to quit.\n");
+   if( (rc1=pthread_create( &thread1, NULL, read_serial_thread, NULL)) )
+   {
+      printf("Thread creation failed: %d\n", rc1);
+   }
     
-  close(fd);
+   usb_tactile_patch::UsbTactilePatch msg;
+   ros::Rate r(111); //  hz
+   
+   signal(SIGINT, sigproc);
+   unsigned char my_buf[BUF_SIZE];
+   while (!stop_thread)
+   {
+     pthread_mutex_lock( &mutex1 ); 
+     for (int i = 0; i < NUM_SENSOR; i++)       
+       msg.tactile_value[i] = shared_tactiles[i];
+     for (int i = 0; i < BUF_SIZE; i++)
+       my_buf[i] = shared_buf[i];
+     pthread_mutex_unlock( &mutex1 );
+     /*printf("-------------------------\n");
+     for (int i = 0; i < BUF_SIZE; i++)
+       printf("%i ", (int)my_buf[i]);     
+     printf("-------------------------\n");     */
+     chatter_pub.publish(msg);     
+     r.sleep();
+    }    
+  
+     pthread_join( thread1, NULL);
+     
+    printf("exiting...\n");
  
   return 0;
 }
