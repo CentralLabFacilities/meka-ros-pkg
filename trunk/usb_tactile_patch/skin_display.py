@@ -49,6 +49,8 @@ for row_num in range(len(var)):
 surf = ax.plot_surface(row, col, var, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False)
 plt.draw()
 
+#TODO: add cubic interpolation s.t. there are 4 times as many points and also make color map to max of scale
+
 while not rospy.is_shutdown():
     '''if max(surf_value)>max_surf:
         max_surf=max(surf_value)'''
@@ -59,6 +61,16 @@ while not rospy.is_shutdown():
         [0, surf_value[3], surf_value[0], surf_value[5], 0, 0],
         [0, surf_value[4], surf_value[1], surf_value[2], 0, 0],
         [0, 0, 0, 0, 0, 0]],np.int32)
+    
+    '''col = 1 * np.array([[0, 0, 0, 0, 0, 0],
+        [0, surf_value[7]/max_surf, surf_value[8]/max_surf, surf_value[10]/max_surf, 0, 0],
+        [0, surf_value[6]/max_surf, surf_value[9]/max_surf, surf_value[11]/max_surf, 0, 0],
+        [0, surf_value[3]/max_surf, surf_value[0]/max_surf, surf_value[5]/max_surf, 0, 0],
+        [0, surf_value[4]/max_surf, surf_value[1]/max_surf, surf_value[2]/max_surf, 0, 0],
+        [0, 0, 0, 0, 0, 0]],np.int32)'''
+        
+    palette = plt.matplotlib.colors.LinearSegmentedColormap('jet3',plt.cm.datad['jet'],max_surf)
+
     surf.remove()
     surf = ax.plot_surface(row, col, var, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False)
     ax.set_zlim3d(0,max_surf)
