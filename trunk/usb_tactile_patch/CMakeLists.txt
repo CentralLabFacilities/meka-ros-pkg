@@ -5,8 +5,6 @@ rosbuild_init()
 rosbuild_genmsg()
 add_definitions(-pedantic -Wall)
 rosbuild_add_executable(leaf_node src/leaf_node.cpp)
-rosbuild_add_executable(thread_test src/thread_test.cpp)
-#target_link_libraries(imu_node Client)
 
 #rosbuild_add_library(Client src/Client.cpp)
 
