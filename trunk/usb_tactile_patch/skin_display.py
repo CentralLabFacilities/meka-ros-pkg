@@ -9,17 +9,30 @@ import numpy as np
 import roslib; roslib.load_manifest('usb_tactile_patch')
 import rospy
 from usb_tactile_patch.msg import UsbTactilePatch
+from std_msgs.msg import Int32
 import cv
 
-max_surf=1000
 
-initial_reading = True
+'''max_max_surf = 65535
+min_max_surf = 5000'''
+max_max_surf = 30
+min_max_surf = 2
+
+max_surf= 20 #default
+
+initial_reading = False
 
 num_values = 12
 surf_value = [0]*num_values
 initial_value = [0]*num_values
 
-def callback(data):
+def callback_kb(data):
+    global max_surf
+
+    max_surf = min_max_surf + int(data.data) * int((max_max_surf - min_max_surf)/9)
+    
+
+def callback_tactile(data):
     global surf_value
     global initial_reading
     global initial_value
@@ -42,12 +55,13 @@ ax = Axes3D(fig)
 
 
 rospy.init_node('skin_display', anonymous=True)
-rospy.Subscriber("/usb_tactile_patch", UsbTactilePatch, callback)
+rospy.Subscriber("/usb_tactile_patch", UsbTactilePatch, callback_tactile)
+rospy.Subscriber("/leaf_zoom", Int32, callback_kb)
 
 size = 6
 scale = 4
 
-bigger = np.zeros((size*scale, size*scale))
+bigger = max_surf*np.ones((size*scale, size*scale))
 row = np.zeros((len(bigger),len(bigger)))
 col = np.zeros((len(bigger),len(bigger)))
 for row_num in range(len(bigger)):
@@ -57,6 +71,7 @@ for row_num in range(len(bigger)):
 surf = ax.plot_surface(row, col,bigger, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False)
 ax.set_zlim3d(0,max_surf)
 plt.draw()
+my_cmap = plt.get_cmap()
 
 print "Starting node_leaf visualizer.  Press Ctrl-C to exit."
 
@@ -90,17 +105,19 @@ while not rospy.is_shutdown():
                 bigger[i,j] = max_surf
             else:
                 bigger[i,j] = big_cv[i,j]
+                
+                
     for i in range(len(bigger)):
         bigger[i,-3] = max_surf
         bigger[i,-2] = max_surf
         bigger[i,-1] = max_surf
        
-    surf = ax.plot_surface(row, col, bigger, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False)
+    surf = ax.plot_surface(row, col, bigger, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
     
     ax.set_zlim3d(0,max_surf)    
     ax.set_ylim3d(0,len(bigger)-4)
     
-    plt.draw()
+    plt.draw()\
         
     rospy.sleep(0.08)
 

@@ -6,9 +6,11 @@
   <review status="unreviewed" />
   <url>http://www.ros.org/wiki/mic_array</url>
   <depend package="roscpp"/>
-  <depend package="rospy"/>  
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>  
   <rosdep name="python-matplotlib"/>
   <depend package="opencv2"/>
+  
   <rosdep name="python-numpy"/>
   
   <export>
