@@ -2,6 +2,7 @@
 
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
+from matplotlib import colors
 from matplotlib.ticker import LinearLocator, FixedLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,10 +11,10 @@ import rospy
 from usb_tactile_patch.msg import UsbTactilePatch
 import cv
 
-max_surf=9
+max_surf=1000
 
-#initial_reading = True
-initial_reading = False
+initial_reading = True
+
 num_values = 12
 surf_value = [0]*num_values
 initial_value = [0]*num_values
@@ -54,9 +55,8 @@ for row_num in range(len(bigger)):
             row[row_num,col_num] = row_num
             col[row_num,col_num] = col_num
 surf = ax.plot_surface(row, col,bigger, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False)
+ax.set_zlim3d(0,max_surf)
 plt.draw()
-
-#TODO: add cubic interpolation s.t. there are 4 times as many points and also make color map to max of scale
 
 print "Starting node_leaf visualizer.  Press Ctrl-C to exit."
 
@@ -70,20 +70,10 @@ while not rospy.is_shutdown():
         [0, surf_value[3], surf_value[0], surf_value[5], 0, 0],
         [0, surf_value[4], surf_value[1], surf_value[2], 0, 0],
         [0, 0, 0, 0, 0, 0]],np.int32)
-    
-    '''col = 1 * np.array([[0, 0, 0, 0, 0, 0],
-        [0, surf_value[7]/max_surf, surf_value[8]/max_surf, surf_value[10]/max_surf, 0, 0],
-        [0, surf_value[6]/max_surf, surf_value[9]/max_surf, surf_value[11]/max_surf, 0, 0],
-        [0, surf_value[3]/max_surf, surf_value[0]/max_surf, surf_value[5]/max_surf, 0, 0],
-        [0, surf_value[4]/max_surf, surf_value[1]/max_surf, surf_value[2]/max_surf, 0, 0],
-        [0, 0, 0, 0, 0, 0]],np.int32)'''
         
-    palette = plt.matplotlib.colors.LinearSegmentedColormap('jet3',plt.cm.datad['jet'],max_surf)
+    #palette = plt.matplotlib.colors.LinearSegmentedColormap('jet3',plt.cm.datad['jet'],max_surf)
 
-    surf.remove()
-    
-    '''big_cv = cv.fromarray(bigger)
-    var_cv = cv.fromarray(var)'''
+    surf.remove()    
     
     big_cv = cv.CreateImage((size*scale,size*scale), cv.IPL_DEPTH_8U, 1)
     var_cv = cv.CreateImage((size,size), cv.IPL_DEPTH_8U, 1)
@@ -91,8 +81,7 @@ while not rospy.is_shutdown():
     for i in range(len(var)):
         for j in range(len(var)):
             var_cv[i,j] = var[i,j]
-    
-    #cv.Resize(var, bigger, cv.CV_INTER_CUBIC)
+       
     cv.Resize(var_cv, big_cv, cv.CV_INTER_CUBIC)
     
     for i in range(len(bigger)):
@@ -101,12 +90,18 @@ while not rospy.is_shutdown():
                 bigger[i,j] = max_surf
             else:
                 bigger[i,j] = big_cv[i,j]
-    #bigger = np.asarray(big_cv)
+    for i in range(len(bigger)):
+        bigger[i,-3] = max_surf
+        bigger[i,-2] = max_surf
+        bigger[i,-1] = max_surf
+       
     surf = ax.plot_surface(row, col, bigger, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=False)
-    ax.set_zlim3d(0,max_surf)
+    
+    ax.set_zlim3d(0,max_surf)    
+    ax.set_ylim3d(0,len(bigger)-4)
+    
     plt.draw()
-    #print surf_value
-    #print max_surf
-    rospy.sleep(0.1)
+        
+    rospy.sleep(0.08)
 
     
