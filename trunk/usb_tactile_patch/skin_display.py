@@ -13,14 +13,16 @@ from std_msgs.msg import Int32
 import cv
 
 
-'''max_max_surf = 65535
-min_max_surf = 5000'''
-max_max_surf = 30
-min_max_surf = 2
+max_surf= 30000 #default
+max_max_surf = 65535
+min_max_surf = 1000
 
-max_surf= 20 #default
 
-initial_reading = False
+'''max_max_surf = 30
+min_max_surf = 2'''
+#max_surf= 20 #default
+
+initial_reading = True
 
 num_values = 12
 surf_value = [0]*num_values
