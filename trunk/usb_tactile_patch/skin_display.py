@@ -13,7 +13,7 @@ from std_msgs.msg import Int32
 import cv
 
 
-max_surf= 10000 #default
+max_surf= 2000 #default
 max_max_surf = 5000#65535
 min_max_surf = 0#1000
 
@@ -43,6 +43,7 @@ def callback_tactile(data):
         initial_reading = False    
         for i in range(num_values):
             initial_value[i] = data.tactile_value[i]
+        print 'initial reading!', data.tactile_value
 
     for i in range(num_values):
         surf_value[i] = data.tactile_value[i] - initial_value[i]
@@ -93,8 +94,8 @@ while not rospy.is_shutdown():
 
     surf.remove()    
     
-    big_cv = cv.CreateImage((size*scale,size*scale), cv.IPL_DEPTH_8U, 1)
-    var_cv = cv.CreateImage((size,size), cv.IPL_DEPTH_8U, 1)
+    big_cv = cv.CreateImage((size*scale,size*scale), cv.IPL_DEPTH_16U, 1)
+    var_cv = cv.CreateImage((size,size), cv.IPL_DEPTH_16U, 1)
 
     for i in range(len(var)):
         for j in range(len(var)):
