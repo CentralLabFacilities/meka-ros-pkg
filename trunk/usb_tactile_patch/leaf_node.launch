@@ -9,7 +9,7 @@
 
   <node pkg="usb_tactile_patch" type="skin_display.py" name="skin_display">
   </node>
-
+ 
 
 </launch>
 

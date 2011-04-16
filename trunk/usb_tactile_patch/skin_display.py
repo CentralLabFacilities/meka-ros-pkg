@@ -46,6 +46,7 @@ def callback_tactile(data):
     
     for i in range(num_values):
         surf_value[i] = data.tactile_value[i] - initial_value[i]
+        print i,data.tactile_value[i] - initial_value[i],data.tactile_value[i],initial_value[i]
         
     
 plt.interactive(True)    
