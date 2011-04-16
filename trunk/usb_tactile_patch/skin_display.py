@@ -13,9 +13,9 @@ from std_msgs.msg import Int32
 import cv
 
 
-max_surf= 30000 #default
-max_max_surf = 65535
-min_max_surf = 1000
+max_surf= 10000 #default
+max_max_surf = 5000#65535
+min_max_surf = 0#1000
 
 
 '''max_max_surf = 30
@@ -43,10 +43,10 @@ def callback_tactile(data):
         initial_reading = False    
         for i in range(num_values):
             initial_value[i] = data.tactile_value[i]
-    
+
     for i in range(num_values):
         surf_value[i] = data.tactile_value[i] - initial_value[i]
-        print i,data.tactile_value[i] - initial_value[i],data.tactile_value[i],initial_value[i]
+    print 'Peak',max(surf_value)
         
     
 plt.interactive(True)    
