@@ -17,7 +17,9 @@
 #define MSG_SIZE 26
 
 unsigned char shared_buf[BUF_SIZE];
+
 int shared_tactiles[NUM_SENSOR];
+int shared_tactiles_last[NUM_SENSOR];
 bool stop_thread;
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
@@ -160,8 +162,12 @@ void sigproc(int sig)
 
 int main(int argc, char **argv)
 {
+  int startup_cnt=100;
   for (int i = 0; i < NUM_SENSOR; i++)
+  {
     shared_tactiles[i] = 0;
+    shared_tactiles_last[i] = 0;
+  }
   
   stop_thread = false;
   ros::init(argc, argv, "talker");
@@ -187,7 +193,17 @@ int main(int argc, char **argv)
    {
      pthread_mutex_lock( &mutex1 ); 
      for (int i = 0; i < NUM_SENSOR; i++)       
-       msg.tactile_value[i] = shared_tactiles[i];
+     {
+       //This is a temp. hack. Toss out very large deltas. These
+       //show up very occaisionally due to a comm/CDC error.
+       int dtx = abs(shared_tactiles[i]-shared_tactiles_last[i]);
+       if (dtx<10000 || startup_cnt)
+       {
+	  msg.tactile_value[i] = shared_tactiles[i];
+	  shared_tactiles_last[i]=shared_tactiles[i];
+       }
+       startup_cnt=startup_cnt-1>0?startup_cnt-1:0;
+     }
      for (int i = 0; i < BUF_SIZE; i++)
        my_buf[i] = shared_buf[i];
      pthread_mutex_unlock( &mutex1 );

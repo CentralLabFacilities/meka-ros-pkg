@@ -13,8 +13,8 @@ from std_msgs.msg import Int32
 import cv
 
 
-max_surf= 2000 #default
-max_max_surf = 5000#65535
+max_surf= 7500 #default
+max_max_surf = 15000#65535
 min_max_surf = 0#1000
 
 
@@ -31,7 +31,7 @@ initial_value = [0]*num_values
 def callback_kb(data):
     global max_surf
 
-    max_surf = min_max_surf + int(data.data) * int((max_max_surf - min_max_surf)/9)
+    max_surf = min_max_surf + int(data.data) * int((max_max_surf - min_max_surf)/100)
     
 
 def callback_tactile(data):
