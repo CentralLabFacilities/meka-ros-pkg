@@ -6,7 +6,7 @@
   <node pkg="usb_tactile_patch" type="skin_display.py" name="skin_display">
   </node>
  
-  <node pkg="usb_tactile_patch" type="skin_scope.py" name="skin_scope">
+ <node pkg="usb_tactile_patch" type="skin_scope.py" name="skin_scope">
   </node>
 </launch>
 

@@ -19,7 +19,7 @@
 unsigned char shared_buf[BUF_SIZE];
 
 int shared_tactiles[NUM_SENSOR];
-int shared_tactiles_last[NUM_SENSOR];
+//int shared_tactiles_last[NUM_SENSOR];
 bool stop_thread;
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 
@@ -54,6 +54,11 @@ open_port(void)
 void *read_serial_thread(void *threadid)
 {   
    int fd = open_port();
+   unsigned short tactiles[NUM_SENSOR];
+   unsigned short their_crc;
+   unsigned short my_crc;
+   
+   
    struct termios options;
    /*
      * Get the current options for the port...
@@ -118,20 +123,33 @@ void *read_serial_thread(void *threadid)
 	    {
 	      starting_read = true;
 	    }
-	  } else if (finalizing_read) { // we should now be on stop byte and then send it off
+	  } else if (finalizing_read) { // we should now be on stop byte and then send it off if CRC checks
 	    if (buf[i] == 102)
-	    {
-	      pthread_mutex_lock( &mutex1 ); 
+	    {	  
+	      unsigned short value;
+	      unsigned char * ptr;
+	      ptr = (unsigned char*)(&value);
 	      for (int i = 0; i < NUM_SENSOR; i++) // start parse the values...
-	      {
-		  unsigned short value;
-		  unsigned char * ptr;
-		  ptr = (unsigned char*)(&value);
+	      {		  		  
 		  ptr[0] = buf_msg[i*2];
 		  ptr[1] = buf_msg[i*2+1];		  
-		  shared_tactiles[i] = (int)value;			      
-	      }	      	      	      
-	      pthread_mutex_unlock( &mutex1 );
+		  tactiles[i] = value;			      	      
+	      }
+	      ptr[0] = buf_msg[NUM_SENSOR*2];
+	      ptr[1] = buf_msg[NUM_SENSOR*2+1];	  
+	      their_crc = value;	      
+	      my_crc = 0;
+	      for (int i = 0; i < NUM_SENSOR; i++)	      
+		my_crc += tactiles[i];
+	      //printf("%u %u\n", their_crc, my_crc);
+	      // if passes CRC copy it over	      	      
+	      if (my_crc == their_crc)
+	      {
+		pthread_mutex_lock( &mutex1 );
+		for (int i = 0; i < NUM_SENSOR; i++)
+		  shared_tactiles[i] = tactiles[i];
+		pthread_mutex_unlock( &mutex1 );
+	      }	      
 	    }
 	    finalizing_read = false;
 	  } else if (starting_read) {	    
@@ -162,11 +180,11 @@ void sigproc(int sig)
 
 int main(int argc, char **argv)
 {
-  int startup_cnt=100;
+//  int startup_cnt=100;
   for (int i = 0; i < NUM_SENSOR; i++)
   {
     shared_tactiles[i] = 0;
-    shared_tactiles_last[i] = 0;
+//    shared_tactiles_last[i] = 0;
   }
   
   stop_thread = false;
@@ -196,16 +214,16 @@ int main(int argc, char **argv)
      {
        //This is a temp. hack. Toss out very large deltas. These
        //show up very occaisionally due to a comm/CDC error.
-       int dtx = abs(shared_tactiles[i]-shared_tactiles_last[i]);
-       if (dtx<10000 || startup_cnt)
-       {
+       //int dtx = abs(shared_tactiles[i]-shared_tactiles_last[i]);
+       //if (dtx<10000 || startup_cnt)
+       //{
 	  msg.tactile_value[i] = shared_tactiles[i];
-	  shared_tactiles_last[i]=shared_tactiles[i];
-       }
-       startup_cnt=startup_cnt-1>0?startup_cnt-1:0;
+	  //shared_tactiles_last[i]=shared_tactiles[i];
+       //}
+       //startup_cnt=startup_cnt-1>0?startup_cnt-1:0;
      }
-     for (int i = 0; i < BUF_SIZE; i++)
-       my_buf[i] = shared_buf[i];
+     /*for (int i = 0; i < BUF_SIZE; i++)
+       my_buf[i] = shared_buf[i];*/
      pthread_mutex_unlock( &mutex1 );
      /*printf("-------------------------\n");
      for (int i = 0; i < BUF_SIZE; i++)
