@@ -19,6 +19,8 @@
 unsigned char shared_buf[BUF_SIZE];
 
 int shared_tactiles[NUM_SENSOR];
+int crc_errors;
+
 //int shared_tactiles_last[NUM_SENSOR];
 bool stop_thread;
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
@@ -90,7 +92,7 @@ void *read_serial_thread(void *threadid)
     int bytes_read;
     int msg_buf_cnt = 0;
      int shared_buf_cnt = 0;
-    
+    crc_errors=0;
     // now read until told to stop
     while (!stop_thread)
     {
@@ -149,7 +151,9 @@ void *read_serial_thread(void *threadid)
 		for (int i = 0; i < NUM_SENSOR; i++)
 		  shared_tactiles[i] = tactiles[i];
 		pthread_mutex_unlock( &mutex1 );
-	      }	      
+	      }	    
+	      else
+		crc_errors++;
 	    }
 	    finalizing_read = false;
 	  } else if (starting_read) {	    
@@ -218,6 +222,7 @@ int main(int argc, char **argv)
        //if (dtx<10000 || startup_cnt)
        //{
 	  msg.tactile_value[i] = shared_tactiles[i];
+	  msg.crc_errors=crc_errors;
 	  //shared_tactiles_last[i]=shared_tactiles[i];
        //}
        //startup_cnt=startup_cnt-1>0?startup_cnt-1:0;
