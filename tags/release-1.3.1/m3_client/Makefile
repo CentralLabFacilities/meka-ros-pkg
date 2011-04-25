@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client
+CMAKE_SOURCE_DIR = /home/meka/mekabot/meka-ros-pkg/m3_client
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client
+CMAKE_BINARY_DIR = /home/meka/mekabot/meka-ros-pkg/m3_client
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client/CMakeFiles /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/meka/mekabot/meka-ros-pkg/m3_client/CMakeFiles /home/meka/mekabot/meka-ros-pkg/m3_client/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/meka/mekabot/meka-ros-pkg/m3_client/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

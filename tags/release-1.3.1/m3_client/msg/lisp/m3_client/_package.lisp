@@ -2,7 +2,7 @@
   (:use cl
         roslisp-msg-protocol)
   (:export
-   "<M3BASESTATUS>"
    "<M3OMNIBASEJOY>"
+   "<M3BASESTATUS>"
   ))
 
