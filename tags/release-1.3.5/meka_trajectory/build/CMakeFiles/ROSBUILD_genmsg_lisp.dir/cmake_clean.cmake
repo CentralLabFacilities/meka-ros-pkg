@@ -1,0 +1,39 @@
+FILE(REMOVE_RECURSE
+  "../msg_gen"
+  "../src/simple_traj_server/msg"
+  "../msg_gen"
+  "CMakeFiles/ROSBUILD_genmsg_lisp"
+  "../msg_gen/lisp/TrajAction.lisp"
+  "../msg_gen/lisp/_package.lisp"
+  "../msg_gen/lisp/_package_TrajAction.lisp"
+  "../msg_gen/lisp/TrajGoal.lisp"
+  "../msg_gen/lisp/_package.lisp"
+  "../msg_gen/lisp/_package_TrajGoal.lisp"
+  "../msg_gen/lisp/TrajActionGoal.lisp"
+  "../msg_gen/lisp/_package.lisp"
+  "../msg_gen/lisp/_package_TrajActionGoal.lisp"
+  "../msg_gen/lisp/TrajResult.lisp"
+  "../msg_gen/lisp/_package.lisp"
+  "../msg_gen/lisp/_package_TrajResult.lisp"
+  "../msg_gen/lisp/TrajActionResult.lisp"
+  "../msg_gen/lisp/_package.lisp"
+  "../msg_gen/lisp/_package_TrajActionResult.lisp"
+  "../msg_gen/lisp/TrajFeedback.lisp"
+  "../msg_gen/lisp/_package.lisp"
+  "../msg_gen/lisp/_package_TrajFeedback.lisp"
+  "../msg_gen/lisp/TrajActionFeedback.lisp"
+  "../msg_gen/lisp/_package.lisp"
+  "../msg_gen/lisp/_package_TrajActionFeedback.lisp"
+  "../msg/TrajAction.msg"
+  "../msg/TrajGoal.msg"
+  "../msg/TrajActionGoal.msg"
+  "../msg/TrajResult.msg"
+  "../msg/TrajActionResult.msg"
+  "../msg/TrajFeedback.msg"
+  "../msg/TrajActionFeedback.msg"
+)
+
+# Per-language clean rules from dependency scanning.
+FOREACH(lang)
+  INCLUDE(CMakeFiles/ROSBUILD_genmsg_lisp.dir/cmake_clean_${lang}.cmake OPTIONAL)
+ENDFOREACH(lang)
