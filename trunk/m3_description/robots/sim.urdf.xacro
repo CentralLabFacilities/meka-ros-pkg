@@ -6,8 +6,8 @@
        name="m3" >
 
  <property name="M_PI" value="3.1415926535897931" />
- <property name="R_ARM" value="ma3" />
- <property name="L_ARM" value="ma4" />
+ <property name="R_ARM" value="ma4" />
+ <property name="L_ARM" value="ma3" />
  
  
  <property name="MESH" value="m3_description/meshes/mid_res" />
