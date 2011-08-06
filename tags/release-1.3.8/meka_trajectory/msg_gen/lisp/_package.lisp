@@ -1,0 +1,19 @@
+(cl:defpackage simple_traj_server-msg
+  (:use )
+  (:export
+   "<TRAJGOAL>"
+   "TRAJGOAL"
+   "<TRAJACTIONRESULT>"
+   "TRAJACTIONRESULT"
+   "<TRAJFEEDBACK>"
+   "TRAJFEEDBACK"
+   "<TRAJACTION>"
+   "TRAJACTION"
+   "<TRAJRESULT>"
+   "TRAJRESULT"
+   "<TRAJACTIONGOAL>"
+   "TRAJACTIONGOAL"
+   "<TRAJACTIONFEEDBACK>"
+   "TRAJACTIONFEEDBACK"
+  ))
+
