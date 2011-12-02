@@ -6,7 +6,7 @@ rosrun xacro xacro.py `rospack find m3_description`/robots/uta.urdf.xacro -o /tm
 
 to generate arm_nav scripts:
 
-roslaunch planning_environment planning_description_configuration_wizard.launch urdf_package:=m3_description urdf_path:=robots/iir.xml
+roslaunch planning_environment planning_description_configuration_wizard.launch urdf_package:=m3_description urdf_path:=robots/uta.xml
 
 to launch visualizer:
 
@@ -16,11 +16,13 @@ to make better motion planner:
 
 rosrun move_arm_warehouse create_launch_files.py m3
 
+to launch better motion planner:
+
 roslaunch m3_arm_navigation planning_scene_warehouse_viewer_m3.launch
 
 
 
-for grabbing:
+for grabbing (not working):
 
 (add to .bashrc export ROBOT=sim)
 
