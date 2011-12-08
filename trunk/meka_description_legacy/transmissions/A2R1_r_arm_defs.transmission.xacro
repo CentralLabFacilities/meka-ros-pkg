@@ -3,7 +3,7 @@
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
 
-  <macro name="m3_r_shoulder_transmission" params="side parent reflect">
+  <macro name="m3_r_shoulder_transmission" params="side parent reflect *origin">
     <!-- Shoulder pan -->
     <transmission name="m3joint_${R_ARM}_t0" type="pr2_mechanism_model/SimpleTransmission">
       <actuator name="m3joint_${R_ARM}_a0" />
@@ -43,7 +43,6 @@
 
 
   <!-- ============================   Forearm   ============================ -->
-
   <macro name="m3_r_forearm_transmission" params="side parent reflect">
     <transmission name="m3joint_${R_ARM}_t5" type="pr2_mechanism_model/SimpleTransmission">
       <actuator name="m3joint_${R_ARM}_a5" />
@@ -60,10 +59,10 @@
 
 
 
-  <macro name="m3_r_arm_transmission" params="side parent reflect">
-    <m3_r_shoulder_transmission side="${side}" reflect="${reflect}" parent="${parent}"/>
-    <m3_r_upper_arm_transmission side="${side}" reflect="${reflect}" parent="bicep_RIGHT" />
-    <m3_r_forearm_transmission side="${side}" reflect="${reflect}" parent="wrist_RIGHT" />
+  <macro name="m3_r_arm_transmission" params="side parent reflect *origin">
+    <m3_r_shoulde_transmissionr side="${side}" reflect="${reflect}" parent="${parent}"/>
+    <m3_r_upper_ar_transmissionm side="${side}" reflect="${reflect}" parent="bicep_RIGHT" />
+    <m3_r_forear_transmissionm side="${side}" reflect="${reflect}" parent="wrist_RIGHT" />
   </macro>
 
 

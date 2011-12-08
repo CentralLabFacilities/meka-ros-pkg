@@ -10,8 +10,8 @@
  <property name="R_HAND" value="mh8" />
  <property name="TORSO" value="mt3" />
  <property name="HEAD" value="ms2" />
- <property name="MESH" value="m3_description/meshes/mid_res" />
- <property name="MESH_COLL" value="m3_description/meshes/low_res" />
+ <property name="MESH" value="meka_description/meshes/mid_res" />
+ <property name="MESH_COLL" value="meka_description/meshes/low_res" />
 
 <!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
   <include filename="$(find m3_full_description)/gazebo/gazebo.urdf.xacro" />
@@ -26,7 +26,7 @@
 
 
   <!-- john added transmissions -->
-  <include filename="$(find m3_full_description)/transmissions/A2R2_r_arm_defs.transmission.xacro" />
+  <include filename="$(find m3_full_description)/transmissions/A2R3_r_arm_defs.transmission.xacro" />
   <include filename="$(find m3_full_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />
   <include filename="$(find m3_full_description)/transmissions/S2R1_head_defs.transmission.xacro" />
 
