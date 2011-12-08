@@ -1,13 +1,13 @@
 <package>
-  <description brief="m3_arm_navigation">
+  <description brief="uta_arm_navigation">
 
-     m3_arm_navigation
+     uta_arm_navigation
 
   </description>
   <author>meka</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/m3_arm_navigation</url>
+  <url>http://ros.org/wiki/uta_arm_navigation</url>
   <depend package="planning_environment"/>
   <depend package="arm_kinematics_constraint_aware"/>
   <depend package="ompl_ros_interface"/>

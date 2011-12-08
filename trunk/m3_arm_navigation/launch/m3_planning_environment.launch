@@ -1,4 +1,0 @@
-<launch>
-    <param name="robot_description" textfile="$(find m3_description)/robots/uta.xml" />
-    <rosparam command="load" ns="robot_description_planning" file="$(find m3_arm_navigation)/config/m3_planning_description.yaml" />
-</launch>

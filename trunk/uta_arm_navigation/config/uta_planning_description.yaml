@@ -225,12 +225,6 @@ default_collision_operations:
     object2: w_differential_RIGHT
     operation: disable  # Never in collision
   - object1: eye_tilt
-    object2: index0
-    operation: disable  # Never in collision
-  - object1: eye_tilt
-    object2: index1
-    operation: disable  # Never in collision
-  - object1: eye_tilt
     object2: index2
     operation: disable  # Never in collision
   - object1: eye_tilt
@@ -258,10 +252,19 @@ default_collision_operations:
     object2: shoulderupper_RIGHT
     operation: disable  # Never in collision
   - object1: eye_tilt
+    object2: thumb1
+    operation: disable  # Never in collision
+  - object1: eye_tilt
+    object2: thumb2
+    operation: disable  # Never in collision
+  - object1: eye_tilt
     object2: torso
     operation: disable  # Never in collision
   - object1: eye_tilt
     object2: upper
+    operation: disable  # Never in collision
+  - object1: eye_tilt
+    object2: w_differential_RIGHT
     operation: disable  # Never in collision
   - object1: handmount_RIGHT
     object2: index0
@@ -334,12 +337,6 @@ default_collision_operations:
     operation: disable  # Never in collision
   - object1: index0
     object2: index2
-    operation: disable  # Never in collision
-  - object1: index0
-    object2: neck_roll
-    operation: disable  # Never in collision
-  - object1: index0
-    object2: neck_yaw
     operation: disable  # Never in collision
   - object1: index0
     object2: pinky0
@@ -427,9 +424,6 @@ default_collision_operations:
     operation: disable  # Never in collision
   - object1: index1
     object2: wrist_RIGHT
-    operation: disable  # Never in collision
-  - object1: index2
-    object2: left_eye
     operation: disable  # Never in collision
   - object1: index2
     object2: neck_roll
@@ -525,13 +519,13 @@ default_collision_operations:
     object2: panplate
     operation: disable  # Never in collision
   - object1: neck_roll
+    object2: pinky1
+    operation: disable  # Never in collision
+  - object1: neck_roll
+    object2: pinky2
+    operation: disable  # Never in collision
+  - object1: neck_roll
     object2: right_eye
-    operation: disable  # Never in collision
-  - object1: neck_roll
-    object2: ring0
-    operation: disable  # Never in collision
-  - object1: neck_roll
-    object2: ring1
     operation: disable  # Never in collision
   - object1: neck_roll
     object2: shoulderpitch_RIGHT
@@ -540,7 +534,7 @@ default_collision_operations:
     object2: shoulderupper_RIGHT
     operation: disable  # Never in collision
   - object1: neck_roll
-    object2: thumb2
+    object2: thumb0
     operation: disable  # Never in collision
   - object1: neck_roll
     object2: torso
@@ -570,13 +564,10 @@ default_collision_operations:
     object2: panplate
     operation: disable  # Never in collision
   - object1: neck_yaw
+    object2: pinky2
+    operation: disable  # Never in collision
+  - object1: neck_yaw
     object2: right_eye
-    operation: disable  # Never in collision
-  - object1: neck_yaw
-    object2: ring0
-    operation: disable  # Never in collision
-  - object1: neck_yaw
-    object2: ring1
     operation: disable  # Never in collision
   - object1: neck_yaw
     object2: shoulderpitch_RIGHT
@@ -585,7 +576,7 @@ default_collision_operations:
     object2: shoulderupper_RIGHT
     operation: disable  # Never in collision
   - object1: neck_yaw
-    object2: thumb2
+    object2: thumb0
     operation: disable  # Never in collision
   - object1: neck_yaw
     object2: torso

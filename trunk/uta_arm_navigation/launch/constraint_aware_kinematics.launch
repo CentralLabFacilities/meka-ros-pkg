@@ -1,6 +1,6 @@
 <launch>
-    <include file="$(find m3_arm_navigation)/launch/m3_planning_environment.launch" />
-    <node pkg="arm_kinematics_constraint_aware" type="arm_kinematics_constraint_aware" name="m3_right_arm_kinematics">
+    <include file="$(find uta_arm_navigation)/launch/uta_planning_environment.launch" />
+    <node pkg="arm_kinematics_constraint_aware" type="arm_kinematics_constraint_aware" name="uta_right_arm_kinematics">
         <param name="group" type="string" value="right_arm" />
         <param name="right_arm/root_name" type="string" value="shoulderupper_RIGHT" />
         <param name="right_arm/tip_name" type="string" value="handmount_RIGHT" />

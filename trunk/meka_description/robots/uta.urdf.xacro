@@ -3,7 +3,7 @@
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
-       name="m3" >
+       name="uta" >
 
  <property name="M_PI" value="3.1415926535897931" />
  <property name="R_ARM" value="ma10" />
@@ -14,21 +14,21 @@
  <property name="MESH_COLL" value="meka_description/meshes/low_res" />
 
 <!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
-  <include filename="$(find m3_full_description)/gazebo/gazebo.urdf.xacro" />
-  <include filename="$(find m3_full_description)/transmissions/uta.transmission.xacro" />
+  <include filename="$(find meka_description)/gazebo/gazebo.urdf.xacro" />
+  <include filename="$(find meka_description)/transmissions/uta.transmission.xacro" />
 
 <!-- Meka Arm -->
-  <include filename="$(find m3_description)/urdf/A2R2_r_arm_defs.urdf.xacro" />
+  <include filename="$(find meka_description)/urdf/A2R3_r_arm_defs.urdf.xacro" />
 <!-- Meka Hand -->
-  <include filename="$(find m3_description)/urdf/H2R2_r_hand_defs.urdf.xacro" />
+  <include filename="$(find meka_description)/urdf/H2R2_r_hand_defs.urdf.xacro" />
 <!-- Meka Head -->
-  <include filename="$(find m3_description)/urdf/S2R1_head_defs.urdf.xacro" />
+  <include filename="$(find meka_description)/urdf/S2R1_head_defs.urdf.xacro" />
 
 
   <!-- john added transmissions -->
-  <include filename="$(find m3_full_description)/transmissions/A2R3_r_arm_defs.transmission.xacro" />
-  <include filename="$(find m3_full_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />
-  <include filename="$(find m3_full_description)/transmissions/S2R1_head_defs.transmission.xacro" />
+  <include filename="$(find meka_description)/transmissions/A2R3_r_arm_defs.transmission.xacro" />
+  <include filename="$(find meka_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />
+  <include filename="$(find meka_description)/transmissions/S2R1_head_defs.transmission.xacro" />
 
 
    <property name="M_PI" value="3.1415926535897931" />
