@@ -15,7 +15,7 @@ ros/ros.h
 -
 KNI/kmlFactories.h
 -
-meka_driver/katana_constants.h
+meka_driver/meka_constants.h
 -
 
 ../include/meka_driver/KNIKinematics.h
@@ -48,7 +48,7 @@ meka_driver/EulerTransformationMatrices.hh
 LinearMath/btTransform.h
 ../include/meka_driver/LinearMath/btTransform.h
 
-../include/meka_driver/katana_constants.h
+../include/meka_driver/meka_constants.h
 
 /home/meka/mekabot/meka-ros-pkg/meka_driver/src/KNIConverter.cpp
 meka_driver/KNIConverter.h

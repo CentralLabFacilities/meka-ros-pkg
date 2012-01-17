@@ -30,7 +30,7 @@
 #include <urdf/model.h>
 
 #include <meka_driver/SpecifiedTrajectory.h>
-#include <meka_driver/katana_constants.h>
+#include <meka_driver/meka_constants.h>
 
 #include <motion_planning_msgs/JointLimits.h>
 

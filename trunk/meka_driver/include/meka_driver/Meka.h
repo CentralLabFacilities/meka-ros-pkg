@@ -30,11 +30,11 @@
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/thread.hpp>
 
-#include <kniBase.h>
+//#include <kniBase.h>
 
 #include <meka_driver/SpecifiedTrajectory.h>
 #include <meka_driver/AbstractMeka.h>
-#include <meka_driver/KNIConverter.h>
+//#include <meka_driver/KNIConverter.h>
 
 namespace meka_driver
 {
@@ -65,19 +65,19 @@ public:
   virtual void testSpeed();
 
 protected:
-  boost::shared_ptr<CLMBase> kni;
+  //boost::shared_ptr<CLMBase> kni;
   boost::recursive_mutex kni_mutex;
-  std::vector<TMotStsFlg> motor_status_;
+  //std::vector<TMotStsFlg> motor_status_;
 
-  KNIConverter* converter;
+//  KNIConverter* converter;
 
 private:
   ros::ServiceServer switch_motors_off_srv_;
   ros::ServiceServer switch_motors_on_srv_;
   ros::ServiceServer test_speed_srv_;
 
-  CCplSerialCRC* protocol;
-  CCdlBase* device;
+  //CCplSerialCRC* protocol;
+  //CCdlBase* device;
 
   ros::Time last_encoder_update_;
 

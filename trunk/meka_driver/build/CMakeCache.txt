@@ -183,7 +183,7 @@ TOOLCHAINCONFIG:FILEPATH=TOOLCHAINCONFIG-NOTFOUND
 USERCONFIG:FILEPATH=USERCONFIG-NOTFOUND
 
 //Path to a file.
-_file_name:FILEPATH=/home/meka/mekabot/meka-ros-pkg/meka_driver/src/KNIKinematics.cpp
+_file_name:FILEPATH=/home/meka/mekabot/meka-ros-pkg/meka_driver/src/spline_functions.cpp
 
 //Value Computed by CMake
 meka_driver_BINARY_DIR:STATIC=/home/meka/mekabot/meka-ros-pkg/meka_driver/build

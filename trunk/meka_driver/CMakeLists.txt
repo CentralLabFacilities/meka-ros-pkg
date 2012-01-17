@@ -30,8 +30,8 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
-rosbuild_add_executable(meka src/MekaNode.cpp src/AbstractMeka.cpp src/Meka.cpp src/SimulatedMeka.cpp src/JointStatePublisher.cpp src/joint_trajectory_action_controller.cpp src/joint_movement_action_controller.cpp src/KNIConverter.cpp src/spline_functions.cpp)
-rosbuild_add_executable(meka_arm_kinematics src/KNIConverter.cpp src/KNIKinematics.cpp)
+rosbuild_add_executable(meka src/MekaNode.cpp src/AbstractMeka.cpp src/Meka.cpp src/SimulatedMeka.cpp src/JointStatePublisher.cpp src/joint_trajectory_action_controller.cpp src/joint_movement_action_controller.cpp src/spline_functions.cpp)
+#rosbuild_add_executable(meka_arm_kinematics src/KNIConverter.cpp src/KNIKinematics.cpp)
 
 #rosbuild_add_executable(meka src/MekaNode.cpp src/AbstractMeka.cpp src/Meka.cpp src/SimulatedMeka.cpp src/JointStatePublisher.cpp src/joint_trajectory_action_controller.cpp src/joint_movement_action_controller.cpp src/spline_functions.cpp)
 #rosbuild_add_executable(katana_arm_kinematics src/KNIConverter.cpp src/KNIKinematics.cpp)

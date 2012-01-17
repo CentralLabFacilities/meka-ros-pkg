@@ -3,7 +3,7 @@
 
 CMakeFiles/meka_arm_kinematics.dir/src/KNIConverter.o
  ../include/meka_driver/KNIConverter.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/KNIConverter.cpp
  /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlBase.h
  /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlCOM.h
@@ -69,7 +69,7 @@ CMakeFiles/meka_arm_kinematics.dir/src/KNIKinematics.o
  ../include/meka_driver/EulerTransformationMatrices.hh
  ../include/meka_driver/KNIConverter.h
  ../include/meka_driver/KNIKinematics.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/KNIKinematics.cpp
  /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlBase.h
  /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlCOM.h

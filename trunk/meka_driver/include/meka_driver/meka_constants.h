@@ -22,8 +22,8 @@
  *      Author: Martin Günther <mguenthe@uos.de>
  */
 
-#ifndef KATANA_CONSTANTS_H_
-#define KATANA_CONSTANTS_H_
+#ifndef MEKA_CONSTANTS_H_
+#define MEKA_CONSTANTS_H_
 
 namespace meka_driver
 {

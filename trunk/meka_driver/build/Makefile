@@ -177,19 +177,6 @@ meka/fast:
 .PHONY : meka/fast
 
 #=============================================================================
-# Target rules for targets named meka_arm_kinematics
-
-# Build rule for target.
-meka_arm_kinematics: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 meka_arm_kinematics
-.PHONY : meka_arm_kinematics
-
-# fast build rule for target.
-meka_arm_kinematics/fast:
-	$(MAKE) -f CMakeFiles/meka_arm_kinematics.dir/build.make CMakeFiles/meka_arm_kinematics.dir/build
-.PHONY : meka_arm_kinematics/fast
-
-#=============================================================================
 # Target rules for targets named rosbuild_precompile
 
 # Build rule for target.
@@ -350,39 +337,6 @@ src/JointStatePublisher.s:
 .PHONY : src/JointStatePublisher.s
 
 # target to build an object file
-src/KNIConverter.o:
-	$(MAKE) -f CMakeFiles/meka.dir/build.make CMakeFiles/meka.dir/src/KNIConverter.o
-	$(MAKE) -f CMakeFiles/meka_arm_kinematics.dir/build.make CMakeFiles/meka_arm_kinematics.dir/src/KNIConverter.o
-.PHONY : src/KNIConverter.o
-
-# target to preprocess a source file
-src/KNIConverter.i:
-	$(MAKE) -f CMakeFiles/meka.dir/build.make CMakeFiles/meka.dir/src/KNIConverter.i
-	$(MAKE) -f CMakeFiles/meka_arm_kinematics.dir/build.make CMakeFiles/meka_arm_kinematics.dir/src/KNIConverter.i
-.PHONY : src/KNIConverter.i
-
-# target to generate assembly for a file
-src/KNIConverter.s:
-	$(MAKE) -f CMakeFiles/meka.dir/build.make CMakeFiles/meka.dir/src/KNIConverter.s
-	$(MAKE) -f CMakeFiles/meka_arm_kinematics.dir/build.make CMakeFiles/meka_arm_kinematics.dir/src/KNIConverter.s
-.PHONY : src/KNIConverter.s
-
-# target to build an object file
-src/KNIKinematics.o:
-	$(MAKE) -f CMakeFiles/meka_arm_kinematics.dir/build.make CMakeFiles/meka_arm_kinematics.dir/src/KNIKinematics.o
-.PHONY : src/KNIKinematics.o
-
-# target to preprocess a source file
-src/KNIKinematics.i:
-	$(MAKE) -f CMakeFiles/meka_arm_kinematics.dir/build.make CMakeFiles/meka_arm_kinematics.dir/src/KNIKinematics.i
-.PHONY : src/KNIKinematics.i
-
-# target to generate assembly for a file
-src/KNIKinematics.s:
-	$(MAKE) -f CMakeFiles/meka_arm_kinematics.dir/build.make CMakeFiles/meka_arm_kinematics.dir/src/KNIKinematics.s
-.PHONY : src/KNIKinematics.s
-
-# target to build an object file
 src/Meka.o:
 	$(MAKE) -f CMakeFiles/meka.dir/build.make CMakeFiles/meka.dir/src/Meka.o
 .PHONY : src/Meka.o
@@ -485,7 +439,6 @@ help:
 	@echo "... clean-test-results"
 	@echo "... edit_cache"
 	@echo "... meka"
-	@echo "... meka_arm_kinematics"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_precompile"
 	@echo "... rosbuild_premsgsrvgen"
@@ -503,12 +456,6 @@ help:
 	@echo "... src/JointStatePublisher.o"
 	@echo "... src/JointStatePublisher.i"
 	@echo "... src/JointStatePublisher.s"
-	@echo "... src/KNIConverter.o"
-	@echo "... src/KNIConverter.i"
-	@echo "... src/KNIConverter.s"
-	@echo "... src/KNIKinematics.o"
-	@echo "... src/KNIKinematics.i"
-	@echo "... src/KNIKinematics.s"
 	@echo "... src/Meka.o"
 	@echo "... src/Meka.i"
 	@echo "... src/Meka.s"

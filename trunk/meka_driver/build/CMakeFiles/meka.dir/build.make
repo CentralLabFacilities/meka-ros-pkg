@@ -784,192 +784,6 @@ CMakeFiles/meka.dir/src/joint_movement_action_controller.o.provides: CMakeFiles/
 CMakeFiles/meka.dir/src/joint_movement_action_controller.o.provides.build: CMakeFiles/meka.dir/src/joint_movement_action_controller.o
 .PHONY : CMakeFiles/meka.dir/src/joint_movement_action_controller.o.provides.build
 
-CMakeFiles/meka.dir/src/KNIConverter.o: CMakeFiles/meka.dir/flags.make
-CMakeFiles/meka.dir/src/KNIConverter.o: ../src/KNIConverter.cpp
-CMakeFiles/meka.dir/src/KNIConverter.o: ../manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/core/rosbuild/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/core/roslang/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/cpp_common/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_traits/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/rostime/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_serialization/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/tools/rospack/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/core/roslib/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/xmlrpcpp/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosconsole/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/std_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/rosgraph_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /home/meka/ros/uos-ros-pkg/katana_driver/kni/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/std_srvs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/rospy/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/tools/rosclean/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosgraph/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosparam/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosmaster/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosout/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/roslaunch/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/tools/rosunit/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rostest/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/topic_tools/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosbag/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosbagmigration/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/geometry_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/sensor_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/actionlib_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common/actionlib/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/trajectory_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/pr2_controllers/pr2_controllers_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/control/control_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common/tinyxml/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/robot_model/urdf/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/geometric_shapes_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/mapping_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/bullet/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/angles/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosnode/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosmsg/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rostopic/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosservice/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/roswtf/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/message_filters/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/tf/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/motion_planning_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/kinematics/kinematics_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/household_objects_database_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/object_manipulation_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/std_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/std_srvs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/topic_tools/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/geometry_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/sensor_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/sensor_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/actionlib_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common/actionlib/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/trajectory_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/pr2_controllers/pr2_controllers_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/pr2_controllers/pr2_controllers_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/control/control_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/geometric_shapes_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/mapping_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/tf/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/tf/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/motion_planning_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/motion_planning_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/kinematics/kinematics_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/kinematics/kinematics_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/household_objects_database_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/household_objects_database_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/object_manipulation_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/object_manipulation_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: ../manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/core/rosbuild/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/core/roslang/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/cpp_common/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_traits/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/rostime/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_serialization/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/tools/rospack/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/core/roslib/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/xmlrpcpp/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosconsole/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/std_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/rosgraph_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /home/meka/ros/uos-ros-pkg/katana_driver/kni/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/std_srvs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/rospy/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/tools/rosclean/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosgraph/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosparam/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosmaster/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosout/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/roslaunch/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/ros/tools/rosunit/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rostest/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/topic_tools/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosbag/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosbagmigration/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/geometry_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/sensor_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/actionlib_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common/actionlib/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/trajectory_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/pr2_controllers/pr2_controllers_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/control/control_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common/tinyxml/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/robot_model/urdf/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/geometric_shapes_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/mapping_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/bullet/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/angles/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosnode/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosmsg/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rostopic/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/rosservice/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/roswtf/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/utilities/message_filters/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/tf/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/motion_planning_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/kinematics/kinematics_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/household_objects_database_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/object_manipulation_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/manifest.xml
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/std_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/rosgraph_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/messages/std_srvs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/ros_comm/tools/topic_tools/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/geometry_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/sensor_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/sensor_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/actionlib_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common/actionlib/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/common_msgs/trajectory_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/pr2_controllers/pr2_controllers_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/pr2_controllers/pr2_controllers_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/control/control_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/geometric_shapes_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/mapping_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/tf/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/geometry/tf/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/motion_planning_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/motion_planning_common/motion_planning_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/kinematics/kinematics_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/kinematics/kinematics_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/household_objects_database_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/household_objects_database_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/object_manipulation_msgs/msg_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /opt/ros/diamondback/stacks/object_manipulation/object_manipulation_msgs/srv_gen/generated
-CMakeFiles/meka.dir/src/KNIConverter.o: /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/generated
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles $(CMAKE_PROGRESS_8)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/meka.dir/src/KNIConverter.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -DTIXML_USE_STL -DBT_USE_DOUBLE_PRECISION -DBT_EULER_DEFAULT_ZYX -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -o CMakeFiles/meka.dir/src/KNIConverter.o -c /home/meka/mekabot/meka-ros-pkg/meka_driver/src/KNIConverter.cpp
-
-CMakeFiles/meka.dir/src/KNIConverter.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/meka.dir/src/KNIConverter.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -DTIXML_USE_STL -DBT_USE_DOUBLE_PRECISION -DBT_EULER_DEFAULT_ZYX -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -E /home/meka/mekabot/meka-ros-pkg/meka_driver/src/KNIConverter.cpp > CMakeFiles/meka.dir/src/KNIConverter.i
-
-CMakeFiles/meka.dir/src/KNIConverter.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/meka.dir/src/KNIConverter.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -DTIXML_USE_STL -DBT_USE_DOUBLE_PRECISION -DBT_EULER_DEFAULT_ZYX -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -S /home/meka/mekabot/meka-ros-pkg/meka_driver/src/KNIConverter.cpp -o CMakeFiles/meka.dir/src/KNIConverter.s
-
-CMakeFiles/meka.dir/src/KNIConverter.o.requires:
-.PHONY : CMakeFiles/meka.dir/src/KNIConverter.o.requires
-
-CMakeFiles/meka.dir/src/KNIConverter.o.provides: CMakeFiles/meka.dir/src/KNIConverter.o.requires
-	$(MAKE) -f CMakeFiles/meka.dir/build.make CMakeFiles/meka.dir/src/KNIConverter.o.provides.build
-.PHONY : CMakeFiles/meka.dir/src/KNIConverter.o.provides
-
-CMakeFiles/meka.dir/src/KNIConverter.o.provides.build: CMakeFiles/meka.dir/src/KNIConverter.o
-.PHONY : CMakeFiles/meka.dir/src/KNIConverter.o.provides.build
-
 CMakeFiles/meka.dir/src/spline_functions.o: CMakeFiles/meka.dir/flags.make
 CMakeFiles/meka.dir/src/spline_functions.o: ../src/spline_functions.cpp
 CMakeFiles/meka.dir/src/spline_functions.o: ../manifest.xml
@@ -1053,7 +867,7 @@ CMakeFiles/meka.dir/src/spline_functions.o: /opt/ros/diamondback/stacks/object_m
 CMakeFiles/meka.dir/src/spline_functions.o: /opt/ros/diamondback/stacks/object_manipulation/object_manipulation_msgs/msg_gen/generated
 CMakeFiles/meka.dir/src/spline_functions.o: /opt/ros/diamondback/stacks/object_manipulation/object_manipulation_msgs/srv_gen/generated
 CMakeFiles/meka.dir/src/spline_functions.o: /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/generated
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/meka.dir/src/spline_functions.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -DTIXML_USE_STL -DBT_USE_DOUBLE_PRECISION -DBT_EULER_DEFAULT_ZYX -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -o CMakeFiles/meka.dir/src/spline_functions.o -c /home/meka/mekabot/meka-ros-pkg/meka_driver/src/spline_functions.cpp
 
@@ -1084,7 +898,6 @@ meka_OBJECTS = \
 "CMakeFiles/meka.dir/src/JointStatePublisher.o" \
 "CMakeFiles/meka.dir/src/joint_trajectory_action_controller.o" \
 "CMakeFiles/meka.dir/src/joint_movement_action_controller.o" \
-"CMakeFiles/meka.dir/src/KNIConverter.o" \
 "CMakeFiles/meka.dir/src/spline_functions.o"
 
 # External object files for target meka
@@ -1097,7 +910,6 @@ meka_EXTERNAL_OBJECTS =
 ../bin/meka: CMakeFiles/meka.dir/src/JointStatePublisher.o
 ../bin/meka: CMakeFiles/meka.dir/src/joint_trajectory_action_controller.o
 ../bin/meka: CMakeFiles/meka.dir/src/joint_movement_action_controller.o
-../bin/meka: CMakeFiles/meka.dir/src/KNIConverter.o
 ../bin/meka: CMakeFiles/meka.dir/src/spline_functions.o
 ../bin/meka: CMakeFiles/meka.dir/build.make
 ../bin/meka: CMakeFiles/meka.dir/link.txt
@@ -1115,7 +927,6 @@ CMakeFiles/meka.dir/requires: CMakeFiles/meka.dir/src/SimulatedMeka.o.requires
 CMakeFiles/meka.dir/requires: CMakeFiles/meka.dir/src/JointStatePublisher.o.requires
 CMakeFiles/meka.dir/requires: CMakeFiles/meka.dir/src/joint_trajectory_action_controller.o.requires
 CMakeFiles/meka.dir/requires: CMakeFiles/meka.dir/src/joint_movement_action_controller.o.requires
-CMakeFiles/meka.dir/requires: CMakeFiles/meka.dir/src/KNIConverter.o.requires
 CMakeFiles/meka.dir/requires: CMakeFiles/meka.dir/src/spline_functions.o.requires
 .PHONY : CMakeFiles/meka.dir/requires
 

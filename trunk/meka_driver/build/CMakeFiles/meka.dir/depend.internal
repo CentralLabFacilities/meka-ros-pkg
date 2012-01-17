@@ -4,7 +4,7 @@
 CMakeFiles/meka.dir/src/AbstractMeka.o
  ../include/meka_driver/AbstractMeka.h
  ../include/meka_driver/SpecifiedTrajectory.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/AbstractMeka.cpp
  /opt/ros/diamondback/stacks/common/tinyxml/include/tinyxml/tinystr.h
  /opt/ros/diamondback/stacks/common/tinyxml/include/tinyxml/tinyxml.h
@@ -68,7 +68,7 @@ CMakeFiles/meka.dir/src/JointStatePublisher.o
  ../include/meka_driver/AbstractMeka.h
  ../include/meka_driver/JointStatePublisher.h
  ../include/meka_driver/SpecifiedTrajectory.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/JointStatePublisher.cpp
  /opt/ros/diamondback/stacks/common/tinyxml/include/tinyxml/tinystr.h
  /opt/ros/diamondback/stacks/common/tinyxml/include/tinyxml/tinyxml.h
@@ -131,88 +131,12 @@ CMakeFiles/meka.dir/src/JointStatePublisher.o
  /opt/ros/diamondback/stacks/ros_comm/utilities/rostime/include/ros/rate.h
  /opt/ros/diamondback/stacks/ros_comm/utilities/rostime/include/ros/time.h
  /opt/ros/diamondback/stacks/ros_comm/utilities/xmlrpcpp/src/XmlRpcValue.h
-CMakeFiles/meka.dir/src/KNIConverter.o
- ../include/meka_driver/KNIConverter.h
- ../include/meka_driver/katana_constants.h
- /home/meka/mekabot/meka-ros-pkg/meka_driver/src/KNIConverter.cpp
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlCOM.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlCOMExceptions.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cplBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlCommon.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlFactories.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlMotBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlSctBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/common/dllexport.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/common/exception.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/advertise_options.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/advertise_service_options.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/common.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/exceptions.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/forwards.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/init.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/master.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/message.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/message_event.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/names.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/node_handle.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/param.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/parameter_adapter.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/publisher.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/ros.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/service.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/service_callback_helper.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/service_client.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/service_client_options.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/service_server.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/single_subscriber_publisher.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/spinner.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/subscribe_options.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/subscriber.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/subscription_callback_helper.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/this_node.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/timer.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/timer_options.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/topic.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/transport_hints.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/wall_timer.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp/include/ros/wall_timer_options.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_serialization/include/ros/serialization.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_serialization/include/ros/serialized_message.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_traits/include/ros/builtin_message_traits.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_traits/include/ros/message_forward.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_traits/include/ros/message_traits.h
- /opt/ros/diamondback/stacks/ros_comm/clients/cpp/roscpp_traits/include/ros/service_traits.h
- /opt/ros/diamondback/stacks/ros_comm/tools/rosconsole/include/ros/assert.h
- /opt/ros/diamondback/stacks/ros_comm/tools/rosconsole/include/ros/console.h
- /opt/ros/diamondback/stacks/ros_comm/tools/rosconsole/include/ros/static_assert.h
- /opt/ros/diamondback/stacks/ros_comm/tools/rosconsole/include/rosconsole/macros_generated.h
- /opt/ros/diamondback/stacks/ros_comm/utilities/cpp_common/include/ros/exception.h
- /opt/ros/diamondback/stacks/ros_comm/utilities/cpp_common/include/ros/macros.h
- /opt/ros/diamondback/stacks/ros_comm/utilities/cpp_common/include/ros/types.h
- /opt/ros/diamondback/stacks/ros_comm/utilities/rostime/include/ros/duration.h
- /opt/ros/diamondback/stacks/ros_comm/utilities/rostime/include/ros/rate.h
- /opt/ros/diamondback/stacks/ros_comm/utilities/rostime/include/ros/time.h
- /opt/ros/diamondback/stacks/ros_comm/utilities/xmlrpcpp/src/XmlRpcValue.h
 CMakeFiles/meka.dir/src/Meka.o
  ../include/meka_driver/AbstractMeka.h
- ../include/meka_driver/KNIConverter.h
  ../include/meka_driver/Meka.h
  ../include/meka_driver/SpecifiedTrajectory.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/Meka.cpp
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlCOM.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlCOMExceptions.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cplBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlCommon.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlFactories.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlMotBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlSctBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/common/dllexport.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/common/exception.h
  /opt/ros/diamondback/stacks/common/tinyxml/include/tinyxml/tinystr.h
  /opt/ros/diamondback/stacks/common/tinyxml/include/tinyxml/tinyxml.h
  /opt/ros/diamondback/stacks/motion_planning_common/motion_planning_msgs/msg_gen/cpp/include/motion_planning_msgs/JointLimits.h
@@ -275,14 +199,13 @@ CMakeFiles/meka.dir/src/Meka.o
 CMakeFiles/meka.dir/src/MekaNode.o
  ../include/meka_driver/AbstractMeka.h
  ../include/meka_driver/JointStatePublisher.h
- ../include/meka_driver/KNIConverter.h
  ../include/meka_driver/Meka.h
  ../include/meka_driver/MekaNode.h
  ../include/meka_driver/SimulatedMeka.h
  ../include/meka_driver/SpecifiedTrajectory.h
  ../include/meka_driver/joint_movement_action_controller.h
  ../include/meka_driver/joint_trajectory_action_controller.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  ../include/meka_driver/spline_functions.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/MekaNode.cpp
  /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/cpp/include/katana_msgs/JointMovementAction.h
@@ -292,30 +215,6 @@ CMakeFiles/meka.dir/src/MekaNode.o
  /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/cpp/include/katana_msgs/JointMovementFeedback.h
  /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/cpp/include/katana_msgs/JointMovementGoal.h
  /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/cpp/include/katana_msgs/JointMovementResult.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlCOM.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlCOMExceptions.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cdlSocket.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cplBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/cplSerial.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlCommon.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlExt.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlFactories.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlMotBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI/kmlSctBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI_InvKin/KatanaKinematics.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI_InvKin/KatanaKinematics5M180.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI_InvKin/KatanaKinematics6M180.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI_InvKin/KatanaKinematics6M90G.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI_InvKin/KatanaKinematics6M90T.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI_InvKin/KatanaKinematicsDecisionAlgorithms.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI_InvKin/ikBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/KNI_LM/lmBase.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/common/Timer.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/common/dllexport.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/common/exception.h
- /home/meka/ros/uos-ros-pkg/katana_driver/kni/KNI_4.3.0/include/kniBase.h
  /opt/ros/diamondback/stacks/common/actionlib/include/actionlib/action_definition.h
  /opt/ros/diamondback/stacks/common/actionlib/include/actionlib/client/action_client.h
  /opt/ros/diamondback/stacks/common/actionlib/include/actionlib/client/client_goal_handle_imp.h
@@ -430,7 +329,7 @@ CMakeFiles/meka.dir/src/MekaNode.o
  /opt/ros/diamondback/stacks/ros_comm/utilities/xmlrpcpp/src/XmlRpcValue.h
 CMakeFiles/meka.dir/src/SimulatedMeka.o
  ../include/meka_driver/SpecifiedTrajectory.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/../include/meka_driver/AbstractMeka.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/../include/meka_driver/SimulatedMeka.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/../include/meka_driver/spline_functions.h
@@ -497,7 +396,7 @@ CMakeFiles/meka.dir/src/joint_movement_action_controller.o
  ../include/meka_driver/AbstractMeka.h
  ../include/meka_driver/SpecifiedTrajectory.h
  ../include/meka_driver/joint_movement_action_controller.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/joint_movement_action_controller.cpp
  /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/cpp/include/katana_msgs/JointMovementAction.h
  /home/meka/ros/uos-ros-pkg/katana_driver/katana_msgs/msg_gen/cpp/include/katana_msgs/JointMovementActionFeedback.h
@@ -602,7 +501,7 @@ CMakeFiles/meka.dir/src/joint_trajectory_action_controller.o
  ../include/meka_driver/AbstractMeka.h
  ../include/meka_driver/SpecifiedTrajectory.h
  ../include/meka_driver/joint_trajectory_action_controller.h
- ../include/meka_driver/katana_constants.h
+ ../include/meka_driver/meka_constants.h
  ../include/meka_driver/spline_functions.h
  /home/meka/mekabot/meka-ros-pkg/meka_driver/src/joint_trajectory_action_controller.cpp
  /opt/ros/diamondback/stacks/common/actionlib/include/actionlib/action_definition.h

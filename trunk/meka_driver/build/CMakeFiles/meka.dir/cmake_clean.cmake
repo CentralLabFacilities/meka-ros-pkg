@@ -6,7 +6,6 @@ FILE(REMOVE_RECURSE
   "CMakeFiles/meka.dir/src/JointStatePublisher.o"
   "CMakeFiles/meka.dir/src/joint_trajectory_action_controller.o"
   "CMakeFiles/meka.dir/src/joint_movement_action_controller.o"
-  "CMakeFiles/meka.dir/src/KNIConverter.o"
   "CMakeFiles/meka.dir/src/spline_functions.o"
   "../bin/meka.pdb"
   "../bin/meka"

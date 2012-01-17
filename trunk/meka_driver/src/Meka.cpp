@@ -33,10 +33,10 @@ MekaDriver::MekaDriver() :
 {
   ros::NodeHandle nh;
   ros::NodeHandle pn("~");
-  motor_status_.resize(NUM_MOTORS);
+  //motor_status_.resize(NUM_MOTORS);
 
   /* ********* get parameters ********* */
-
+#if 0
   // general parameters
   std::string config_file_path;
   bool use_serial;
@@ -123,7 +123,7 @@ MekaDriver::MekaDriver() :
   refreshEncoders();
 
   // boost::thread worker_thread(&Katana::test_speed, this);
-
+#endif
   /* ********* services ********* */
   switch_motors_off_srv_ = nh.advertiseService("switch_motors_off", &MekaDriver::switchMotorsOff, this);
   switch_motors_on_srv_ = nh.advertiseService("switch_motors_on", &MekaDriver::switchMotorsOn, this);
@@ -134,15 +134,17 @@ MekaDriver::~MekaDriver()
 {
   // protocol and device are members of kni, so we should be
   // the last ones using it before deleting them
-  assert(kni.use_count() == 1);
+  /*assert(kni.use_count() == 1);
 
   kni.reset(); // delete kni, so protocol and device won't be used any more
   delete protocol;
   delete device;
-  delete converter;
+  delete converter;*/
 }
 
 void MekaDriver::setLimits(void) {
+  //TODO: update params in M3
+  /*
 	for (size_t i = 0; i < NUM_MOTORS; i++) {
 		// These two settings probably only influence KNI functions like moveRobotToEnc(),
 		// openGripper() and so on, and not the spline trajectories. We still set them
@@ -150,10 +152,13 @@ void MekaDriver::setLimits(void) {
 		kni->setMotorAccelerationLimit(i, KNI_MAX_ACCELERATION);
 		kni->setMotorVelocityLimit(i, KNI_MAX_VELOCITY);
 	}
+	*/
 }
 
 void MekaDriver::refreshEncoders()
 {
+  //TODO: get joint angles from M3
+  /*
   try
   {
     boost::recursive_mutex::scoped_lock lock(kni_mutex);
@@ -216,10 +221,12 @@ void MekaDriver::refreshEncoders()
   {
     ROS_ERROR("Unhandled exception in refreshEncoders()");
   }
+  */
 }
 
 void MekaDriver::refreshMotorStatus()
 {
+#if 0  
   try
   {
     boost::recursive_mutex::scoped_lock lock(kni_mutex);
@@ -269,6 +276,7 @@ void MekaDriver::refreshMotorStatus()
   {
     ROS_ERROR("Unhandled exception in refreshMotorStatus()");
   }
+#endif
 }
 
 /**
@@ -280,20 +288,20 @@ bool MekaDriver::executeTrajectory(boost::shared_ptr<SpecifiedTrajectory> traj)
 {
   assert(traj->size() > 0);
 
-  try
+  //try
   {
     // ------- wait until all motors idle
     ros::Rate idleWait(10);
     while (!allMotorsReady())
     {
       refreshMotorStatus();
-      ROS_DEBUG("Motor status: %d, %d, %d, %d, %d, %d", motor_status_[0], motor_status_[1], motor_status_[2], motor_status_[3], motor_status_[4], motor_status_[5]);
+      //ROS_DEBUG("Motor status: %d, %d, %d, %d, %d, %d", motor_status_[0], motor_status_[1], motor_status_[2], motor_status_[3], motor_status_[4], motor_status_[5]);
 
       // ------- check if motors are blocked
       // it is important to do this inside the allMotorsReady() loop, otherwise we
       // could get stuck in a deadlock if the motors crash while we wait for them to
       // become ready
-      if (someMotorCrashed())
+      /*if (someMotorCrashed())
       {
         ROS_WARN("Motors are crashed before executing trajectory! Unblocking...");
 
@@ -301,7 +309,7 @@ bool MekaDriver::executeTrajectory(boost::shared_ptr<SpecifiedTrajectory> traj)
         kni->unBlock();
       }
 
-      idleWait.sleep();
+      idleWait.sleep();*/
     }
 
     //// ------- move to start position
@@ -374,7 +382,7 @@ bool MekaDriver::executeTrajectory(boost::shared_ptr<SpecifiedTrajectory> traj)
         // more splines following, start movement
         activityflag = 0;
       }
-
+/*
       std::vector<short> polynomial;
       short s_time = round(seg.duration * KNI_TO_ROS_TIME);
       if (s_time <= 0)
@@ -412,11 +420,12 @@ bool MekaDriver::executeTrajectory(boost::shared_ptr<SpecifiedTrajectory> traj)
         ROS_DEBUG("   time: %d   target: %d   p0: %d   p1: %d   p2: %d   p3: %d",
             polynomial[k-5], polynomial[k-4], polynomial[k-3], polynomial[k-2], polynomial[k-1], polynomial[k]);
       }
-
-      kni->setAndStartPolyMovement(polynomial, false, activityflag);
+*/
+      //kni->setAndStartPolyMovement(polynomial, false, activityflag);
     }
     return true;
   }
+  /*
   catch (const WrongCRCException &e)
   {
     ROS_ERROR("WrongCRCException: Two threads tried to access the KNI at once. This means that the locking in the Katana node is broken. (exception in executeTrajectory(): %s)", e.message().c_str());
@@ -431,23 +440,23 @@ bool MekaDriver::executeTrajectory(boost::shared_ptr<SpecifiedTrajectory> traj)
     // the message returned by the Katana is:
     // FirmwareException : 'StopperThread: collision on axis: 1 (axis N)'
     ROS_ERROR("FirmwareException: Motor collision? Perhaps we tried to send a trajectory that the arm couldn't follow. (exception in executeTrajectory(): %s)", e.message().c_str());
-  }
-  catch (const Exception &e)
+  }*/
+  /*catch (const Exception &e)
   {
     ROS_ERROR("Unhandled exception in executeTrajectory(): %s", e.message().c_str());
   }
   catch (...)
   {
     ROS_ERROR("Unhandled exception in executeTrajectory()");
-  }
+  }*/
   return false;
 }
 
 void MekaDriver::freezeRobot()
 {
-  boost::recursive_mutex::scoped_lock lock(kni_mutex);
-  kni->flushMoveBuffers();
-  kni->freezeRobot();
+  //boost::recursive_mutex::scoped_lock lock(kni_mutex);
+  //kni->flushMoveBuffers();
+  //kni->freezeRobot();
 }
 
 bool MekaDriver::moveJoint(int motorIndex, double desiredAngle)
@@ -457,7 +466,7 @@ bool MekaDriver::moveJoint(int motorIndex, double desiredAngle)
     ROS_ERROR("Desired angle %f is out of range [%f, %f]", desiredAngle, motor_limits_[motorIndex].min_position, motor_limits_[motorIndex].max_position);
     return false;
   }
-
+/*
   try
   {
     boost::recursive_mutex::scoped_lock lock(kni_mutex);
@@ -481,37 +490,41 @@ bool MekaDriver::moveJoint(int motorIndex, double desiredAngle)
     ROS_ERROR("Unhandled exception in moveJoint()");
   }
   return false;
+  */
 }
 
 bool MekaDriver::someMotorCrashed()
 {
+  /*
   for (size_t i = 0; i < NUM_MOTORS; i++)
   {
     if (motor_status_[i] == MSF_MOTCRASHED)
       return true;
-  }
+  }*/
 
   return false;
 }
 
 bool MekaDriver::allJointsReady()
 {
+  /*
   for (size_t i = 0; i < NUM_JOINTS; i++)
   {
     if ((motor_status_[i] != MSF_DESPOS) && (motor_status_[i] != (MSF_NLINMOV)))
       return false;
-  }
+  }*/
 
   return true;
 }
 
 bool MekaDriver::allMotorsReady()
 {
+  /*
   for (size_t i = 0; i < NUM_MOTORS; i++)
   {
     if ((motor_status_[i] != MSF_DESPOS) && (motor_status_[i] != (MSF_NLINMOV)))
       return false;
-  }
+  }*/
 
   return true;
 }
@@ -534,7 +547,7 @@ void MekaDriver::calibrate()
   // private function only called in constructor, so no locking required
   bool calibrate = false;
   const int encoders = 100;
-
+/*
   kni->unBlock();
 
   // check if gripper collides in both cases (open and close gripper)
@@ -567,6 +580,7 @@ void MekaDriver::calibrate()
     kni->calibrate();
     kni->enableCrashLimits();
   }
+ */
 }
 
 /**
@@ -576,16 +590,16 @@ void MekaDriver::calibrate()
 bool MekaDriver::switchMotorsOff(std_srvs::Empty::Request &request, std_srvs::Empty::Response &response)
 {
   ROS_WARN("Switching all motors off!");
-  boost::recursive_mutex::scoped_lock lock(kni_mutex);
-  kni->switchRobotOff();
+  //boost::recursive_mutex::scoped_lock lock(kni_mutex);
+  //kni->switchRobotOff();
   return true;
 }
 
 bool MekaDriver::switchMotorsOn(std_srvs::Empty::Request &request, std_srvs::Empty::Response &response)
 {
   ROS_INFO("Switching all motors back on.");
-  boost::recursive_mutex::scoped_lock lock(kni_mutex);
-  kni->switchRobotOn();
+  //boost::recursive_mutex::scoped_lock lock(kni_mutex);
+  //kni->switchRobotOn();
   return true;
 }
 
@@ -600,7 +614,7 @@ void MekaDriver::testSpeed()
   ros::Rate idleWait(5);
   std::vector<double> pos1_angles(NUM_MOTORS);
   std::vector<double> pos2_angles(NUM_MOTORS);
-
+#if 0
   // these are safe values, i.e., no self-collision is possible
   pos1_angles[0] = 2.88;
   pos2_angles[0] = -3.02;
@@ -628,15 +642,15 @@ void MekaDriver::testSpeed()
     int accel = kni->getMotorAccelerationLimit(i);
     int max_vel = kni->getMotorVelocityLimit(i);
 
-    ROS_INFO("Motor %zu - acceleration: %d (= %f), max speed: %d (=%f)", i, accel, 2.0 * converter->acc_enc2rad(i, accel), max_vel, converter->vel_enc2rad(i, max_vel));
+/*    ROS_INFO("Motor %zu - acceleration: %d (= %f), max speed: %d (=%f)", i, accel, 2.0 * converter->acc_enc2rad(i, accel), max_vel, converter->vel_enc2rad(i, max_vel));
     ROS_INFO("KNI encoders: %d, %d", kni->GetBase()->GetMOT()->arr[i].GetEncoderMinPos(), kni->GetBase()->GetMOT()->arr[i].GetEncoderMaxPos());
     ROS_INFO("moving to encoders: %d, %d", pos1_encoders, pos2_encoders);
-    ROS_INFO("current encoders: %d", kni->getMotorEncoders(i, true));
+    ROS_INFO("current encoders: %d", kni->getMotorEncoders(i, true));*/
 
     ROS_INFO("Moving to min");
     {
-      boost::recursive_mutex::scoped_lock lock(kni_mutex);
-      kni->moveMotorToEnc(i, pos1_encoders);
+      //boost::recursive_mutex::scoped_lock lock(kni_mutex);
+      //kni->moveMotorToEnc(i, pos1_encoders);
     }
 
     do
@@ -647,8 +661,8 @@ void MekaDriver::testSpeed()
 
     ROS_INFO("Moving to max");
     {
-      boost::recursive_mutex::scoped_lock lock(kni_mutex);
-      kni->moveMotorToEnc(i, pos2_encoders);
+      //boost::recursive_mutex::scoped_lock lock(kni_mutex);
+      //kni->moveMotorToEnc(i, pos2_encoders);
     }
 
     do
@@ -668,6 +682,7 @@ void MekaDriver::testSpeed()
   //  Motor 4 - acceleration: 2 (= -4.908739), max speed: 180 (=-2.208932)
   //  Motor 5 - acceleration: 2 (= 1.597410), max speed: 180 (=0.718834)
   //     (TODO: the gripper duration can be calculated from this)
+#endif
 }
 
 }

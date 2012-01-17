@@ -4,7 +4,6 @@
 /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles/ROSBUILD_gensrv_lisp.dir
 /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles/clean-test-results.dir
 /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles/meka.dir
-/home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles/meka_arm_kinematics.dir
 /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles/rosbuild_precompile.dir
 /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles/rosbuild_premsgsrvgen.dir
 /home/meka/mekabot/meka-ros-pkg/meka_driver/build/CMakeFiles/rospack_genmsg.dir
