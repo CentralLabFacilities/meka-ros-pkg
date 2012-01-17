@@ -1,0 +1,17 @@
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/ROSBUILD_genmsg_cpp.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/ROSBUILD_genmsg_lisp.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/ROSBUILD_gensrv_cpp.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/ROSBUILD_gensrv_lisp.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/clean-test-results.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/katana.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/katana_arm_kinematics.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/rosbuild_precompile.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/rosbuild_premsgsrvgen.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/rospack_genmsg.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/rospack_genmsg_libexe.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/rospack_gensrv.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/test.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/test-future.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/test-results.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/test-results-run.dir
+/home/meka/ros/uos-ros-pkg/katana_driver/katana/build/CMakeFiles/tests.dir
