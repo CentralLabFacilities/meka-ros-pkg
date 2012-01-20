@@ -32,7 +32,7 @@ namespace meka_driver
 MekaTeleopKey::MekaTeleopKey() :
   action_client("meka_arm_controller/joint_movement_action", true), gripper_("gripper_grasp_posture_controller", true)
 {
-  ROS_INFO("KatanaTeleopKey starting...");
+  ROS_INFO("MekaTeleopKey starting...");
   ros::NodeHandle n_;
   ros::NodeHandle n_private("~");
 
@@ -41,19 +41,19 @@ MekaTeleopKey::MekaTeleopKey() :
   n_.param("increment_step_scaling", increment_step_scaling, 1.0); // default scaling = 1
 
   js_sub_ = n_.subscribe("joint_states", 1000, &MekaTeleopKey::jointStateCallback, this);
-
+  ROS_INFO("aaa");
   got_joint_states_ = false;
 
   jointIndex = 0;
 
   action_client.waitForServer();
-  gripper_.waitForServer();
-
+  //gripper_.waitForServer();
+  ROS_INFO("ccc");
   // Gets all of the joints
   XmlRpc::XmlRpcValue joint_names;
 
   // Gets all of the joints
-  if (!n_.getParam("katana_joints", joint_names))
+  if (!n_.getParam("meka_joints", joint_names))
   {
     ROS_ERROR("No joints given. (namespace: %s)", n_.getNamespace().c_str());
   }
@@ -290,7 +290,7 @@ void MekaTeleopKey::keyboardLoop()
         // in case of shutting down the teleop node the arm is moved back into it's initial pose
         // assuming that this is a proper resting pose for the arm
 
-        ROS_INFO("Shutting down the Katana Teleoperation node...");
+        ROS_INFO("Shutting down the Meka Teleoperation node...");
         shutdown = true;
         break;
 
