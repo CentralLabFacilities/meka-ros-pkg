@@ -35,6 +35,9 @@ MekaDriver::MekaDriver() :
   ros::NodeHandle pn("~");
   //motor_status_.resize(NUM_MOTORS);
 
+  
+  bot = new M3HumanoidClient(&nh);
+  
   /* ********* get parameters ********* */
 #if 0
   // general parameters
@@ -140,6 +143,7 @@ MekaDriver::~MekaDriver()
   delete protocol;
   delete device;
   delete converter;*/
+  delete bot;
 }
 
 void MekaDriver::setLimits(void) {
@@ -157,6 +161,17 @@ void MekaDriver::setLimits(void) {
 
 void MekaDriver::refreshEncoders()
 {
+  bot->UpdateStatus();
+  
+  for (size_t i = 0; i < NUM_MOTORS; i++)
+    {
+      
+      
+      motor_velocities_[i] = deg2rad(bot->GetThetaDotDeg(RIGHT_ARM, i));
+            
+      motor_angles_[i] = deg2rad(bot->GetThetaDeg(RIGHT_ARM, i));
+    }
+  
   //TODO: get joint angles from M3
   /*
   try
@@ -287,7 +302,7 @@ void MekaDriver::refreshMotorStatus()
 bool MekaDriver::executeTrajectory(boost::shared_ptr<SpecifiedTrajectory> traj)
 {
   assert(traj->size() > 0);
-
+  // TODO: send trajectory to the Meka
   //try
   {
     // ------- wait until all motors idle
@@ -491,6 +506,14 @@ bool MekaDriver::moveJoint(int motorIndex, double desiredAngle)
   }
   return false;
   */
+  bot->SetModeThetaGc(RIGHT_ARM, motorIndex);
+  bot->SetStiffness(RIGHT_ARM, motorIndex, 0.8);
+  bot->SetSlewRateProportional(RIGHT_ARM, motorIndex, 1.0);
+  bot->SetMotorPowerOn();
+  bot->SetThetaDeg(RIGHT_ARM, motorIndex, rad2deg(desiredAngle)); 
+  bot->SendCommand();            
+  
+  return true;
 }
 
 bool MekaDriver::someMotorCrashed()

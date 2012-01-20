@@ -26,6 +26,16 @@
 
 namespace meka_driver
 {
+  
+double AbstractMeka::deg2rad(const double deg)
+{
+  return deg * (M_PI / 180.0);
+}
+
+double AbstractMeka::rad2deg(const double rad)
+{
+  return rad * (180.0 / M_PI);
+}
 
 AbstractMeka::AbstractMeka()
 {
@@ -96,7 +106,7 @@ AbstractMeka::AbstractMeka()
   XmlRpc::XmlRpcValue gripper_joint_names;
 
   // Gets all of the joints
-  if (!n.getParam("katana_gripper_joints", gripper_joint_names))
+  /*if (!n.getParam("katana_gripper_joints", gripper_joint_names))
   {
     ROS_ERROR("No gripper_joints given. (namespace: %s)", n.getNamespace().c_str());
   }
@@ -125,7 +135,7 @@ AbstractMeka::AbstractMeka()
     motor_limits_[NUM_JOINTS + i].max_position = model.getJoint(gripper_joint_names_[i])->limits->upper;
 
     // ROS_INFO("Setting MotorLimit for %s to min: %f - max: %f", motor_limits_[NUM_JOINTS + i].joint_name.c_str(), motor_limits_[NUM_JOINTS + i].min_position, motor_limits_[NUM_JOINTS + i].max_position);
-  }
+  }*/
 }
 
 AbstractMeka::~AbstractMeka()

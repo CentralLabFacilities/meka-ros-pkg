@@ -21,16 +21,20 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_genmsg()
 #uncomment if you have defined services
 #rosbuild_gensrv()
+#rosbuild_add_library(meka_client
+#  src/humanoid_client.cpp  
+#)
 
 #common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
+#rosbuild_add_library(meka_client src/humanoid_client.cpp)
+#target_link_libraries(${PROJECT_NAME} meka_client)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 #rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
+#target_link_libraries(meka meka_client)
 
 rosbuild_add_executable(meka src/MekaNode.cpp src/AbstractMeka.cpp src/Meka.cpp src/SimulatedMeka.cpp src/JointStatePublisher.cpp src/joint_trajectory_action_controller.cpp src/joint_movement_action_controller.cpp src/spline_functions.cpp)
+#target_link_libraries(meka meka_client)
 #rosbuild_add_executable(meka_arm_kinematics src/KNIConverter.cpp src/KNIKinematics.cpp)
 
 #rosbuild_add_executable(meka src/MekaNode.cpp src/AbstractMeka.cpp src/Meka.cpp src/SimulatedMeka.cpp src/JointStatePublisher.cpp src/joint_trajectory_action_controller.cpp src/joint_movement_action_controller.cpp src/spline_functions.cpp)

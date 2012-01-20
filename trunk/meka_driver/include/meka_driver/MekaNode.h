@@ -33,7 +33,7 @@
 //#include <meka_driver/katana_gripper_grasp_controller.h>
 
 #include <meka_driver/AbstractMeka.h>
-#include <meka_driver/Meka.h>
+#include "meka_driver/Meka.h"
 //#include <meka_driver/Katana300.h>
 #include <meka_driver/SimulatedMeka.h>
 

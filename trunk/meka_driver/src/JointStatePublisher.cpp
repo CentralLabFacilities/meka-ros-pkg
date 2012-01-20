@@ -53,13 +53,13 @@ void JointStatePublisher::update()
     msg->velocity.push_back(vels[i]);
   }
 
-  msg->name.push_back(meka->getGripperJointNames()[0]);
+  /*msg->name.push_back(meka->getGripperJointNames()[0]);
   msg->position.push_back(angles[5]);
   msg->velocity.push_back(vels[5]);
 
   msg->name.push_back(meka->getGripperJointNames()[1]);
   msg->position.push_back(angles[5]); // both right and left finger are controlled by motor 6
-  msg->velocity.push_back(vels[5]);
+  msg->velocity.push_back(vels[5]);*/
 
   msg->header.stamp = ros::Time::now();
   pub.publish(msg); // NOTE: msg must not be changed after publishing; use reset() if necessary (http://www.ros.org/wiki/roscpp/Internals)

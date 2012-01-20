@@ -32,7 +32,7 @@ namespace meka_driver
 {
 
 JointMovementActionController::JointMovementActionController(boost::shared_ptr<AbstractMeka> meka) :
-  meka_(meka), action_server_(ros::NodeHandle(), "katana_arm_controller/joint_movement_action",
+  meka_(meka), action_server_(ros::NodeHandle(), "meka_arm_controller/joint_movement_action",
                                   boost::bind(&JointMovementActionController::executeCB, this, _1), false)
 {
   joints_ = meka_->getJointNames();
@@ -145,13 +145,13 @@ void JointMovementActionController::executeCB(const JMAS::GoalConstPtr &goal)
   // adjust all goal positions to match the given motor limits
   sensor_msgs::JointState adjustedJointGoal = adjustJointGoalPositionsToMotorLimits(goal->jointGoal);
 
-  ROS_INFO("Sending movement to Katana arm...");
+  ROS_INFO("Sending movement to Meka arm...");
 
   for (size_t i = 0; i < adjustedJointGoal.name.size(); i++)
   {
     if (!meka_->moveJoint(meka_->getJointIndex(adjustedJointGoal.name[i]), adjustedJointGoal.position[i]))
     {
-      ROS_ERROR("Problem while transferring movement to Katana arm. Aborting...");
+      ROS_ERROR("Problem while transferring movement to Meka arm. Aborting...");
       action_server_.setAborted();
       return;
     }

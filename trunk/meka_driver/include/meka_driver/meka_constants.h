@@ -28,13 +28,16 @@
 namespace meka_driver
 {
 /// The number of motors in the katana (= all 5 "real" joints + the gripper)
-const size_t NUM_MOTORS = 6;
+//const size_t NUM_MOTORS = 6;
+const size_t NUM_MOTORS = 7;
 
 /// The number of joints in the katana (= only the 5 "real" joints)
-const size_t NUM_JOINTS = NUM_MOTORS - 1;
+//const size_t NUM_JOINTS = NUM_MOTORS - 1;
+const size_t NUM_JOINTS = 7;
 
 /// The number of gripper_joints in the katana (= the two gripper finger joints)
-const size_t NUM_GRIPPER_JOINTS = 2;
+//const size_t NUM_GRIPPER_JOINTS = 2;
+const size_t NUM_GRIPPER_JOINTS = 0;
 
 /// The motor index of the gripper (used in all vectors -- e.g., motor_angles_)
 const size_t GRIPPER_INDEX = NUM_MOTORS - 1;

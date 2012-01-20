@@ -77,7 +77,8 @@ public:
   virtual bool allJointsReady() = 0;
   virtual bool allMotorsReady() = 0;
 
-
+  double deg2rad(const double deg);
+  double rad2deg(const double deg);
 protected:
   // only the 5 "real" joints:
   std::vector<std::string> joint_names_;

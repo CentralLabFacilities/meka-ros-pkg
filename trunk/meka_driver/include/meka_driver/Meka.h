@@ -34,6 +34,10 @@
 
 #include <meka_driver/SpecifiedTrajectory.h>
 #include <meka_driver/AbstractMeka.h>
+//#include <arm_control_msgs/TrajectoryCancel.h>
+
+#include "meka_client/humanoid_client.h"
+
 //#include <meka_driver/KNIConverter.h>
 
 namespace meka_driver
@@ -88,6 +92,7 @@ private:
   bool testSpeedSrv(std_srvs::Empty::Request &request, std_srvs::Empty::Response &response);
 
   short round(const double x);
+  M3HumanoidClient * bot;
 };
 
 }

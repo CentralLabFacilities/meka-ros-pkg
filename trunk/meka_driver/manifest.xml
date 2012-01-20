@@ -16,6 +16,13 @@
   <license>GPL</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/katana</url>
+  <depend package="meka_client"/>
+  <depend package="katana"/>
+  <!-- <depend package="arm_control_msgs"/> -->
+  <depend package="image_proc"/>
+  <export>
+    <cpp cflags="-I${prefix}/msg/cpp -I${prefix}/srv/cpp -I${prefix}/include"/>    
+  </export>
   <depend package="roscpp"/>
   <depend package="kni"/>
   <depend package="std_msgs"/>
@@ -33,8 +40,7 @@
 
   <!-- for KNIKinematics -->
   <depend package="kinematics_msgs"/>
-  <depend package="tf"/>
-  <rosdep name="armadillo"/>
+  <depend package="tf"/>  
 
   <!-- for katana_gripper_grasp_controller -->
   <depend package="object_manipulation_msgs"/>
@@ -42,4 +48,5 @@
   <!-- for JointMovementActionController -->
   <depend package="katana_msgs"/>
   
+  <rosdep name="armadillo"/>
 </package>
