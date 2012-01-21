@@ -301,6 +301,9 @@ void MekaDriver::refreshMotorStatus()
  */
 bool MekaDriver::executeTrajectory(boost::shared_ptr<SpecifiedTrajectory> traj)
 {
+  
+  ROS_INFO("lkjsdflkjsdf");
+  
   assert(traj->size() > 0);
   // TODO: send trajectory to the Meka
   //try
@@ -397,6 +400,12 @@ bool MekaDriver::executeTrajectory(boost::shared_ptr<SpecifiedTrajectory> traj)
         // more splines following, start movement
         activityflag = 0;
       }
+      
+      for (size_t j = 0; j < seg.splines.size(); j++)
+      {
+	moveJoint(j, seg.splines[j].target_position);
+      }
+      
 /*
       std::vector<short> polynomial;
       short s_time = round(seg.duration * KNI_TO_ROS_TIME);
