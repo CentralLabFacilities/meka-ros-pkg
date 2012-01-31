@@ -134,7 +134,7 @@
 		  <origin xyz="0.00502 0  0" rpy="0 0 0" />
       <parent link="${parent}"/>
       <child link="elbowclevis_RIGHT"/>
-	<limit effort="20" velocity="${50*M_PI/180}" lower="${ 0.182*M_PI/180}" upper="${132.8175*M_PI/180}" />    
+	<limit effort="20" velocity="${50*M_PI/180}" lower="${-0.278978*M_PI/180}" upper="${132.8175*M_PI/180}" />    
       <dynamics damping="10.0" />
     </joint>
     <link name="elbowclevis_RIGHT">
