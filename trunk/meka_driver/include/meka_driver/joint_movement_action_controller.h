@@ -34,17 +34,17 @@
 
 #include <meka_driver/AbstractMeka.h>
 #include <sensor_msgs/JointState.h>
-#include <katana_msgs/JointMovementAction.h>
+#include <meka_driver/JointMovementAction.h>
 
-#include <motion_planning_msgs/JointLimits.h>
+#include <arm_navigation_msgs/JointLimits.h>
 
 namespace meka_driver
 {
 
 class JointMovementActionController
 {
-  typedef actionlib::SimpleActionServer<katana_msgs::JointMovementAction> JMAS;
-  typedef actionlib::SimpleActionClient<katana_msgs::JointMovementAction> JMAC;
+  typedef actionlib::SimpleActionServer<JointMovementAction> JMAS;
+  typedef actionlib::SimpleActionClient<JointMovementAction> JMAC;
 
 public:
   JointMovementActionController(boost::shared_ptr<AbstractMeka> meka);

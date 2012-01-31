@@ -51,7 +51,131 @@ void JointStatePublisher::update()
     msg->name.push_back(joint_names[i]);
     msg->position.push_back(angles[i]);
     msg->velocity.push_back(vels[i]);
+    //msg->position.push_back(0.2);
+    //msg->velocity.push_back(0.);
+    
   }
+#if 0  
+  msg->name.push_back("floating_rot_w");
+  msg->position.push_back(0.0);
+  msg->velocity.push_back(0.0);
+   
+  msg->name.push_back("floating_rot_x");
+  msg->position.push_back(0.0);
+  msg->velocity.push_back(0.0);
+  
+  msg->name.push_back("floating_rot_y");
+  msg->position.push_back(0.0);
+  msg->velocity.push_back(0.0);
+  
+  msg->name.push_back("floating_rot_z");
+  msg->position.push_back(0.0);
+  msg->velocity.push_back(0.0);
+  
+  msg->name.push_back("floating_trans_x");
+  msg->position.push_back(0.0);
+  msg->velocity.push_back(0.0);
+  
+  msg->name.push_back("floating_trans_y");
+  msg->position.push_back(0.0);
+  msg->velocity.push_back(0.0);
+  
+  msg->name.push_back("floating_trans_z");
+  msg->position.push_back(0.0);
+  msg->velocity.push_back(0.0);
+
+   msg->name.push_back("m3joint_mt3_j0");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_mt3_j1");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_mt3_j2");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   
+   msg->name.push_back("m3joint_ua_mh8_j0");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j1");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j2");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j3");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j4");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j5");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j6");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j7");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j8");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j9");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ua_mh8_j10");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+      
+   msg->name.push_back("m3joint_ua_mh8_j11");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ms2_j0");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ms2_j1");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ms2_j2");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ms2_j3");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ms2_j4");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ms2_j5");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+   
+   msg->name.push_back("m3joint_ms2_j6");
+   msg->position.push_back(0.0);
+   msg->velocity.push_back(0.0);
+#endif   
+   
+
+
 
   /*msg->name.push_back(meka->getGripperJointNames()[0]);
   msg->position.push_back(angles[5]);

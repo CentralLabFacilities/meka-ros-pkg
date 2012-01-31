@@ -32,7 +32,7 @@
 #include <meka_driver/SpecifiedTrajectory.h>
 #include <meka_driver/meka_constants.h>
 
-#include <motion_planning_msgs/JointLimits.h>
+#include <arm_navigation_msgs/JointLimits.h>
 
 namespace meka_driver
 {
@@ -68,7 +68,7 @@ public:
   virtual std::vector<double> getMotorAngles();
   virtual std::vector<double> getMotorVelocities();
 
-  virtual std::vector<motion_planning_msgs::JointLimits> getMotorLimits();
+  virtual std::vector<arm_navigation_msgs::JointLimits> getMotorLimits();
   virtual double getMotorLimitMax(std::string joint_name);
   virtual double getMotorLimitMin(std::string joint_name);
 
@@ -95,7 +95,7 @@ protected:
 
   // the motor limits of the 6 motors
 
-  std::vector<motion_planning_msgs::JointLimits> motor_limits_;
+  std::vector<arm_navigation_msgs::JointLimits> motor_limits_;
 };
 
 }

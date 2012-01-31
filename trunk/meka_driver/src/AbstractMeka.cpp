@@ -202,7 +202,7 @@ std::vector<double> AbstractMeka::getMotorVelocities()
   return motor_velocities_;
 }
 
-std::vector<motion_planning_msgs::JointLimits> AbstractMeka::getMotorLimits()
+std::vector<arm_navigation_msgs::JointLimits> AbstractMeka::getMotorLimits()
 {
   return motor_limits_;
 }

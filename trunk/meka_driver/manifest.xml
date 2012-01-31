@@ -21,7 +21,7 @@
   <!-- <depend package="arm_control_msgs"/> -->
   <depend package="image_proc"/>
   <export>
-    <cpp cflags="-I${prefix}/msg/cpp -I${prefix}/srv/cpp -I${prefix}/include"/>    
+    <cpp cflags="-I${prefix}/msg/cpp/include -I${prefix}/srv/cpp/include -I${prefix}/include"/>    
   </export>
   <depend package="roscpp"/>
   <depend package="kni"/>
@@ -40,13 +40,14 @@
 
   <!-- for KNIKinematics -->
   <depend package="kinematics_msgs"/>
-  <depend package="tf"/>  
+  <depend package="tf"/>
+  <depend package="arm_navigation_msgs"/>  
 
   <!-- for katana_gripper_grasp_controller -->
   <depend package="object_manipulation_msgs"/>
 
   <!-- for JointMovementActionController -->
-  <depend package="katana_msgs"/>
+  <!--<depend package="katana_msgs"/>-->
   
   <rosdep name="armadillo"/>
 </package>
