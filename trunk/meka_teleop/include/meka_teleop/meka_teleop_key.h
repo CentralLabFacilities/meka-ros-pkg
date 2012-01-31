@@ -33,13 +33,13 @@
 
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
-#include <katana_msgs/JointMovementAction.h>
+#include <meka_driver/JointMovementAction.h>
 #include <object_manipulation_msgs/GraspHandPostureExecutionAction.h>
 
 #include <actionlib/server/simple_action_server.h>
 #include <actionlib/client/simple_action_client.h>
 
-typedef actionlib::SimpleActionClient<katana_msgs::JointMovementAction> JMAC;
+typedef actionlib::SimpleActionClient<meka_driver::JointMovementAction> JMAC;
 typedef object_manipulation_msgs::GraspHandPostureExecutionGoal GHPEG;
 
 #define KEYCODE_A 0x61

@@ -358,7 +358,7 @@ void MekaTeleopKey::keyboardLoop()
     {
       ROS_INFO("Sending new JointMovementActionGoal..");
 
-      katana_msgs::JointMovementGoal goal;
+      meka_driver::JointMovementGoal goal;
       goal.jointGoal = movement_goal_;
 
       for (size_t i = 0; i < goal.jointGoal.name.size(); i++)
