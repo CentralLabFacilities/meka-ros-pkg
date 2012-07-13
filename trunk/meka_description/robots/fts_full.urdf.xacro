@@ -6,9 +6,9 @@
        name="uta" >
 
  <property name="M_PI" value="3.1415926535897931" />
- <property name="R_ARM" value="ma5" />
+ <property name="R_ARM" value="ma16" />
  <property name="R_HAND" value="mh12" />
- <property name="TORSO" value="mt3" />
+ <property name="TORSO" value="mt5" />
  
  <property name="MESH" value="meka_description/meshes/mid_res" />
  <property name="MESH_COLL" value="meka_description/meshes/low_res" />
@@ -48,9 +48,9 @@
   <m3_r_arm_transmission side="r" reflect="1" parent="upper"/>
   <m3_r_hand_transmission/>
   
-  <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
+  <!--<m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-  </m3_r_hand>
+  </m3_r_hand>-->
   
   <!--<m3_l_arm side="l" reflect="1" parent="upper">
     <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
