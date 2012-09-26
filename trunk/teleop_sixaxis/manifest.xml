@@ -13,6 +13,8 @@
   <depend package="roscpp"/>
   <depend package="eigen" />
   <depend package="kdl" />
+  <depend package="joy" />
+  <depend package="sensor_msgs" />
 </package>
 
 

@@ -22,8 +22,10 @@ import time
 import os
 import roslib; roslib.load_manifest('m3_defs_ros')
 import rospy
-import roslib; roslib.load_manifest('joy')
-from joy.msg import Joy
+#import roslib; roslib.load_manifest('joy')
+import roslib; roslib.load_manifest('sensor_msgs')
+
+from sensor_msgs.msg import Joy
 import roslib; roslib.load_manifest('m3_client')
 from m3_client.msg import M3OmnibaseJoy
 

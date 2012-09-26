@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client
+CMAKE_SOURCE_DIR = /home/meka/mekabot/meka-ros-pkg/m3_client
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client
+CMAKE_BINARY_DIR = /home/meka/mekabot/meka-ros-pkg/m3_client
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client/CMakeFiles /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/meka/mekabot/meka-ros-pkg/m3_client/CMakeFiles /home/meka/mekabot/meka-ros-pkg/m3_client/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /opt/ros/cturtle/stacks/meka-ros-pkg/m3_client/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/meka/mekabot/meka-ros-pkg/m3_client/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -188,71 +188,6 @@ clean-test-results: cmake_check_build_system
 clean-test-results/fast:
 	$(MAKE) -f CMakeFiles/clean-test-results.dir/build.make CMakeFiles/clean-test-results.dir/build
 .PHONY : clean-test-results/fast
-
-#=============================================================================
-# Target rules for targets named hand_client_example
-
-# Build rule for target.
-hand_client_example: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 hand_client_example
-.PHONY : hand_client_example
-
-# fast build rule for target.
-hand_client_example/fast:
-	$(MAKE) -f CMakeFiles/hand_client_example.dir/build.make CMakeFiles/hand_client_example.dir/build
-.PHONY : hand_client_example/fast
-
-#=============================================================================
-# Target rules for targets named humanoid_client_example
-
-# Build rule for target.
-humanoid_client_example: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 humanoid_client_example
-.PHONY : humanoid_client_example
-
-# fast build rule for target.
-humanoid_client_example/fast:
-	$(MAKE) -f CMakeFiles/humanoid_client_example.dir/build.make CMakeFiles/humanoid_client_example.dir/build
-.PHONY : humanoid_client_example/fast
-
-#=============================================================================
-# Target rules for targets named humanoid_client_test
-
-# Build rule for target.
-humanoid_client_test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 humanoid_client_test
-.PHONY : humanoid_client_test
-
-# fast build rule for target.
-humanoid_client_test/fast:
-	$(MAKE) -f CMakeFiles/humanoid_client_test.dir/build.make CMakeFiles/humanoid_client_test.dir/build
-.PHONY : humanoid_client_test/fast
-
-#=============================================================================
-# Target rules for targets named loadx6_client_example
-
-# Build rule for target.
-loadx6_client_example: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 loadx6_client_example
-.PHONY : loadx6_client_example
-
-# fast build rule for target.
-loadx6_client_example/fast:
-	$(MAKE) -f CMakeFiles/loadx6_client_example.dir/build.make CMakeFiles/loadx6_client_example.dir/build
-.PHONY : loadx6_client_example/fast
-
-#=============================================================================
-# Target rules for targets named m3_client
-
-# Build rule for target.
-m3_client: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 m3_client
-.PHONY : m3_client
-
-# fast build rule for target.
-m3_client/fast:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/build
-.PHONY : m3_client/fast
 
 #=============================================================================
 # Target rules for targets named rosbuild_precompile
@@ -410,141 +345,6 @@ tests/fast:
 	$(MAKE) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/build
 .PHONY : tests/fast
 
-# target to build an object file
-src/examples/hand_client_example.o:
-	$(MAKE) -f CMakeFiles/hand_client_example.dir/build.make CMakeFiles/hand_client_example.dir/src/examples/hand_client_example.o
-.PHONY : src/examples/hand_client_example.o
-
-# target to preprocess a source file
-src/examples/hand_client_example.i:
-	$(MAKE) -f CMakeFiles/hand_client_example.dir/build.make CMakeFiles/hand_client_example.dir/src/examples/hand_client_example.i
-.PHONY : src/examples/hand_client_example.i
-
-# target to generate assembly for a file
-src/examples/hand_client_example.s:
-	$(MAKE) -f CMakeFiles/hand_client_example.dir/build.make CMakeFiles/hand_client_example.dir/src/examples/hand_client_example.s
-.PHONY : src/examples/hand_client_example.s
-
-# target to build an object file
-src/examples/humanoid_client_example.o:
-	$(MAKE) -f CMakeFiles/humanoid_client_example.dir/build.make CMakeFiles/humanoid_client_example.dir/src/examples/humanoid_client_example.o
-.PHONY : src/examples/humanoid_client_example.o
-
-# target to preprocess a source file
-src/examples/humanoid_client_example.i:
-	$(MAKE) -f CMakeFiles/humanoid_client_example.dir/build.make CMakeFiles/humanoid_client_example.dir/src/examples/humanoid_client_example.i
-.PHONY : src/examples/humanoid_client_example.i
-
-# target to generate assembly for a file
-src/examples/humanoid_client_example.s:
-	$(MAKE) -f CMakeFiles/humanoid_client_example.dir/build.make CMakeFiles/humanoid_client_example.dir/src/examples/humanoid_client_example.s
-.PHONY : src/examples/humanoid_client_example.s
-
-# target to build an object file
-src/examples/humanoid_client_test.o:
-	$(MAKE) -f CMakeFiles/humanoid_client_test.dir/build.make CMakeFiles/humanoid_client_test.dir/src/examples/humanoid_client_test.o
-.PHONY : src/examples/humanoid_client_test.o
-
-# target to preprocess a source file
-src/examples/humanoid_client_test.i:
-	$(MAKE) -f CMakeFiles/humanoid_client_test.dir/build.make CMakeFiles/humanoid_client_test.dir/src/examples/humanoid_client_test.i
-.PHONY : src/examples/humanoid_client_test.i
-
-# target to generate assembly for a file
-src/examples/humanoid_client_test.s:
-	$(MAKE) -f CMakeFiles/humanoid_client_test.dir/build.make CMakeFiles/humanoid_client_test.dir/src/examples/humanoid_client_test.s
-.PHONY : src/examples/humanoid_client_test.s
-
-# target to build an object file
-src/examples/loadx6_client_example.o:
-	$(MAKE) -f CMakeFiles/loadx6_client_example.dir/build.make CMakeFiles/loadx6_client_example.dir/src/examples/loadx6_client_example.o
-.PHONY : src/examples/loadx6_client_example.o
-
-# target to preprocess a source file
-src/examples/loadx6_client_example.i:
-	$(MAKE) -f CMakeFiles/loadx6_client_example.dir/build.make CMakeFiles/loadx6_client_example.dir/src/examples/loadx6_client_example.i
-.PHONY : src/examples/loadx6_client_example.i
-
-# target to generate assembly for a file
-src/examples/loadx6_client_example.s:
-	$(MAKE) -f CMakeFiles/loadx6_client_example.dir/build.make CMakeFiles/loadx6_client_example.dir/src/examples/loadx6_client_example.s
-.PHONY : src/examples/loadx6_client_example.s
-
-# target to build an object file
-src/examples/rotate_arm.o:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/examples/rotate_arm.o
-.PHONY : src/examples/rotate_arm.o
-
-# target to preprocess a source file
-src/examples/rotate_arm.i:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/examples/rotate_arm.i
-.PHONY : src/examples/rotate_arm.i
-
-# target to generate assembly for a file
-src/examples/rotate_arm.s:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/examples/rotate_arm.s
-.PHONY : src/examples/rotate_arm.s
-
-# target to build an object file
-src/hand_client.o:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/hand_client.o
-.PHONY : src/hand_client.o
-
-# target to preprocess a source file
-src/hand_client.i:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/hand_client.i
-.PHONY : src/hand_client.i
-
-# target to generate assembly for a file
-src/hand_client.s:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/hand_client.s
-.PHONY : src/hand_client.s
-
-# target to build an object file
-src/humanoid_client.o:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/humanoid_client.o
-.PHONY : src/humanoid_client.o
-
-# target to preprocess a source file
-src/humanoid_client.i:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/humanoid_client.i
-.PHONY : src/humanoid_client.i
-
-# target to generate assembly for a file
-src/humanoid_client.s:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/humanoid_client.s
-.PHONY : src/humanoid_client.s
-
-# target to build an object file
-src/joint_array_client.o:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/joint_array_client.o
-.PHONY : src/joint_array_client.o
-
-# target to preprocess a source file
-src/joint_array_client.i:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/joint_array_client.i
-.PHONY : src/joint_array_client.i
-
-# target to generate assembly for a file
-src/joint_array_client.s:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/joint_array_client.s
-.PHONY : src/joint_array_client.s
-
-# target to build an object file
-src/loadx6_client.o:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/loadx6_client.o
-.PHONY : src/loadx6_client.o
-
-# target to preprocess a source file
-src/loadx6_client.i:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/loadx6_client.i
-.PHONY : src/loadx6_client.i
-
-# target to generate assembly for a file
-src/loadx6_client.s:
-	$(MAKE) -f CMakeFiles/m3_client.dir/build.make CMakeFiles/m3_client.dir/src/loadx6_client.s
-.PHONY : src/loadx6_client.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -559,11 +359,6 @@ help:
 	@echo "... ROSBUILD_gensrv_py"
 	@echo "... clean-test-results"
 	@echo "... edit_cache"
-	@echo "... hand_client_example"
-	@echo "... humanoid_client_example"
-	@echo "... humanoid_client_test"
-	@echo "... loadx6_client_example"
-	@echo "... m3_client"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_precompile"
 	@echo "... rosbuild_premsgsrvgen"
@@ -577,33 +372,6 @@ help:
 	@echo "... test-results"
 	@echo "... test-results-run"
 	@echo "... tests"
-	@echo "... src/examples/hand_client_example.o"
-	@echo "... src/examples/hand_client_example.i"
-	@echo "... src/examples/hand_client_example.s"
-	@echo "... src/examples/humanoid_client_example.o"
-	@echo "... src/examples/humanoid_client_example.i"
-	@echo "... src/examples/humanoid_client_example.s"
-	@echo "... src/examples/humanoid_client_test.o"
-	@echo "... src/examples/humanoid_client_test.i"
-	@echo "... src/examples/humanoid_client_test.s"
-	@echo "... src/examples/loadx6_client_example.o"
-	@echo "... src/examples/loadx6_client_example.i"
-	@echo "... src/examples/loadx6_client_example.s"
-	@echo "... src/examples/rotate_arm.o"
-	@echo "... src/examples/rotate_arm.i"
-	@echo "... src/examples/rotate_arm.s"
-	@echo "... src/hand_client.o"
-	@echo "... src/hand_client.i"
-	@echo "... src/hand_client.s"
-	@echo "... src/humanoid_client.o"
-	@echo "... src/humanoid_client.i"
-	@echo "... src/humanoid_client.s"
-	@echo "... src/joint_array_client.o"
-	@echo "... src/joint_array_client.i"
-	@echo "... src/joint_array_client.s"
-	@echo "... src/loadx6_client.o"
-	@echo "... src/loadx6_client.i"
-	@echo "... src/loadx6_client.s"
 .PHONY : help
 
 
