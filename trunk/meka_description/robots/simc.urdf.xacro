@@ -8,7 +8,10 @@
  <property name="M_PI" value="3.1415926535897931" />
  <property name="R_ARM" value="ma16" />
  <property name="R_HAND" value="mh12" />
+ <property name="L_ARM" value="ma17" />
+ <property name="L_HAND" value="mh13" />
  <property name="TORSO" value="mt5" />
+  <property name="HEAD" value="ms2" />
  
  <property name="MESH" value="meka_description/meshes/mid_res" />
  <property name="MESH_COLL" value="meka_description/meshes/low_res" />
@@ -25,14 +28,21 @@
 
 <!-- Meka Arm -->
   <include filename="$(find meka_description)/urdf/A2R3_r_arm_defs.urdf.xacro" />
+  <include filename="$(find meka_description)/urdf/A2R3_l_arm_defs.urdf.xacro" />
 
   <!-- Meka Hand -->
   <include filename="$(find meka_description)/urdf/H2R2_r_hand_defs.urdf.xacro" />
+  <include filename="$(find meka_description)/urdf/H2R2_l_hand_defs.urdf.xacro" />
+  
+<!-- Meka Head -->
+  <include filename="$(find meka_description)/urdf/S2R1_head_defs.urdf.xacro" />
+
 
 
   <!-- john added transmissions -->
   <include filename="$(find meka_description)/transmissions/A2R3_r_arm_defs.transmission.xacro" />
   <include filename="$(find meka_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />
+  <include filename="$(find meka_description)/transmissions/S2R1_head_defs.transmission.xacro" />
 
 
    <property name="M_PI" value="3.1415926535897931" />
@@ -54,9 +64,15 @@
   <m3_r_arm_transmission side="r" reflect="1" parent="upper"/>
   <m3_r_hand_transmission/>
   
-  <!--<m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
+  <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-  </m3_r_hand>-->
+  </m3_r_hand>
+  
+  <m3_head side="r" reflect="1" parent="upper">
+    <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
+  </m3_head>
+
+
   
   <!--<m3_l_arm side="l" reflect="1" parent="upper">
     <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
