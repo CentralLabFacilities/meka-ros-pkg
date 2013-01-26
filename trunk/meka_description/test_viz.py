@@ -149,12 +149,11 @@ header = Header(0,rospy.Time.now(),'0')
 pub.publish(JointState(header, joints, positions, [0]*len(positions), [0]*len(positions)))
 
 try:
-    while True:
-	time.sleep(1.0)
-	if not rospy.is_shutdown():
-	    header = Header(0,rospy.Time.now(),'0')
-	    pub.publish(JointState(header, joints, positions, [0]*len(positions), [0]*len(positions)))	    
-except (KeyboardInterrupt,EOFError):
+    while not rospy.is_shutdown():
+	time.sleep(1.0)	
+	header = Header(0,rospy.Time.now(),'0')
+	pub.publish(JointState(header, joints, positions, [0]*len(positions), [0]*len(positions)))	    
+except (KeyboardInterrupt,EOFError,rospy.ROSInterruptException):
     pass
 
 
