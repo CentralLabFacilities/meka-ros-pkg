@@ -11,7 +11,7 @@
 
     <!-- Shoulder pan -->
     <joint name="zlift_z" type="prismatic">
-      <axis xyz="0 1 0" />
+      <axis xyz="0 0 1" />
       <insert_block name="origin" /> <!-- transform from parent link to this joint frame -->
       <parent link="${parent}"/>
       <child link="zlift_link"/>
