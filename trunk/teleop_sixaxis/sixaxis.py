@@ -26,8 +26,8 @@ import rospy
 import roslib; roslib.load_manifest('sensor_msgs')
 
 from sensor_msgs.msg import Joy
-import roslib; roslib.load_manifest('m3_client')
-from m3_client.msg import M3OmnibaseJoy
+import roslib; roslib.load_manifest('m3meka_msgs')
+from m3meka_msgs.msg import M3OmnibaseJoy
 
 #from sensor_msgs.msg import JointState
 #from roslib.msg import Header
