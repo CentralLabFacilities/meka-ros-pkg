@@ -49,8 +49,8 @@
                          soft_upper_limit="${reflect*M_PI/4+1.5-0.15}" />
 
       <!-- joint angle when the rising or the falling flag is activated on PR2 -->
-
     </joint>
+
     <link name="shoulderupper_LEFT">
 
       <inertial>
@@ -63,19 +63,20 @@
 
       <visual>
 	      <material name="GreyA" />
-	      <origin xyz="0 0 0" rpy="0 0 0 " />
+	      <origin xyz="0 0 0" rpy="3.14 0 0 " />
 	      <geometry name="l_shoulder_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_shoulderupper_LEFT.mesh" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3_RT1_shoulderRoll.dae" />
 	      </geometry>  
       </visual>
 
       <collision>
-	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
+	      <origin xyz="0 0 0" rpy="3.14 0.0 0.0 " />
 	      <geometry name="l_shoulder_collision_geom">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT1_shoulderRoll.stl" />
 	      </geometry>
       </collision>
     </link>
+
 
     <!-- Shoulder lift -->
     <joint name="left_arm_j1" type="revolute">
@@ -93,7 +94,6 @@
       <child link="shoulderpitch_LEFT"/>
     </joint>
     <link name="shoulderpitch_LEFT">
-
       <inertial>
         <mass value="2.74988" />
         <origin xyz="0.02195 -0.02664 -0.03127" rpy="0 0 0"/>
@@ -104,21 +104,21 @@
 
       <visual>
 	      <material name="GreyB" />
-	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="shoulderpitch_LEFT">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_shoulderpitch_LEFT.mesh" />
+	      <origin xyz="0 0 0" rpy="0 0 3.14" />
+	      <geometry name="l_shoulderpitch_RIGHT">
+		      <mesh filename="package://${MESH}/A2R3/A2R3_RT2_shoulderPitch.dae" />		      
 	      </geometry>  
       </visual>
       
       <collision>
-	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="shoulderpitch_LEFT_collision">
-		      <box size="0.01 0.01 0.01" />
+	      <origin xyz="0 0 0" rpy="0.0 0.0 3.14" />
+	      <geometry name="l_shoulderpitch_RIGHT_collision">
+		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT2_shoulderPitch.stl" />
 	      </geometry>
       </collision>
     </link>
 
-    <!-- Upperarm roll: internal fixed attchment point for upper arm -->
+ <!-- Upperarm roll: internal fixed attchment point for upper arm -->
 
     <joint name="left_arm_j2" type="revolute">
       <axis xyz="0 0 -1" />
@@ -143,19 +143,19 @@
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="bicep_l_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_bicep_LEFT.mesh" />
+	      <geometry name="bicep_LEFT_geom">
+		      <mesh filename="package://${MESH}/A2R3/A2R3_LT3_bicep.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="bicep_l_geom_collision">
-		      <box size="0.01 0.01 0.01" />
+	      <geometry name="bicep_LEFT_geom_collision">
+		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_LT3_bicep.stl" />
 	      </geometry>
       </collision>
     </link>
-
+ 
   </macro>
 
 
@@ -190,15 +190,15 @@
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="elbowclevis_l_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_elbowclevis_LEFT.mesh" />
+	      <geometry name="elbowclevis_LEFT_geom">
+		      <mesh filename="package://${MESH}/A2R3/A2R3_LT4_elbow.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="elbowclevis_l_collision">
-		      <box size="0.01 0.01 0.01" />
+	      <geometry name="elbowclevis_LEFT_collision">
+		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT4_elbow.stl" />
 	      </geometry>
       </collision>
 
@@ -216,7 +216,6 @@
       <child link="wrist_LEFT"/>
     </joint>
     <link name="wrist_LEFT">
-
       <inertial>
         <mass value="1.90327" />
         <origin xyz="0.01014 0.00032 -0.01211" />
@@ -228,15 +227,15 @@
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="wrist_l_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_wrist.mesh" />
+	      <geometry name="wrist_LEFT_geom">
+		      <mesh filename="package://${MESH}/A2R3/A2R3_T5_forearmRoll.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="wrist_l_collision">
-		      <box size="0.01 0.01 0.01" />
+	      <geometry name="wrist_LEFT_collision">
+		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T5_forearmRoll.stl" />
 	      </geometry>
       </collision>
     </link>
@@ -244,12 +243,11 @@
 
   </macro>
 
-
   <!-- ============================   Forearm   ============================ -->
 
   <macro name="m3_l_forearm" params="side parent reflect">
 
-	  <joint name="m3joint_${L_ARM}_j5" type="revolute">
+	  <joint name="left_arm_j5" type="revolute">
 		  <axis xyz="0 -1 0" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="${parent}"/>
@@ -267,25 +265,25 @@
                  izz="0.01659310749" />
       </inertial>
 
-      <visual>
+       <visual>
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="w_differential_l_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_w_differential.mesh" />
+	      <geometry name="w_differential_LEFT_geom">
+		      <mesh filename="package://${MESH}/A2R3/A2R3_T6_wristDiff.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="w_differential_l_collision">
+	      <geometry name="w_differential_LEFT_collision">
 		      <box size="0.01 0.01 0.01" />
 	      </geometry>
       </collision>
     </link>
 
-    <!-- Wrist flex -->
+  <!-- Wrist flex -->
 
-    <joint name="m3joint_${L_ARM}_j6" type="revolute">
+    <joint name="left_arm_j6" type="revolute">
 	    <axis xyz="-1 0 0" />
       <limit lower="-0.1" upper="2.2" effort="200" velocity="${VELOCITY_LIMIT_SCALE*5.13}" />
       <safety_controller k_position="20" k_velocity="4" soft_lower_limit="${-0.1+0.2}" soft_upper_limit="${2.2-0.2}" />
@@ -307,21 +305,20 @@
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="handmount_l_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_handmount.mesh" />
+	      <geometry name="handmount_LEFT_geom">
+		       <mesh filename="package://${MESH}/A2R3/A2R3_T7_wristYaw.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="handmount_l_collision">
-		      <box size="0.01 0.01 0.01" />
+	      <geometry name="handmount_LEFT_collision">
+		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T7_wristYaw.stl" />
 	      </geometry>
       </collision>
     </link>
 
   </macro>
-
 
 
   <macro name="m3_l_arm" params="side parent reflect *origin">
@@ -330,8 +327,6 @@
     </m3_l_shoulder>
     <m3_l_upper_arm side="${side}" reflect="${reflect}" parent="bicep_LEFT" />
     <m3_l_forearm side="${side}" reflect="${reflect}" parent="wrist_LEFT" />
-
-    
   </macro>
 
 
