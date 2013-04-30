@@ -31,7 +31,7 @@ from m3meka_msgs.msg import M3OmnibaseJoy
 
 #from sensor_msgs.msg import JointState
 #from roslib.msg import Header
-import subprocess
+#import subprocess
 
 class M3SixAxis:        
     def __init__(self):        
@@ -64,13 +64,13 @@ class M3SixAxis:
         rospy.Subscriber("/joy", Joy, self.callback)
         self.pub = rospy.Publisher('omnibase_joy', M3OmnibaseJoy)
         
+	print 'Starting /omnibase_joy topic'
         try:            
             rospy.spin()
         except:
             pass
         
-    def callback(self, data):
-        
+    def callback(self, data):        
         self.pub.publish(self.get_x(data.axes), self.get_y(data.axes), self.get_yaw(data.axes), self.get_button(data.buttons),self.get_z(data.axes))
         
     def get_z(self,axes):
