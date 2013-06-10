@@ -122,6 +122,7 @@
 		  <geometry name="upper_geom">
 			  <mesh filename="package://${MESH}/T2R3/T2R3_TJ3_chest_waist_neck.dae" />
 		  </geometry>
+		  <material name="Blue" />
 	  </visual>
 	  <collision>
 		  <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
