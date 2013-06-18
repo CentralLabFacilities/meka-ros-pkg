@@ -34,7 +34,7 @@
 
   
 <!-- Meka Head -->
-  <include filename="$(find meka_description)/urdf/S2R1B_head_defs.urdf.xacro" />
+  <include filename="$(find meka_description)/urdf/SIMC_head_defs.urdf.xacro" />
 
 
 
@@ -127,7 +127,7 @@
 	  <collision>
 		  <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 		  <geometry name="upper_collision_geom">
-			  <mesh filename="package://${MESH_COLL}/T2R3/T2R3_TJ3_chest_waist_neck.stl" />
+			  <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T4_Chest_Neck.stl" />
 		  </geometry>
 	  </collision>
   </link>

@@ -114,7 +114,7 @@
 	  <collision>
 		  <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 		  <geometry name="b1r1_3_geom">
-			  <box size="0.01 0.01 0.01" />
+			  <mesh filename="package://${MESH_COLL}/B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.stl" />
 		  </geometry>
 	  </collision>
   </link>

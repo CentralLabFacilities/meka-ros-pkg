@@ -45,7 +45,7 @@
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="z_lift_geom_collision_geom">
-		      <box size="0.01 0.01 0.01" />
+		      <mesh filename="package://${MESH_COLL}/B1R1/MB1_00_011_festo-chest_mount_assy+spacer.stl" />
 	      </geometry>
       </collision>
     </link>
