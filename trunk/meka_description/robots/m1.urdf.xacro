@@ -106,7 +106,7 @@
 
   <!-- Solid Base -->
   <joint name="chest_joint" type="fixed">
-	  <origin xyz="0 0 0.0" rpy="0 0 0" />
+	  <origin xyz="0 0 -0.03" rpy="0 0 0" />
     <parent link="zlift_link" />
     <child link="upper" />
   </joint>
@@ -120,7 +120,7 @@
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
 		  <geometry name="upper_geom">
-			  <mesh filename="package://${MESH}/T2R3/T2R3_TJ3_chest_waist_neck.dae" />
+			  <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest_Neck.dae" />
 		  </geometry>
 		  <material name="Blue" />
 	  </visual>

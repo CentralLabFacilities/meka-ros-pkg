@@ -189,9 +189,9 @@
 
       <visual>
 	      <material name="GreyA" />
-	      <origin xyz="0 0 0" rpy="0 0 0 " />
+	      <origin xyz="0 0 0" rpy="0 0 3.14 " />
 	      <geometry name="elbowclevis_LEFT_geom">
-		      <mesh filename="package://${MESH}/A2R3/A2R3_LT4_elbow.dae" />
+		      <mesh filename="package://${MESH}/A2R3/A2R3_RT4_elbow.dae" />
 	      </geometry>  
       </visual>
       

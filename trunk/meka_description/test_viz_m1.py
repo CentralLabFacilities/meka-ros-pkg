@@ -165,9 +165,32 @@ joints.append('head_j5')
 positions.append(0.0)
 joints.append('head_j6')
 positions.append(0.0)
+#joints.append('head_j7')
+#positions.append(0.0)
+joints.append('head_j8')
+positions.append(0.0)
+joints.append('head_j9')
+#positions.append(0.0)
+positions.append(61.5*3.14/180.0)
+joints.append('head_j10')
+positions.append(0.0)
+joints.append('head_j11')
+#positions.append(0.0)
+positions.append(61.5*3.14/180.0)
+
+joints.append('head_j7_rt_eyelid_top')
+#positions.append(0.0)
+positions.append(3.14/4.0)
+joints.append('head_j7_rt_eyelid_bottom')
+#positions.append(0.0)
+positions.append(3.14/4.0)
+#positions.append(1.1862)
 
 
-
+joints.append('head_j7_lt_eyelid_top')
+positions.append(3.14/4.0)
+joints.append('head_j7_lt_eyelid_bottom')
+positions.append(3.14/4.0)
 
 
 header = Header(0,rospy.Time.now(),'0')
