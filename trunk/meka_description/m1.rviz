@@ -78,6 +78,26 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        ear1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ear2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ear_roll:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ear_roll2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         elbowclevis_LEFT:
           Alpha: 1
           Show Axes: false
@@ -193,6 +213,16 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        lt_eyelid_bottom:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lt_eyelid_top:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         neck_roll:
           Alpha: 1
           Show Axes: false
@@ -244,6 +274,16 @@ Visualization Manager:
           Show Trail: false
           Value: true
         ring2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rt_eyelid_bottom:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rt_eyelid_top:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -342,17 +382,17 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 6.688
+      Distance: 3.25304
       Focal Point:
-        X: 0.232131
-        Y: 0.0398274
-        Z: -0.192304
+        X: -0.39356
+        Y: -0.274899
+        Z: 1.50563
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.385398
+      Pitch: 0.400398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.950398
+      Yaw: 0.385398
     Saved: ~
 Window Geometry:
   Displays:
@@ -370,5 +410,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1449
-  X: 70
-  Y: 31
+  X: 268
+  Y: 162
