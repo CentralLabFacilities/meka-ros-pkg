@@ -23,18 +23,14 @@
 
 <!-- Meka Arm -->
   <include filename="$(find meka_description)/urdf/A2R4_r_arm_defs.urdf.xacro" />
-
-  <include filename="$(find meka_description)/urdf/A2R4_l_arm_defs.urdf.xacro" />
   
 
   <!-- Meka Hand -->
   <include filename="$(find meka_description)/urdf/H2R4_r_hand_defs.urdf.xacro" />
 
-  <include filename="$(find meka_description)/urdf/H2R4_l_hand_defs.urdf.xacro" />
-
   
 <!-- Meka Head -->
-  <include filename="$(find meka_description)/urdf/ENS_head_defs.urdf.xacro" />
+  <include filename="$(find meka_description)/urdf/S2R1B_head_defs.urdf.xacro" />
 
 
 
@@ -67,28 +63,20 @@
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_r_hand>
   
-  <!--<m3_l_hand side="l" reflect="1" parent="handmount_LEFT">
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-  </m3_l_hand>-->
- 
-
   <m3_head side="r" reflect="1" parent="upper">
     <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
   </m3_head>
 
+  
+  
  <m3_r_arm side="r" reflect="1" parent="upper">
     <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
   </m3_r_arm>
-
- <!--<m3_l_arm side="l" reflect="1" parent="upper">
-    <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
-  </m3_l_arm>-->
-
   
   <link name="world" />
 
   <link name="base_link" />
-  <!-- Solid Base -->
+<!-- Solid Base -->
   <joint name="base_joint" type="fixed">
 	  <origin xyz="0 0 1" rpy="0 0 0" />
     <parent link="world" />
@@ -106,7 +94,7 @@
 
   <!-- Solid Base -->
   <joint name="chest_joint" type="fixed">
-	  <origin xyz="0 0 -0.03" rpy="0 0 0" />
+	  <origin xyz="0 0 0.0" rpy="0 0 0" />
     <parent link="zlift_link" />
     <child link="upper" />
   </joint>
@@ -120,14 +108,13 @@
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
 		  <geometry name="upper_geom">
-			  <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest_Neck.dae" />
+			  <mesh filename="package://${MESH}/T2R3/T2R3_TJ3_chest_waist_neck.dae" />
 		  </geometry>
-		  <material name="Blue" />
 	  </visual>
 	  <collision>
 		  <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 		  <geometry name="upper_collision_geom">
-			  <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T4_Chest_Neck.stl" />
+			  <mesh filename="package://${MESH_COLL}/T2R3/T2R3_TJ3_chest_waist_neck.stl" />
 		  </geometry>
 	  </collision>
   </link>
