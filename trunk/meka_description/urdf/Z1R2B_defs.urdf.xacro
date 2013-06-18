@@ -15,7 +15,7 @@
       <insert_block name="origin" /> <!-- transform from parent link to this joint frame -->
       <parent link="${parent}"/>
       <child link="zlift_link"/>
-      <limit lower="${reflect*M_PI/4-1.5}"  upper="${reflect*M_PI/4+1.5}"
+      <limit lower="${0.0*M_PI/180.0}"  upper="${31965.0*M_PI/180.0}"
              effort="30" velocity="${3.48}" />
 
       <dynamics damping="10.0" />
