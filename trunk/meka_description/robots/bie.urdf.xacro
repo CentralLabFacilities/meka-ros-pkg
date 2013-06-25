@@ -106,7 +106,7 @@
 
   <!-- Solid Base -->
   <joint name="chest_joint" type="fixed">
-	  <origin xyz="0 0 -0.03" rpy="0 0 0" />
+	  <origin xyz="0.1 0.0 0.0" rpy="0 0 0" />
     <parent link="zlift_link" />
     <child link="panplate" />
   </joint>
@@ -132,7 +132,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="m3joint_${TORSO}_j0" type="continuous">
+  <joint name="torso_j0" type="continuous">
     <axis xyz="0 0 1"/>
     <origin xyz="0 0 0.1678" rpy="0 0 0" />
     <parent link="panplate" />
@@ -161,7 +161,7 @@
     </collision>
   </link>
   
-  <joint name="m3joint_${TORSO}_j1" type="continuous">
+  <joint name="torso_j1" type="continuous">
     <axis xyz="0 1 0"/>
     <origin xyz="0 0 0" rpy="0 0 0" />    
     <parent link="torso" />
@@ -195,7 +195,7 @@
     </collision>
   </link>
   
-  <joint name="m3joint_slave_${TORSO}_j2" type="continuous">
+  <joint name="torso_j2" type="continuous">
     <axis xyz="0 1 0"/>
     <origin xyz="0 0 0.1397" rpy="0 0 0" />    
     <parent link="mid" />
@@ -219,7 +219,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="upper_geom">
-        <mesh filename="package://${MESH}/T2R3/T2R3_TJ3_chest_waist_neck.dae" />
+       <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest_Neck.dae" />
       </geometry>
     </visual>
     <collision>

@@ -126,7 +126,12 @@ positions.append(0.0)
 joints.append('left_hand_j11')
 positions.append(0.0)
 
-
+joints.append('torso_j0')
+positions.append(0.0)
+joints.append('torso_j1')
+positions.append(0.0)
+joints.append('torso_j2')
+positions.append(0.0)
 
 joints.append('head_j0')
 positions.append(0.0)

@@ -80,39 +80,6 @@
       </collision>
     </link>
 
-    <joint name="head_j2" type="revolute">
-      <axis xyz="-1 0 0" />
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <parent link="neck_roll" />
-      <child link="neck_yaw"/>
-      <limit effort="100" velocity="${50*M_PI/180}" lower="${-15.87*M_PI/180}" upper="${15.87*M_PI/180}" />    
-    </joint>
-    <link name="neck_yaw">
-      <inertial>        
-        <mass value="0.496" />
-	<origin xyz="-0.010690 0.053982 0.000045"/>
-	<inertia ixx="0.001094"
-	iyy="0.000311"
-	izz="0.001222"
-	ixy="0.000284"
-	ixz="0.000000"
-	iyz="0.000000" />
-      </inertial>        
-      <visual>
-	      <material name="GreyC" />
-	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="S2R1_H3_neckYaw_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_H3_neckYaw.dae" />
-	      </geometry>  
-      </visual>
-      
-      <collision>
-	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="S2R1_H3_neckYaw_collision">
-		      <box size="0.01 0.01 0.01" />
-	      </geometry>
-      </collision>
-    </link>
 
 </macro>
 
