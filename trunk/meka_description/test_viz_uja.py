@@ -34,32 +34,7 @@ pub = rospy.Publisher("/joint_states", JointState)
 joints = []
 positions = []
 
-joints.append('X')
-positions.append(0.0)
 
-joints.append('Y')
-positions.append(0.0)
-
-joints.append('yaw')
-positions.append(0.0)
-
-joints.append('zlift_joint')
-positions.append(0.0)
-
-joints.append('left_arm_j0')
-positions.append(0.0)
-joints.append('left_arm_j1')
-positions.append(0.0)
-joints.append('left_arm_j2')
-positions.append(0.0)
-joints.append('left_arm_j3')
-positions.append(0.0)
-joints.append('left_arm_j4')
-positions.append(0.0)
-joints.append('left_arm_j5')
-positions.append(0.0)
-joints.append('left_arm_j6')
-positions.append(0.0)
 
 joints.append('right_arm_j0')
 positions.append(0.0)
@@ -101,36 +76,7 @@ positions.append(0.0)
 joints.append('right_hand_j11')
 positions.append(0.0)
 
-joints.append('left_hand_j0')
-positions.append(0.0)
-joints.append('left_hand_j1')
-positions.append(0.0)
-joints.append('left_hand_j2')
-positions.append(0.0)
-joints.append('left_hand_j3')
-positions.append(0.0)
-joints.append('left_hand_j4')
-positions.append(0.0)
-joints.append('left_hand_j5')
-positions.append(0.0)
-joints.append('left_hand_j6')
-positions.append(0.0)
-joints.append('left_hand_j7')
-positions.append(0.0)
-joints.append('left_hand_j8')
-positions.append(0.0)
-joints.append('left_hand_j9')
-positions.append(0.0)
-joints.append('left_hand_j10')
-positions.append(0.0)
-joints.append('left_hand_j11')
-positions.append(0.0)
 
-
-'''joints.append('head_j0')
-positions.append(0.0)
-joints.append('head_j1')
-positions.append(0.0)'''
 
 
 header = Header(0,rospy.Time.now(),'0')

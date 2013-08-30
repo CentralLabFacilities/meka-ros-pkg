@@ -35,22 +35,6 @@ def shm_humanoid(joint_states):
 	  velocities[i] = joint_states.velocity[j]
 	  effort[i] = joint_states.effort[j]
 	  
-def shm_omnibase(joint_states):
-    for i in range(len(joints)):
-      for j in range(len(joint_states.name)):
-	if joints[i] == joint_states.name[j]:
-	  positions[i] = joint_states.position[j]
-	  velocities[i] = joint_states.velocity[j]
-	  effort[i] = joint_states.effort[j]
-
-def shm_zlift(joint_states):
-    for i in range(len(joints)):
-      for j in range(len(joint_states.name)):
-	if joints[i] == joint_states.name[j]:
-	  positions[i] = joint_states.position[j]
-	  velocities[i] = joint_states.velocity[j]
-	  effort[i] = joint_states.effort[j]
-
 
 rospy.init_node("joint_state_publisher")
 pub = rospy.Publisher("/joint_states", JointState)
@@ -60,26 +44,6 @@ joints = []
 positions = []
 velocities = []
 effort = []
-
-joints.append('X')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-
-joints.append('Y')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-
-joints.append('yaw')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-
-joints.append('zlift_joint')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
 
 joints.append('right_arm_j0')
 positions.append(0.0)
@@ -106,35 +70,6 @@ positions.append(0.0)
 velocities.append(0.0)
 effort.append(0.0)
 joints.append('right_arm_j6')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-
-joints.append('left_arm_j0')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_arm_j1')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_arm_j2')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_arm_j3')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_arm_j4')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_arm_j5')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_arm_j6')
 positions.append(0.0)
 velocities.append(0.0)
 effort.append(0.0)
@@ -188,67 +123,12 @@ positions.append(0.0)
 velocities.append(0.0)
 effort.append(0.0)
 
-joints.append('left_hand_j0')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j1')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j2')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j3')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j4')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j5')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j6')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j7')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j8')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j9')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j10')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-joints.append('left_hand_j11')
-positions.append(0.0)
-velocities.append(0.0)
-effort.append(0.0)
-
-
-
-
 
 header = Header(0,rospy.Time.now(),'0')
 pub.publish(JointState(header, joints, positions, velocities, effort))
 
 rospy.Subscriber("/humanoid_state", JointState, shm_humanoid)
 
-rospy.Subscriber("/zlift_state", JointState, shm_zlift)
-
-#rospy.Subscriber("/omnibase_state", JointState, shm_omnibase)
 
 try:
     while not rospy.is_shutdown():

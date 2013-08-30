@@ -60,25 +60,13 @@
   <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_r_hand>
-  
-  <m3_l_hand side="l" reflect="1" parent="handmount_LEFT">
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-  </m3_l_hand>
  
-
-  <m3_head side="r" reflect="1" parent="upper">
-    <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
-  </m3_head>
 
  <m3_r_arm side="r" reflect="1" parent="upper">
     <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
   </m3_r_arm>
 
- <m3_l_arm side="l" reflect="1" parent="upper">
-    <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
-  </m3_l_arm>
 
-  
   <link name="world" />
 
   <link name="base_link" />
@@ -90,18 +78,11 @@
   </joint>
 
     
-  <meka_base  side="r" reflect="1" parent="base_link">
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-  </meka_base>
-
-  <meka_zlift  side="r" reflect="1" parent="dummy_3">
-    <origin xyz="0.43 0.0 0.75" rpy="0 0 0" />
-  </meka_zlift>
 
   <!-- Solid Base -->
   <joint name="chest_joint" type="fixed">
 	  <origin xyz="0 0 -0.03" rpy="0 0 0" />
-    <parent link="zlift_link" />
+    <parent link="base_link" />
     <child link="upper" />
   </joint>
   <link name="upper">
