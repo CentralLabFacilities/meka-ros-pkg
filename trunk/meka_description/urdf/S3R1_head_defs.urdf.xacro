@@ -8,14 +8,19 @@
 
   <macro name="m3_neck" params="side parent reflect *origin">
     
-    <joint name="head_j0" type="revolute">
-      <axis xyz="0 -1 0" />
+   
+    
+     <joint name="head_j1" type="revolute">
+      <axis xyz="0 0 1"/>
+     <limit effort="100" velocity="${75*M_PI/180}" lower="${-56.0*M_PI/180}" upper="${56.0*M_PI/180}" />    
       <insert_block name="origin" /> <!-- transform from parent link to this joint frame -->
       <parent link="${parent}"/>
-      <child link="neck_tilt"/>
-      <limit effort="100" velocity="${20.0*M_PI/180}" lower="${-18.0*M_PI/180}" upper="${1.0*M_PI/180}" />
+      <child link="neck_pan"/>
     </joint>
-    <link name="neck_tilt">
+    
+ 
+    
+    <link name="neck_pan">
       <inertial>
         <mass value="0.940" />
 	<origin xyz="0.000061 0.003310 0.028798"/>
@@ -29,9 +34,12 @@
 
       <visual>
 	      <material name="GreyA" />
-	      <origin xyz="0 0 0" rpy="0 0 0 " />
+	      <!--<origin xyz="0 0 0.0" rpy="0 0 0 " />-->
+	      <origin xyz="0 0 -0.152287" rpy="0 0 0 " />
 	      <geometry name="neck_tilt_geom">		
-		      <mesh filename="package://${MESH}/S2R1/S2R1_SH1_neckTilt.dae" />
+		<!--<box size="0.01 0.01 0.01" />-->
+		<!--<mesh filename="package://${MESH}/S2R1/S2R1_SH1_neckTilt.dae" />-->
+		<mesh filename="package://${MESH}/S3R1/neck.dae" />
 	      </geometry>  
       </visual>
 
@@ -43,16 +51,19 @@
       </collision>
     </link>
 
-     
-    <joint name="head_j1" type="revolute">
-      <axis xyz="0 0 1"/>
-     <limit effort="100" velocity="${75*M_PI/180}" lower="${-56.0*M_PI/180}" upper="${56.0*M_PI/180}" />    
-      <origin xyz="0 0 0.13849" rpy="0 0 0" />
-      <parent link="neck_tilt"/>
-      <child link="neck_roll"/>
-    </joint>
-    <link name="neck_roll">
+    
 
+
+    
+    <joint name="head_j0" type="revolute">
+      <axis xyz="0 -1 0" />
+      <origin xyz="0 0 0.0" rpy="0 0 0" />
+      <parent link="neck_pan"/>
+      <child link="shell"/>
+      <limit effort="100" velocity="${20.0*M_PI/180}" lower="${-18.0*M_PI/180}" upper="${1.0*M_PI/180}" />
+    </joint>
+    
+    <link name="shell">
       <inertial>
         <mass value="0.409" />
 	<origin xyz="0.0 0.0 0.0"/>
@@ -67,20 +78,55 @@
       <visual>
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="neck_roll_geom">
-		      <mesh filename="package://${MESH}/S2R1/S2R1_SH2_neckRoll.dae" />
+	      <geometry name="shell_geom">
+		      <mesh filename="package://${MESH}/S3R1/S3.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="S2R1_SH2_neckRoll_collision">
+	      <geometry name="S3_collision">
 		      <box size="0.01 0.01 0.01" />
 	      </geometry>
       </collision>
-    </link>
+    </link>    
+    
+    <joint name="head_j2" type="revolute">
+      <axis xyz="0 -1 0" /> 
+      <origin xyz="0.07975 0 0.123536" rpy="0 0 0" />
+      <parent link="shell"/>
+      <child link="BB3"/>
+      <limit effort="100" velocity="${20.0*M_PI/180}" lower="${-18.0*M_PI/180}" upper="${1.0*M_PI/180}" />
+    </joint>
+    
+    <link name="BB3">
+      <inertial>
+        <mass value="0.409" />
+	<origin xyz="0.0 0.0 0.0"/>
+	<inertia ixx="0.0"
+	iyy="0.0"
+	izz="0.0"
+	ixy="0.0"
+	ixz="0.0"
+	iyz="0.0" />
+      </inertial>
 
-
+      <visual>
+	      <material name="GreyB" />
+	      <origin xyz="0 0 0" rpy="0 0 0 " />
+	      <geometry name="shell_geom">
+		      <mesh filename="package://${MESH}/S3R1/BB3.dae" />
+	      </geometry>  
+      </visual>
+      
+      <collision>
+	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
+	      <geometry name="S3_collision">
+		      <box size="0.01 0.01 0.01" />
+	      </geometry>
+      </collision>
+    </link>    
+    
 </macro>
 
 
