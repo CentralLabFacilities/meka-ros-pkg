@@ -35,7 +35,7 @@
       <visual>
 	      <material name="GreyA" />
 	      <!--<origin xyz="0 0 0.0" rpy="0 0 0 " />-->
-	      <origin xyz="0 0 -0.152287" rpy="0 0 0 " />
+	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="neck_tilt_geom">		
 		<!--<box size="0.01 0.01 0.01" />-->
 		<!--<mesh filename="package://${MESH}/S2R1/S2R1_SH1_neckTilt.dae" />-->
@@ -57,7 +57,7 @@
     
     <joint name="head_j0" type="revolute">
       <axis xyz="0 -1 0" />
-      <origin xyz="0 0 0.0" rpy="0 0 0" />
+      <origin xyz="0 0 0.152287" rpy="0 0 0" />
       <parent link="neck_pan"/>
       <child link="shell"/>
       <limit effort="100" velocity="${20.0*M_PI/180}" lower="${-18.0*M_PI/180}" upper="${1.0*M_PI/180}" />

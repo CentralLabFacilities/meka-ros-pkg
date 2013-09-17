@@ -37,6 +37,9 @@
   <!--<include filename="$(find meka_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />-->
   <!--<include filename="$(find meka_description)/transmissions/S2R1_head_defs.transmission.xacro" />-->
 
+  <!-- Meka Head -->
+  <include filename="$(find meka_description)/urdf/S3R1_head_defs.urdf.xacro" />
+  
 
    <property name="M_PI" value="3.1415926535897931" />
   <material name="GreyA"> <!-- darkest -->
@@ -64,11 +67,6 @@
   <m3_l_hand side="l" reflect="1" parent="handmount_LEFT">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_l_hand>
- 
-
-  <m3_head side="r" reflect="1" parent="upper">
-    <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
-  </m3_head>
 
  <m3_r_arm side="r" reflect="1" parent="upper">
     <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
@@ -77,6 +75,10 @@
  <m3_l_arm side="l" reflect="1" parent="upper">
     <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
   </m3_l_arm>
+  
+  <m3_head side="r" reflect="1" parent="upper">
+    <origin xyz="0.0 0.0 0.2337" rpy="0 0 0" />
+  </m3_head>
 
   
   <link name="world" />
@@ -114,7 +116,8 @@
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
 		  <geometry name="upper_geom">
-			  <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest_Neck.dae" />
+		    <!--<mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest_Neck.dae" />-->
+		    <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest2.dae" />
 		  </geometry>
 		  <material name="Blue" />
 	  </visual>

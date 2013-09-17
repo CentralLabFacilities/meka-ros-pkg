@@ -127,10 +127,12 @@ joints.append('left_hand_j11')
 positions.append(0.0)
 
 
-'''joints.append('head_j0')
+joints.append('head_j0')
 positions.append(0.0)
 joints.append('head_j1')
-positions.append(0.0)'''
+positions.append(0.0)
+joints.append('head_j2')
+positions.append(0.0)
 
 
 header = Header(0,rospy.Time.now(),'0')
