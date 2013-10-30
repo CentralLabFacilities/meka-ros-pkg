@@ -30,14 +30,14 @@
   <!-- Meka Hand -->
   <include filename="$(find meka_description)/urdf/H2R4_r_hand_defs.urdf.xacro" />
 
- <!--<include filename="$(find meka_description)/urdf/H2R4_l_hand_defs.urdf.xacro" />-->
+  <!-- Meka Gripper -->
+  <include filename="$(find meka_description)/urdf/G2R1_l_gripper_defs.urdf.xacro" />
+
 
     <!-- Meka Head -->
   <include filename="$(find meka_description)/urdf/S3R1_head_defs.urdf.xacro" />
 <!-- Meka Head -->
 <!--<include filename="$(find meka_description)/urdf/SIMC_head_defs.urdf.xacro" />-->
-
-
 
   <!-- john added transmissions -->
   <include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" />
@@ -65,15 +65,10 @@
   <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_r_hand>
-  
-  <!--<m3_l_hand side="l" reflect="1" parent="handmount_LEFT">
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-  </m3_l_hand>-->
- 
 
-<!--  <m3_head side="r" reflect="1" parent="upper">
-    <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
-  </m3_head>-->
+  <m3_l_gripper side="r" reflect="1" parent="handmount_LEFT">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+  </m3_l_gripper>    
 
  <m3_r_arm side="r" reflect="1" parent="upper">
     <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />

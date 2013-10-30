@@ -76,6 +76,18 @@ positions.append(0.0)
 joints.append('right_arm_j6')
 positions.append(0.0)
 
+joints.append('left_gripper_j0')
+positions.append(0.0)
+
+joints.append('left_gripper_j1')
+positions.append(0.0)
+
+joints.append('left_gripper_j2')
+positions.append(0.0)
+
+joints.append('left_gripper_j3')
+positions.append(0.0)
+
 joints.append('right_hand_j0')
 positions.append(0.0)
 joints.append('right_hand_j1')
