@@ -102,7 +102,7 @@
   </meka_base>
 
   <meka_zlift  side="r" reflect="1" parent="dummy_3">
-    <origin xyz="0.43 0.0 0.75" rpy="0 0 0" />
+    <origin xyz="0.43 0.0 0.45" rpy="0 0 0" />
   </meka_zlift>
 
   <!-- Solid Base -->

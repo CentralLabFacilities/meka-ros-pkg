@@ -134,11 +134,11 @@ joints.append('torso_j2')
 positions.append(0.0)
 
 joints.append('head_j0')
-positions.append(45.0*3.14/180.0)
+positions.append(0*3.14/180.0)
 joints.append('head_j1')
-positions.append(45.0*3.14/180.0)
+positions.append(0*3.14/180.0)
 joints.append('head_j2')
-positions.append(45.0*3.14/180.0)
+positions.append(0*3.14/180.0)
 
 
 
