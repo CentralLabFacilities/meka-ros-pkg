@@ -15,11 +15,6 @@
   <include filename="$(find meka_description)/gazebo/gazebo.urdf.xacro" />
   <!--<include filename="$(find meka_description)/transmissions/uta.transmission.xacro" />-->
 
-<!-- Meka Base -->
-  <include filename="$(find meka_description)/urdf/B1R2B_defs.urdf.xacro" />
-
-<!-- Meka Zlift -->
-  <include filename="$(find meka_description)/urdf/Z1R2B_defs.urdf.xacro" />
 
 <!-- Meka Arm -->
   <include filename="$(find meka_description)/urdf/A2R4_r_arm_defs.urdf.xacro" />
@@ -60,13 +55,20 @@
   <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_r_hand>
- 
 
  <m3_r_arm side="r" reflect="1" parent="upper">
     <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
   </m3_r_arm>
 
-
+  <m3_l_hand side="l" reflect="1" parent="handmount_LEFT">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+  </m3_l_hand>
+  
+   <m3_l_arm side="l" reflect="1" parent="upper">
+    <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
+  </m3_l_arm>
+  
+  
   <link name="world" />
 
   <link name="base_link" />
