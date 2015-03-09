@@ -39,7 +39,7 @@
 
 
   <!-- john added transmissions -->
-  <xacro:include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" />
+  <!-- <xacro:include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" /> -->
   <!--<xacro:include filename="$(find meka_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />-->
   <!--<xacro:include filename="$(find meka_description)/transmissions/S2R1_head_defs.transmission.xacro" />-->
 
@@ -132,7 +132,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="torso_j0" type="continuous">
+  <joint name="torso_j0" type="revolute">
     <axis xyz="0 0 1"/>
     <origin xyz="0 0 0.1678" rpy="0 0 0" />
     <parent link="panplate" />
@@ -161,7 +161,7 @@
     </collision>
   </link>
   
-  <joint name="torso_j1" type="continuous">
+  <joint name="torso_j1" type="revolute">
     <axis xyz="0 1 0"/>
     <origin xyz="0 0 0" rpy="0 0 0" />    
     <parent link="torso" />
@@ -195,7 +195,7 @@
     </collision>
   </link>
   
-  <joint name="torso_j2" type="continuous">
+  <joint name="torso_j2" type="revolute">
     <axis xyz="0 1 0"/>
     <origin xyz="0 0 0.1397" rpy="0 0 0" />    
     <parent link="mid" />
@@ -206,7 +206,7 @@
 
   <link name="upper">
     <inertial>
-      <mass value="6.534" /> <!-- torso with motors, bottom pullies, and neck mount -->
+      <mass value="6.534" />
       <origin xyz="0.008700 0.011470 0.129740"/>
       <inertia ixx="0.069760"
       iyy="0.048010"

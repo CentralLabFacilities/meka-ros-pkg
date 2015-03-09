@@ -49,7 +49,7 @@
 	      </geometry>
       </collision>
     </link>
-  <link name="upper">
+  <!--link name="upper">
 	  <inertial>
 		  <mass value="1000" />
 		  <origin xyz="0 0 0" />
@@ -61,7 +61,7 @@
 		  <geometry name="upper_geom">
 			  <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest_Neck.dae" />
 		  </geometry>
-		  <!--material name="Blue" /-->
+		  <material name="Blue" />
 	  </visual>
 	  <collision>
 		  <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
@@ -69,18 +69,18 @@
 			  <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T4_Chest_Neck.stl" />
 		  </geometry>
 	  </collision>
-  </link>
-    <joint name="chest_joint" type="fixed">
+  </link -->
+    <!--joint name="chest_joint" type="fixed">
 	<origin xyz="0 0 -0.03" rpy="0 0 0" />
 	<parent link="zlift_link" />
 	<child link="upper" />
-    </joint>
-    <joint name="origin_joint" type="fixed">
+    </joint-->
+    <!--joint name="origin_joint" type="fixed">
 	<origin xyz="0 0 0.2337" rpy="0 0 0" />
 	<parent link="upper" />
 	<child link="T0" />
-    </joint>
-    <link name="T0"/>
+    </joint-->
+    <!--link name="T0"/-->
   </macro>
 
 
