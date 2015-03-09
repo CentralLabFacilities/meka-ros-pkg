@@ -46,7 +46,7 @@ def get_zlift(proxy):
     ## Returns the zlift object, None if none or more is found
     zlift = None
     try:
-        zlift = m3z.M3JointZLift('m3joint_mz2_j0')
+        zlift = m3z.M3JointZLift('m3joint_mz7_j0')
         proxy.subscribe_status(zlift)
     except Exception,e:
         print 'Zlift not found : ',e
@@ -58,7 +58,7 @@ def get_omnibase(proxy):
     ## Returns the omnibase object, None if none or more is found
     omni = None
     try:
-        omni = m3o.M3OmniBase('m3omnibase_mb2')
+        omni = m3o.M3OmniBase('m3omnibase_mb7')
         proxy.subscribe_status(omni)
     except Exception,e:
         print 'Omni not found : ',e
@@ -83,7 +83,7 @@ def get_right_hand(proxy):
     ## Returns the right hand object, None if none or more is found
     right_hand = None
     try:
-        right_hand = m3.hand.M3Hand('m3hand_mh16')   
+        right_hand = m3.hand.M3Hand('m3hand_mh24')   
         proxy.subscribe_status(right_hand)
     except Exception,e:
         print 'No right hand found : ',e
@@ -95,7 +95,7 @@ def get_left_hand(proxy):
     ## Returns the left hand object, None if none or more is found
     left_hand = None
     try:
-        left_hand = m3.hand.M3Hand('m3hand_mh28')   
+        left_hand = m3.hand.M3Hand('m3hand_mh26')   
         proxy.subscribe_status(left_hand)
     except Exception,e:
         print 'No left hand found : ',e
@@ -105,18 +105,30 @@ def get_head(proxy):
     assert isinstance(proxy,m3p.M3RtProxy)
     csp_rt = None
     try:
-        csp_rt=m3.head.M3Head('m3head_ms4')
+        csp_rt=m3.head.M3Head('m3head_ms8')
         proxy.subscribe_status(csp_rt)
     except Exception,e:
         print 'No csp head found : ',e
         csp_rt = None
     return csp_rt
+
+def get_torso(proxy):
+    assert isinstance(proxy,m3p.M3RtProxy)
+    torso_rt = None
+    try:
+        torso_rt=m3.torso.M3Torso('m3torso_mt6')
+        proxy.subscribe_status(torso_rt)
+    except Exception,e:
+        print 'No torso found : ',e
+        torso_rt = None
+    return torso_rt
+
     
 def get_right_arm(proxy):
     assert isinstance(proxy,m3p.M3RtProxy)
     right_arm = None
     try:
-        right_arm=m3a.M3Arm('m3arm_ma17')
+        right_arm=m3a.M3Arm('m3arm_ma29')
         proxy.subscribe_status(right_arm)
     except Exception,e:
         print 'No right_arm head found : ',e
@@ -127,7 +139,7 @@ def get_left_arm(proxy):
     assert isinstance(proxy,m3p.M3RtProxy)
     left_arm = None
     try:
-        left_arm=m3a.M3Arm('m3arm_ma20')
+        left_arm=m3a.M3Arm('m3arm_ma30')
         proxy.subscribe_status(left_arm)
     except Exception,e:
         print 'No left_arm head found : ',e
@@ -145,6 +157,7 @@ if __name__ == '__main__':
             right_arm = get_right_arm(proxy)
             left_arm  = get_left_arm(proxy)
             head        = get_head(proxy)
+            torso       = get_torso(proxy)
             zlift       = get_zlift(proxy)
             omni        = get_omnibase(proxy)
             bot         = get_bot(proxy)
@@ -170,6 +183,8 @@ if __name__ == '__main__':
                 print '- Left Arm'
             if head:
                 print '- Head'#,head
+            if torso:
+                print '- Torso'#,torso
             if right_hand:
                 print '- Right hand'#,right_hand
             if left_hand:
@@ -179,8 +194,9 @@ if __name__ == '__main__':
             ## HACK
             ndof_arm = 7
             ndof_hand = 16
-            ndof_head = 11
+            ndof_head = 2
             ndof_zlift = 1
+            ndof_torso = 2
             ndof_base = 3
             # Calibrate ZLift
         #    if zlift is not None:
@@ -262,16 +278,9 @@ if __name__ == '__main__':
             joints.append('left_hand_j15')
             joints.append('head_j0')
             joints.append('head_j1')
-            joints.append('head_j2')
-            joints.append('head_j3')
-            joints.append('head_j4')
-            joints.append('head_j5')
-            joints.append('head_j6')
-            joints.append('head_j7_rt_eyelid_top')
-            joints.append('head_j7_rt_eyelid_bottom')
-            joints.append('head_j7_lt_eyelid_top')
-            joints.append('head_j7_lt_eyelid_bottom')
-               
+            joints.append('torso_j0')
+            joints.append('torso_j1')               
+            joints.append('torso_j2')               
             rospy.init_node("m3_joint_state_publisher")
             pub = rospy.Publisher("/joint_states", JointState,queue_size=1)
             loop_rate = rospy.Rate(50.0)
@@ -372,18 +381,17 @@ if __name__ == '__main__':
                         idx = i
                         # Head state
                         all_head_joints = head.get_theta_rad()
-                        eye_lids_angle_rad = m3t.deg2rad(75.0)
                         for j in xrange(0,len(all_head_joints)-1):
                             positions[idx]=all_head_joints[j] ; idx=idx+1
-                        if len(all_head_joints)>0:
-                            eye_lids_angle_rad = all_head_joints[-1]
-                        for j in xrange(1,5):
-                            positions[-j]=eye_lids_angle_rad + m3t.deg2rad(35);
- 		    else:
-			eye_lids_angle_rad = m3t.deg2rad(75.0)
- 			for j in xrange(1,5):
-				positions[-j] = eye_lids_angle_rad
-
+                    i=i+ndof_head
+                    if torso:
+                        idx = i
+                        # torso state
+                        all_torso_joints = torso.get_theta_rad()
+                        for j in xrange(0,len(all_torso_joints)-1):
+                            positions[idx]=all_torso_joints[j] ; idx=idx+1
+			#extra joint for coupled torso link
+			positions[idx]=all_torso_joints[-1] ; idx=idx+1 
                     
                     pub.publish(JointState(header, joints, positions, [], []))
                     loop_rate.sleep()
