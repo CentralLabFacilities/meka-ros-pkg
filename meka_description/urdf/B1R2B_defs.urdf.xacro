@@ -9,19 +9,19 @@
   <macro name="meka_base" params="side parent reflect *origin">
 
     
-    <joint name="X" type="prismatic">
+    <joint name="X" type="fixed">  <!-- was prismatic -->
       <axis xyz="1 0 0" />
       <insert_block name="origin" /> 
       <parent link="${parent}"/>
       <child link="dummy_1"/>
-      <limit lower="${reflect*M_PI/4-1.5}"  upper="${reflect*M_PI/4+1.5}"
+      <!--limit lower="${reflect*M_PI/4-1.5}"  upper="${reflect*M_PI/4+1.5}"
              effort="30" velocity="${3.48}" />
 
       <dynamics damping="10.0" />
 
       <safety_controller k_position="100" k_velocity="10"
                          soft_lower_limit="${reflect*M_PI/4-1.5+0.15}"
-                         soft_upper_limit="${reflect*M_PI/4+1.5-0.15}" />     
+                         soft_upper_limit="${reflect*M_PI/4+1.5-0.15}" /-->     
     </joint>
     
     <link name="dummy_1">
@@ -49,15 +49,15 @@
       </collision>
     </link>
 
-    <joint name="Y" type="prismatic">
+    <joint name="Y" type="fixed"> <!-- was prismatic -->
       <axis xyz="0 1 0"/>
     
-      <limit lower="-0.5236" upper="1.3963"
+      <!-- limit lower="-0.5236" upper="1.3963"
              effort="30" velocity="${3.47}" />
              
       <safety_controller k_position="100" k_velocity="10"
                          soft_lower_limit="${-0.5236+0.17}" soft_upper_limit="${1.3963-0.05}" />      
-      <dynamics damping="10.0" />
+      <dynamics damping="10.0" / -->
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="dummy_1"/>
       <child link="dummy_2"/>
@@ -88,14 +88,14 @@
       </collision>
     </link>
 
-    <joint name="yaw" type="revolute">
+    <joint name="yaw" type="fixed">  <!-- was revolute -->
       <axis xyz="0 0 1" />
       <origin xyz="0 0.0 0.0" rpy="0 0 0" />
       <parent link="dummy_2" />
       <child link="dummy_3"/>
-      <limit lower="${reflect*1.55-2.35}" upper="${reflect*1.55+2.35}" effort="30" velocity="${5.45}" />
+      <!-- limit lower="${reflect*1.55-2.35}" upper="${reflect*1.55+2.35}" effort="30" velocity="${5.45}" />
       <safety_controller k_position="100" k_velocity="2" soft_lower_limit="${reflect*1.55-2.35+0.15}" soft_upper_limit="${reflect*1.55+2.35-0.15}" />
-      <dynamics damping="0.1" />
+      <dynamics damping="0.1" / -->
     </joint>
 
   <link name="dummy_3">

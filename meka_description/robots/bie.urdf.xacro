@@ -84,18 +84,10 @@
     <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
   </m3_l_arm>
 
-  
-  <link name="world" />
+
 
   <link name="base_link" />
-  <!-- Solid Base -->
-  <joint name="base_joint" type="fixed">
-	  <origin xyz="0 0 1" rpy="0 0 0" />
-    <parent link="world" />
-    <child link="base_link" />
-  </joint>
 
-    
   <meka_base  side="r" reflect="1" parent="base_link">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </meka_base>
