@@ -6,8 +6,6 @@
        name="meka" >
 
  <property name="M_PI" value="3.1415926535897931" />
-
- 
  <property name="MESH" value="meka_description/meshes/mid_res" />
  <property name="MESH_COLL" value="meka_description/meshes/low_res" />
 
