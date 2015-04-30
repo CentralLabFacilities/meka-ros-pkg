@@ -3,11 +3,12 @@
        xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+       
   <property name="M_PI" value="3.1415926535897931" />
   <property name="proxmid_coupling" value="1.0" />
   <property name="middist_coupling" value="1.0" />
-  
-  
+  <property name="th_proxmid_coupling" value="1.0" />
+  <property name="th_middist_coupling" value="1.0" />
  
   <macro name="m3_r_palm" params="side parent reflect *origin use_mimic:=false">
 
@@ -119,6 +120,9 @@
       <parent link="thumb1_right" />
       <child link="thumb2_right"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
+      <xacro:if value="${use_mimic}">
+				<mimic joint="right_hand_j1" multiplier="${th_proxmid_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="thumb2_right">  
@@ -153,6 +157,9 @@
       <parent link="thumb2_right" />
       <child link="thumb_end_right"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
+      <xacro:if value="${use_mimic}">
+				<mimic joint="right_hand_j1" multiplier="${th_middist_coupling}"/>
+			</xacro:if>
     </joint>
     <link name="thumb_end_right"/>
     
@@ -198,7 +205,7 @@
       <parent link="index0_right"/>
       <child link="index1_right"/>
       <xacro:if value="${use_mimic}">
-				<mimic joint="right_hand_j4" multiplier="${proxmid_coupling}"/>
+				<mimic joint="right_hand_j2" multiplier="${proxmid_coupling}"/>
 			</xacro:if>
     </joint>
 
@@ -235,7 +242,7 @@
       <parent link="index1_right"/>
       <child link="index2_right"/>
       <xacro:if value="${use_mimic}">
-				<mimic joint="right_hand_j4" multiplier="${middist_coupling}"/>
+				<mimic joint="right_hand_j2" multiplier="${middist_coupling}"/>
 			</xacro:if>
     </joint>
 
@@ -314,7 +321,7 @@
       <parent link="ring0_right"/>
       <child link="ring1_right"/>
       <xacro:if value="${use_mimic}">
-				<mimic joint="right_hand_j8" multiplier="${proxmid_coupling}"/>
+				<mimic joint="right_hand_j3" multiplier="${proxmid_coupling}"/>
 			</xacro:if>
     </joint>
 
@@ -351,7 +358,7 @@
       <parent link="ring1_right"/>
       <child link="ring2_right"/>
       <xacro:if value="${use_mimic}">
-				<mimic joint="right_hand_j8" multiplier="${middist_coupling}"/>
+				<mimic joint="right_hand_j3" multiplier="${middist_coupling}"/>
 			</xacro:if>
     </joint>
 
@@ -430,7 +437,7 @@
       <parent link="pinky0_right"/>
       <child link="pinky1_right"/>
       <xacro:if value="${use_mimic}">
-				<mimic joint="right_hand_j12" multiplier="${proxmid_coupling}"/>
+				<mimic joint="right_hand_j4" multiplier="${proxmid_coupling}"/>
 			</xacro:if>
     </joint>
 
@@ -467,7 +474,7 @@
       <parent link="pinky1_right"/>
       <child link="pinky2_right"/>
       <xacro:if value="${use_mimic}">
-				<mimic joint="right_hand_j12" multiplier="${middist_coupling}"/>
+				<mimic joint="right_hand_j4" multiplier="${middist_coupling}"/>
 			</xacro:if>
     </joint>
 

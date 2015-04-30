@@ -1,11 +1,16 @@
 <?xml version="1.0"?>
-<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
 
   <property name="M_PI" value="3.1415926535897931" />
- 
-  <macro name="m3_l_palm" params="side parent reflect *origin">
+  <property name="proxmid_coupling" value="1.0" />
+  <property name="middist_coupling" value="1.0" />
+  <property name="th_proxmid_coupling" value="1.0" />
+  <property name="th_middist_coupling" value="1.0" />
+  
+  <macro name="m3_l_palm" params="side parent reflect *origin use_mimic:=false">
 
   <joint name="palm_joint_left" type="fixed">
     <origin xyz="0 0 -0.04414" rpy="0 0 0" />
@@ -115,6 +120,9 @@
       <parent link="thumb1_left" />
       <child link="thumb2_left"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
+      <xacro:if value="${use_mimic}">
+				<mimic joint="left_hand_j1" multiplier="${th_proxmid_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="thumb2_left">  
@@ -148,7 +156,10 @@
       <origin xyz="-0.035 0 0" rpy="0 0 0" />
       <parent link="thumb2_left" />
       <child link="thumb_end_left"/>
-      <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
+      <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />  
+      <xacro:if value="${use_mimic}">
+				<mimic joint="left_hand_j1" multiplier="${th_middist_coupling}"/>
+			</xacro:if>  
     </joint>
     <link name="thumb_end_left"/>
 <!-- Start Index Finger -->
@@ -192,6 +203,9 @@
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
       <parent link="index0_left"/>
       <child link="index1_left"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="left_hand_j2" multiplier="${proxmid_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="index1_left"> 
@@ -209,8 +223,8 @@
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="index1_geom_left">		      
-	      </geometry>  
 		      <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle2.dae" />
+        </geometry>  
       </visual>
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
@@ -226,6 +240,9 @@
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
       <parent link="index1_left"/>
       <child link="index2_left"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="left_hand_j2" multiplier="${middist_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="index2_left">
@@ -302,6 +319,9 @@
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
       <parent link="ring0_left"/>
       <child link="ring1_left"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="left_hand_j3" multiplier="${proxmid_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="ring1_left">    
@@ -336,6 +356,9 @@
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
       <parent link="ring1_left"/>
       <child link="ring2_left"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="left_hand_j3" multiplier="${middist_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="ring2_left">
@@ -412,6 +435,9 @@
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
       <parent link="pinky0_left"/>
       <child link="pinky1_left"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="left_hand_j4" multiplier="${proxmid_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="pinky1_left">      
@@ -446,6 +472,9 @@
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
       <parent link="pinky1_left"/>
       <child link="pinky2_left"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="left_hand_j4" multiplier="${middist_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="pinky2_left">
@@ -483,8 +512,8 @@
     <link name="pinky_end_left"/>
 </macro>
 
-  <macro name="m3_l_hand" params="side parent reflect *origin">
-    <m3_l_palm side="${side}" reflect="${reflect}" parent="${parent}">
+  <macro name="m3_l_hand" params="side parent reflect use_mimic:=false *origin">
+    <m3_l_palm side="${side}" reflect="${reflect}" parent="${parent}" use_mimic="${use_mimic}">
       <insert_block name="origin" />
     </m3_l_palm>
   </macro>
