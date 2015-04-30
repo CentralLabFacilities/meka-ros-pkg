@@ -151,17 +151,12 @@
 	      </geometry>
       </collision>
     </link>
-    <joint name="right_hand_j6" type="revolute">
-      <axis xyz="0 -1 0" />
+    <joint name="right_hand_thumb_dummy" type="fixed">
       <origin xyz="-0.035 0 0" rpy="0 0 0" />
       <parent link="thumb2_right" />
-      <child link="thumb_end_right"/>
-      <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
-      <xacro:if value="${use_mimic}">
-				<mimic joint="right_hand_j1" multiplier="${th_middist_coupling}"/>
-			</xacro:if>
+      <child link="thumb_tip_right"/>
     </joint>
-    <link name="thumb_end_right"/>
+    <link name="thumb_tip_right"/>
     
 <!-- Start Index Finger -->
     <joint name="right_hand_j2" type="revolute">
@@ -198,7 +193,7 @@
       </collision>
     </link>
 
-    <joint name="right_hand_j7" type="revolute">
+    <joint name="right_hand_j6" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
@@ -235,7 +230,7 @@
       </collision>
     </link>
 
-    <joint name="right_hand_j8" type="revolute">
+    <joint name="right_hand_j7" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
@@ -271,14 +266,12 @@
 	      </geometry>
       </collision>
     </link>
-    <joint name="right_hand_j9" type="revolute">
-      <axis xyz="0 1 0" />
-      <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
+    <joint name="right_hand_index_dummy" type="fixed">
       <origin xyz="0 0.008 -0.025" rpy="0 0 0" />
       <parent link="index2_right"/>
-      <child link="index_end_right"/>
+      <child link="index_tip_right"/>
     </joint>
-    <link name="index_end_right"/>
+    <link name="index_tip_right"/>
 <!-- Start Ring Finger -->
     <joint name="right_hand_j3" type="revolute">
       <axis xyz="0 1 0" />
@@ -314,7 +307,7 @@
       </collision>
     </link>
 
-    <joint name="right_hand_j10" type="revolute">
+    <joint name="right_hand_j8" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
@@ -351,7 +344,7 @@
       </collision>
     </link>
 
-    <joint name="right_hand_j11" type="revolute">
+    <joint name="right_hand_j9" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
@@ -387,14 +380,12 @@
 	      </geometry>
       </collision>
     </link>
-    <joint name="right_hand_j12" type="revolute">
-      <axis xyz="0 1 0" />
-      <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
+    <joint name="right_hand_ring_dummy" type="fixed">
       <origin xyz="0 0.008 -0.025" rpy="0 0 0" />
       <parent link="ring2_right"/>
-      <child link="ring_end_right"/>
+      <child link="ring_tip_right"/>
     </joint>
-    <link name="ring_end_right"/>
+    <link name="ring_tip_right"/>
 <!-- Start Pinky Finger -->
     <joint name="right_hand_j4" type="revolute">
       <axis xyz="0 1 0" />
@@ -430,7 +421,7 @@
       </collision>
     </link>
 
-    <joint name="right_hand_j13" type="revolute">
+    <joint name="right_hand_j10" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
@@ -467,7 +458,7 @@
       </collision>
     </link>
 
-    <joint name="right_hand_j14" type="revolute">
+    <joint name="right_hand_j11" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
@@ -503,14 +494,12 @@
 	      </geometry>
       </collision>
     </link>
-    <joint name="right_hand_j15" type="revolute">
-      <axis xyz="0 1 0" />
-      <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
+    <joint name="right_hand_pinky_dummy" type="fixed">
       <origin xyz="0 0.008 -0.025" rpy="0 0 0" />
       <parent link="pinky2_right"/>
-      <child link="pinky_end_right"/>
+      <child link="pinky_tip_right"/>
     </joint>
-    <link name="pinky_end_right"/>
+    <link name="pinky_tip_right"/>
 </macro>
 
   <macro name="m3_r_hand" params="side parent reflect use_mimic:=false *origin">
