@@ -24,13 +24,13 @@ find_package(catkin REQUIRED COMPONENTS openni_launch)
 #   FILES
 #   tabletop_object_detector.msg
 #   Message2.msg
- )
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
 #   tabletop_object_detector.srv
 #   Service2.srv
- )
+# )
 
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
