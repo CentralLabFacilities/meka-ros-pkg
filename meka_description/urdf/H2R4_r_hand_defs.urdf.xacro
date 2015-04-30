@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
-<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
-
   <property name="M_PI" value="3.1415926535897931" />
+  <property name="proxmid_coupling" value="1.0" />
+  <property name="middist_coupling" value="1.0" />
+  
+  
  
-  <macro name="m3_r_palm" params="side parent reflect *origin">
+  <macro name="m3_r_palm" params="side parent reflect *origin use_mimic:=false">
 
   <joint name="palm_joint_right" type="fixed">
     <origin xyz="0 0 -0.04414" rpy="0 0 0" />
@@ -151,6 +155,7 @@
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
     </joint>
     <link name="thumb_end_right"/>
+    
 <!-- Start Index Finger -->
     <joint name="right_hand_j4" type="revolute">
       <axis xyz="0 1 0" />
@@ -192,6 +197,9 @@
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
       <parent link="index0_right"/>
       <child link="index1_right"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="right_hand_j4" multiplier="${proxmid_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="index1_right"> 
@@ -226,6 +234,9 @@
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
       <parent link="index1_right"/>
       <child link="index2_right"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="right_hand_j4" multiplier="${middist_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="index2_right">
@@ -302,6 +313,9 @@
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
       <parent link="ring0_right"/>
       <child link="ring1_right"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="right_hand_j8" multiplier="${proxmid_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="ring1_right">    
@@ -336,6 +350,9 @@
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
       <parent link="ring1_right"/>
       <child link="ring2_right"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="right_hand_j8" multiplier="${middist_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="ring2_right">
@@ -412,6 +429,9 @@
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
       <parent link="pinky0_right"/>
       <child link="pinky1_right"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="right_hand_j12" multiplier="${proxmid_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="pinky1_right">      
@@ -446,6 +466,9 @@
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
       <parent link="pinky1_right"/>
       <child link="pinky2_right"/>
+      <xacro:if value="${use_mimic}">
+				<mimic joint="right_hand_j12" multiplier="${middist_coupling}"/>
+			</xacro:if>
     </joint>
 
     <link name="pinky2_right">
@@ -483,8 +506,8 @@
     <link name="pinky_end_right"/>
 </macro>
 
-  <macro name="m3_r_hand" params="side parent reflect *origin">
-    <m3_r_palm side="${side}" reflect="${reflect}" parent="${parent}">
+  <macro name="m3_r_hand" params="side parent reflect use_mimic:=false *origin">
+    <m3_r_palm side="${side}" reflect="${reflect}" parent="${parent}" use_mimic="${use_mimic}">
       <insert_block name="origin" />
     </m3_r_palm>
   </macro>

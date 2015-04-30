@@ -10,6 +10,10 @@
  
  <property name="MESH" value="meka_description/meshes/mid_res" />
  <property name="MESH_COLL" value="meka_description/meshes/low_res" />
+ 
+ <!-- synergy vector -->
+ <xacro:property name="torso_coupling" value="1.0" />
+ 
 
 <!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
   <xacro:include filename="$(find meka_description)/gazebo/gazebo.urdf.xacro" />
@@ -63,7 +67,7 @@
   <m3_r_arm_transmission side="r" reflect="1" parent="upper"/>
   <m3_r_hand_transmission/>
   
-  <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT">
+  <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT" use_mimic="$(arg use_mimic)">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_r_hand>
   
@@ -194,6 +198,9 @@
     <child link="upper" />
     <limit effort="200" velocity="${10.0*M_PI/180}" lower="${-11.79349*M_PI/180}" upper="${53.29349*M_PI/180}" />
     <dynamics damping="1.0"/>
+    <xacro:if value="$(arg use_mimic)">
+      <mimic joint="torso_j1" multiplier="${torso_coupling}"/>
+		</xacro:if>
   </joint>
 
   <link name="upper">
