@@ -36,12 +36,25 @@
 		      <mesh filename="package://${MESH}/A2R3/A2R3_RT1_shoulderRoll.dae" />
 	      </geometry>  
       </visual>
-
+      <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="r_shoulder_collision_geom">
 		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT1_shoulderRoll.stl" />
 	      </geometry>
+      </collision> -->  
+      <!-- primitive only -->
+      <collision>
+        <origin xyz="0.0 0.035 0.0" rpy="0.0 0.0 0.0 " />
+        <geometry>
+          <box size="0.128 0.07 0.072" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="-0.011 0.0 0" rpy="0 1.5707 0.0 " />
+        <geometry>
+          <cylinder radius="0.036" length="0.15" />
+        </geometry>
       </collision>
     </link>
 
@@ -74,12 +87,39 @@
 		      <mesh filename="package://${MESH}/A2R3/A2R3_RT2_shoulderPitch.dae" />		      
 	      </geometry>  
       </visual>
-      
+      <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="shoulderpitch_RIGHT_collision">
 		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT2_shoulderPitch.stl" />
 	      </geometry>
+      </collision>
+      -->  
+      <!-- primitive only -->
+      <collision>
+        <origin xyz="0.0 -0.0256 -0.04" rpy="-0.58 0.0 0.0 " />
+        <geometry>
+          <box size="0.09 0.07 0.072" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 -0.0319 -0.0595" rpy="0 0 0.0 " />
+        <geometry>
+          <cylinder radius="0.04" length="0.0262" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="-0.0407 0.0 0" rpy="0 1.5707 0.0 " />
+        <geometry>
+          <cylinder radius="0.0352" length="0.008" />
+        </geometry>
+      </collision>
+      
+      <collision>
+        <origin xyz="0.0407 0.0 0" rpy="0 1.5707 0.0 " />
+        <geometry>
+          <cylinder radius="0.0352" length="0.008" />
+        </geometry>
       </collision>
     </link>
 
@@ -111,12 +151,31 @@
 		      <mesh filename="package://${MESH}/A2R3/A2R3_RT3_bicep.dae" />
 	      </geometry>  
       </visual>
-      
+      <!-- meshes 
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="bicep_RIGHT_geom_collision">
 		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT3_bicep.stl" />
 	      </geometry>
+      </collision> -->  
+      <!-- primitive only -->
+      <collision>
+        <origin xyz="-0.03 0 0.1" rpy="0 0.0 0.0 " />
+        <geometry>
+          <box size="0.07 0.08 0.15" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="-0.0047 0 0.15" rpy="0 0 0.0 " />
+        <geometry>
+          <cylinder radius="0.04" length="0.12" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0.0 0"  rpy="1.5707 0.0 0.0 " />
+        <geometry>
+          <cylinder radius="0.0362" length="0.077" />
+        </geometry>
       </collision>
     </link>
 
@@ -157,12 +216,44 @@
 		      <mesh filename="package://${MESH}/A2R3/A2R3_RT4_elbow.dae" />
 	      </geometry>  
       </visual>
-      
+      <!-- meshes 
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="elbowclevis_RIGHT_collision">
 		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT4_elbow.stl" />
 	      </geometry>
+      </collision> -->  
+      <!-- primitive only -->
+      <collision>
+        <origin xyz="0 0 -0.048" rpy="0 0.0 0.0 " />
+        <geometry>
+          <box size="0.0712 0.0868 0.015" />
+        </geometry>
+      </collision>
+       <collision>
+        <origin xyz="0 0.0443 -0.024" rpy="0 0 0.0 " />
+        <geometry>
+          <box size="0.0652 0.01 0.048" />
+        </geometry>
+      </collision>
+       <collision>
+       <origin xyz="0 -0.046 -0.024" rpy="0 0 0.0 " />
+        <geometry>
+          <box size="0.0652 0.01 0.048" />
+        </geometry>
+      </collision>
+      
+      <collision>
+        <origin xyz="0 0.0443 0" rpy="1.5707 0 0.0 " />
+        <geometry>
+          <cylinder radius="0.0356" length="0.01" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 -0.0485 0" rpy="1.5707 0 0.0 " />
+        <geometry>
+          <cylinder radius="0.0356" length="0.015" />
+        </geometry>
       </collision>
 
     </link>
@@ -197,13 +288,47 @@
 		      <mesh filename="package://${MESH}/A2R3/A2R3_T5_forearmRoll.dae" />
 	      </geometry>  
       </visual>
-      
+      <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="wrist_RIGHT_collision">
 		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T5_forearmRoll.stl" />
 	      </geometry>
       </collision>
+       -->  
+      <!-- primitive only -->
+      <collision>
+        <origin xyz="0.0 0 0.1317" rpy="0 0.0 0.0 " />
+        <geometry>
+            <cylinder radius="0.041" length="0.18" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0.0307 0.025"  rpy="0.0 0.0 0.0 " />
+        <geometry>
+          <box size="0.03 0.0154 0.05" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 -0.0307 0.025"  rpy="0.0 0.0 0.0 " />
+        <geometry>
+          <box size="0.03 0.0154 0.05" />
+        </geometry>
+      </collision>
+      
+      <collision>
+        <origin xyz="0 0.027 0"  rpy="1.5707 0.0 0.0 " />
+        <geometry>
+          <cylinder radius="0.024" length="0.007" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 -0.027 0"  rpy="1.5707 0.0 0.0 " />
+        <geometry>
+          <cylinder radius="0.024" length="0.007" />
+        </geometry>
+      </collision>
+      
     </link>
        
 
@@ -242,9 +367,9 @@
       </visual>
       
       <collision>
-	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
+	      <origin xyz="0 0 0" rpy="1.5707 0.0 0.0" />
 	      <geometry name="w_differential_RIGHT_collision">
-		      <box size="0.01 0.01 0.01" />
+		      <cylinder radius="0.027" length="0.044" />
 	      </geometry>
       </collision>
     </link>
@@ -276,12 +401,45 @@
 		       <mesh filename="package://${MESH}/A2R3/A2R3_T7_wristYaw.dae" />
 	      </geometry>  
       </visual>
-      
+      <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
 	      <geometry name="handmount_RIGHT_collision">
 		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T7_wristYaw.stl" />
 	      </geometry>
+      </collision>
+       -->  
+      <!-- primitive only -->
+      <collision>
+        <origin xyz="0 0 -0.043"  rpy="0.0 0.0 0.0 " />
+        <geometry>
+          <box size="0.04 0.0412 0.004" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="-0.025 0.0 -0.0302"  rpy="0 1.1 0.0" />
+        <geometry>
+          <box size="0.03 0.03 0.004" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0.025 0.0 -0.0302"  rpy="0 2.04 0.0" />
+        <geometry>
+          <box size="0.03 0.03 0.004" />
+        </geometry>
+      </collision>
+      
+      <collision>
+        <origin xyz="-0.0275 0.0 0"  rpy="0 1.5707 0.0" />
+        <geometry>
+          <cylinder radius="0.0206" length="0.014" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0.0275 0.0 0"  rpy="0 1.5707 0.0" />
+        <geometry>
+          <cylinder radius="0.0206" length="0.014" />
+        </geometry>
       </collision>
     </link>
 
