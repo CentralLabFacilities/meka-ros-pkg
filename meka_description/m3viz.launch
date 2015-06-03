@@ -3,10 +3,11 @@
   <arg name="robot" default="bie.urdf.xacro" />
  	<arg name="use_joint_state_publisher" default="true"/>
   <arg name="gui" default="true" />
-  <arg name="use_mimic" default="true"/>     
-  
+  <arg name="hand_mimic" default="true"/>     
+  <arg name="torso_mimic" default="true"/>     
+ 
   <!-- ROBOT Description (URDF Model) -->
-  <param name="robot_description" command="$(find xacro)/xacro.py $(find meka_description)/robots/$(arg robot) use_mimic:=$(arg use_mimic)" />
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find meka_description)/robots/$(arg robot) hand_mimic:=$(arg hand_mimic) torso_mimic:=$(arg torso_mimic)" />
   
   <group if="$(arg use_joint_state_publisher)">
 		<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >

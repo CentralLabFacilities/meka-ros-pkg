@@ -9,8 +9,9 @@
  <property name="MESH" value="meka_description/meshes/mid_res" />
  <property name="MESH_COLL" value="meka_description/meshes/low_res" />
 
- <xacro:arg name="use_mimic" default="true"/> 
- <!-- synergy vector -->
+ <xacro:arg name="hand_mimic" default="true"/> 
+ <xacro:arg name="torso_mimic" default="true"/> 
+<!-- synergy vector -->
  <xacro:property name="torso_coupling" value="1.0" />
  
 
@@ -66,11 +67,11 @@
   <m3_r_arm_transmission side="r" reflect="1" parent="upper"/>
   <m3_r_hand_transmission/>
   
-  <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT" use_mimic="$(arg use_mimic)">
+  <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT" use_mimic="$(arg hand_mimic)">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_r_hand>
   
-  <m3_l_hand side="l" reflect="1" parent="handmount_LEFT" use_mimic="$(arg use_mimic)">
+  <m3_l_hand side="l" reflect="1" parent="handmount_LEFT" use_mimic="$(arg hand_mimic)">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </m3_l_hand>
  
@@ -129,18 +130,17 @@
     </collision>-->  
     <!-- primitive only -->
     <collision>
-		  <origin xyz="-0.11 0 0.025" rpy="0.0 0.0 0.0 " />
-		  <geometry>
-			  <box size="0.22 0.19 0.05" />
-		  </geometry>
-	  </collision>
+      <origin xyz="-0.11 0 0.025" rpy="0.0 0.0 0.0 " />
+      <geometry>
+        <box size="0.22 0.19 0.05" />
+      </geometry>
+    </collision>
     <collision>
-		  <origin xyz="0.0 0 0.05" rpy="0.0 0.0 0.0 " />
-		  <geometry>
-			  <cylinder radius="0.095" length="0.1" />
-		  </geometry>
-	  </collision>
-    
+      <origin xyz="0.0 0 0.05" rpy="0.0 0.0 0.0 " />
+      <geometry>
+        <cylinder radius="0.095" length="0.1" />
+      </geometry>
+    </collision> 
   </link>
   <joint name="torso_j0" type="revolute">
     <axis xyz="0 0 1"/>
@@ -173,29 +173,29 @@
     -->  
     <!-- primitive only -->
     <collision>
-		  <origin xyz="0.0 0 -0.0615" rpy="0.0 0.0 0.0 " />
-		  <geometry>
-			  <cylinder radius="0.088" length="0.015" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 0 -0.0615" rpy="0.0 0.0 0.0 " />
+      <geometry>
+        <cylinder radius="0.088" length="0.015" />
+      </geometry>
+    </collision>
     <collision>
-		   <origin xyz="0.0 0 -0.0615" rpy="0.0 0.0 0.0 " />
-		  <geometry>
-			  <box size="0.08 0.23 0.015" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 0 -0.0615" rpy="0.0 0.0 0.0 " />
+      <geometry>
+        <box size="0.08 0.23 0.015" />
+      </geometry>
+    </collision>
     <collision>
-		  <origin xyz="0.0 0.105 0" rpy="1.5707 0.0 0.0 " />
-		  <geometry>
-			  <cylinder radius="0.052" length="0.02" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 0.105 0" rpy="1.5707 0.0 0.0 " />
+      <geometry>
+        <cylinder radius="0.052" length="0.02" />
+      </geometry>
+    </collision>
     <collision>
-		  <origin xyz="0.0 -0.105 0" rpy="1.5707 0.0 0.0  " />
-		  <geometry>
-			  <cylinder radius="0.052" length="0.02" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 -0.105 0" rpy="1.5707 0.0 0.0  " />
+      <geometry>
+        <cylinder radius="0.052" length="0.02" />
+      </geometry>
+  </collision>
   </link>
   
   <joint name="torso_j1" type="revolute">
@@ -234,23 +234,23 @@
     -->  
     <!-- primitive only -->
     <collision>
-		  <origin xyz="0.0 0 0.0684" rpy="0.0 0.0 0.0 " />
-		  <geometry>
-			  <box size="0.114 0.241 0.1368" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 0 0.0684" rpy="0.0 0.0 0.0 " />
+      <geometry>
+        <box size="0.114 0.241 0.1368" />
+      </geometry>
+    </collision>
     <collision>
-		  <origin xyz="0.0 0.0 0" rpy="1.5707 0.0 0.0 " />
-		  <geometry>
-			  <cylinder radius="0.057" length="0.241" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 0.0 0" rpy="1.5707 0.0 0.0 " />
+      <geometry>
+        <cylinder radius="0.057" length="0.241" />
+      </geometry>
+    </collision>
     <collision>
-		  <origin xyz="0.0 0.0 0.1368" rpy="1.5707 0.0 0.0 " />
-		  <geometry>
-			  <cylinder radius="0.057" length="0.241" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 0.0 0.1368" rpy="1.5707 0.0 0.0 " />
+      <geometry>
+        <cylinder radius="0.057" length="0.241" />
+      </geometry>
+    </collision>
     
   </link>
   
@@ -261,9 +261,9 @@
     <child link="upper" />
     <limit effort="200" velocity="${10.0*M_PI/180}" lower="${-11.79349*M_PI/180}" upper="${53.29349*M_PI/180}" />
     <dynamics damping="1.0"/>
-    <xacro:if value="$(arg use_mimic)">
+    <xacro:if value="$(arg torso_mimic)">
       <mimic joint="torso_j1" multiplier="${torso_coupling}"/>
-		</xacro:if>
+    </xacro:if>
   </joint>
 
   <link name="upper">
@@ -294,17 +294,17 @@
         -->  
     <!-- primitive only -->
     <collision>
-		  <origin xyz="0.0 0 0.1346" rpy="0.0 0.0 0.0 " />
-		  <geometry>
-			  <box size="0.14 0.22 0.1978" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 0 0.1346" rpy="0.0 0.0 0.0 " />
+      <geometry>
+        <box size="0.14 0.22 0.1978" />
+      </geometry>
+    </collision>
     <collision>
-		  <origin xyz="0.0 0.0 0.2335" rpy="1.5707 0.0 0.0 " />
-		  <geometry>
-			  <cylinder radius="0.0644" length="0.22" />
-		  </geometry>
-	  </collision>
+      <origin xyz="0.0 0.0 0.2335" rpy="1.5707 0.0 0.0 " />
+      <geometry>
+        <cylinder radius="0.0644" length="0.22" />
+      </geometry>
+    </collision>
     
     
   </link>

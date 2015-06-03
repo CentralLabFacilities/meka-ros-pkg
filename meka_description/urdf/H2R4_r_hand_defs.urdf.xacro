@@ -8,8 +8,8 @@
   <property name="palmprox_coupling" value="0.3" />
   <property name="proxmid_coupling" value="0.3" />
   <property name="middist_coupling" value="0.3" />
-  <property name="th_palmprox_coupling" value="0.5" />
-  <property name="th_proxdist_coupling" value="0.5" />
+  <property name="th_palmprox_coupling" value="0.4" />
+  <property name="th_proxdist_coupling" value="0.4" />
  
   <macro name="m3_r_palm" params="side parent reflect *origin use_mimic:=false">
 
@@ -93,11 +93,11 @@
 
 <!-- Start Thumb -->
     <joint name="right_hand_j0" type="revolute">
-      <axis xyz="0 0 -1" />
-      <origin xyz="-0.02 0.028 -0.03" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <origin xyz="-0.02 0.028 -0.03" rpy="0 0 ${-M_PI/2.0}" />
       <parent link="palm_right"/>
       <child link="thumb0_right"/>
-      <limit effort="100" velocity="${20.0*M_PI/180}" lower="${-40*M_PI/180}" upper="${15*M_PI/180}" />
+      <limit effort="100" velocity="${20.0*M_PI/180}" lower="${0.0*M_PI/180}" upper="${120.0*M_PI/180}" />
     </joint>
 
     <link name="thumb0_right">
@@ -160,14 +160,14 @@
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="palm_right" />
       <child link="thumb_motor_right"/>
-      <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${120.0*M_PI/180.0}" />    
+      <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${170.0*M_PI/180.0}" />    
     </joint>
       
     <link name="thumb_motor_right"/>
         
     <joint name="right_hand_j1a" type="revolute">
       <axis xyz="0 -1 0"/>
-      <limit effort="100" velocity="${75*M_PI/180}" lower="${-80.919*M_PI/180}" upper="${80.91*M_PI/180}" />    
+      <limit effort="100" velocity="${75*M_PI/180}" lower="${0.0*M_PI/180}" upper="${85.0*M_PI/180}" />    
       <origin xyz="-0.018 0 0" rpy="0 0 0" />
       <parent link="thumb0_right"/>
       <child link="thumb1_right"/> 
@@ -178,7 +178,7 @@
   <xacro:unless value="${use_mimic}">
     <joint name="right_hand_j1" type="revolute">
       <axis xyz="0 -1 0"/>
-      <limit effort="100" velocity="${75*M_PI/180}" lower="${-80.919*M_PI/180}" upper="${80.91*M_PI/180}" />    
+      <limit effort="100" velocity="${75*M_PI/180}" lower="${0.0*M_PI/180}" upper="${85.0*M_PI/180}" />    
       <origin xyz="-0.018 0 0" rpy="0 0 0" />
       <parent link="thumb0_right"/>
       <child link="thumb1_right"/>
@@ -238,7 +238,7 @@
       <origin xyz="-0.044 0 0" rpy="0 0 0" />
       <parent link="thumb1_right" />
       <child link="thumb2_right"/>
-      <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
+      <limit effort="100" velocity="${50*M_PI/180}" lower="${0.0*M_PI/180}" upper="${85.0*M_PI/180}" />    
 			<mimic joint="right_hand_j1" multiplier="${th_proxdist_coupling}"/>
     </joint>
   </xacro:if>
@@ -248,7 +248,7 @@
       <origin xyz="-0.044 0 0" rpy="0 0 0" />
       <parent link="thumb1_right" />
       <child link="thumb2_right"/>
-      <limit effort="100" velocity="${50*M_PI/180}" lower="${-14.94*M_PI/180}" upper="${14.94*M_PI/180}" />    
+      <limit effort="100" velocity="${50*M_PI/180}" lower="${0.0*M_PI/180}" upper="${85.0*M_PI/180}" />    
     </joint>
   </xacro:unless>   
       
