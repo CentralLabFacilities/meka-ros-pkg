@@ -77,7 +77,7 @@
  
 
   <m3_head side="r" reflect="1" parent="upper">
-    <origin xyz="0.0 0.0 0.31155" rpy="0 0 0" />
+    <origin xyz="0.0 0.0 0.2757" rpy="0 0 0" />
   </m3_head>
 
  <m3_r_arm side="r" reflect="1" parent="upper">
@@ -281,7 +281,7 @@
       <material name="GreyC" />
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry name="upper_geom">
-       <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest_Neck.dae" />
+       <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest.dae" />
       </geometry>
     </visual>
     <!-- meshes 
