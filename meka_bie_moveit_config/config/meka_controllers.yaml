@@ -1,5 +1,5 @@
 controller_list:
-  - name: /right_position_trajectory_controller
+  - name: /meka_roscontrol/right_position_trajectory_controller
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: true
@@ -11,7 +11,7 @@ controller_list:
       - right_arm_j4
       - right_arm_j5
       - right_arm_j6
-  - name: /left_position_trajectory_controller
+  - name: /meka_roscontrol/left_position_trajectory_controller
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     default: true
