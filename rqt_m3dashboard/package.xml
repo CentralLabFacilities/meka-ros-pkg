@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>rqt_m3dashboard</name>
+  <version>0.0.1</version>
+  <description>rqt_m3dashboard is a GUI to interact with the robot state</description>
+
+  <maintainer email="gwalck@techfak.uni-bielefeld.de">Guillaume WALCK</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>rqt_gui</run_depend>
+  <run_depend>rqt_gui_py</run_depend>
+  <run_depend>rqt_robot_dashboard</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>m3meka_msgs</run_depend>
+
+  <export>
+    <rqt_gui plugin="${prefix}/plugin.xml"/>
+  </export>
+</package>

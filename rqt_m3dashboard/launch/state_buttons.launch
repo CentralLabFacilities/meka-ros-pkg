@@ -1,0 +1,4 @@
+<launch>
+	<rosparam file="$(find rqt_m3dashboard)/config/emergency_buttons_dashboard.yaml" command="load" />
+	<node pkg="rqt_m3dashboard" type="rqt_m3dashboard" name="rqt_m3dashboard" output="screen" />
+</launch>

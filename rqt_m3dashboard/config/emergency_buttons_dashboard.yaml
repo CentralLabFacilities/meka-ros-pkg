@@ -1,0 +1,17 @@
+m3dashboard:
+    emergency_buttons:
+        # Must be an array (it's parsed like that) so the "- " must be added. 
+        # This is the name of the emergency button internally in the node, won't be shown
+        - emergency1:
+            # topic of type std_msgs/Bool publishing if the button is pressed (True)
+            pressed_topic: /emergency1
+            # name of the emergency button for the tooltip when mousing over
+            tooltip_name: EMER1
+    state_buttons:
+        # Must be an array (it's parsed like that) so the "- " must be added. 
+        # This is the name of the emergency button internally in the node, won't be shown
+        - state1:
+            # topic of type M3RosControlState publishing the state
+            state_topic: /meka_roscontrol_state_manager/state
+            # name of the state button for the tooltip when mousing over
+            tooltip_name: STATE
