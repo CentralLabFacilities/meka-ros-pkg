@@ -146,19 +146,19 @@
         <joint name="right_hand_j4c" value="0" />
     </group_state>
     <group_state name="left_arm_safe" group="left_arm">
-        <joint name="left_arm_j0" value="0,0674" />
-        <joint name="left_arm_j1" value="-0,1824" />
-        <joint name="left_arm_j2" value="0,0075" />
-        <joint name="left_arm_j3" value="0,4079" />
-        <joint name="left_arm_j4" value="-0,0476" />
+        <joint name="left_arm_j0" value="0.0674" />
+        <joint name="left_arm_j1" value="-0.1824" />
+        <joint name="left_arm_j2" value="0.0075" />
+        <joint name="left_arm_j3" value="0.4079" />
+        <joint name="left_arm_j4" value="-0.0476" />
         <joint name="left_arm_j5" value="0" />
         <joint name="left_arm_j6" value="0" />
     </group_state>
     <group_state name="right_arm_safe" group="right_arm">
-        <joint name="right_arm_j0" value="0,1914" />
-        <joint name="right_arm_j1" value="0,1361" />
+        <joint name="right_arm_j0" value="0.1914" />
+        <joint name="right_arm_j1" value="0.1361" />
         <joint name="right_arm_j2" value="0" />
-        <joint name="right_arm_j3" value="0,2428" />
+        <joint name="right_arm_j3" value="0.2428" />
         <joint name="right_arm_j4" value="0" />
         <joint name="right_arm_j5" value="0" />
         <joint name="right_arm_j6" value="0" />
