@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>meka_posture_execution</name>
+  <name>meka_posture</name>
   <version>0.0.1</version>
-  <description>The meka_posture_execution package</description>
+  <description>Helper class to access meka postures</description>
   <maintainer email="gwalck@techfak.uni-bielefeld.de">Guillaume Walck</maintainer>
   <license>BSD</license>
   <url type="website">https://github.com/CentralLabFacilities/meka-ros-pkg.git</url>
@@ -12,22 +12,14 @@
   <author email="plueckin@techfak.uni-bielefeld.de">plueckin</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>actionlib</build_depend>
-  <build_depend>actionlib_msgs</build_depend>
-  <build_depend>control_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>rospy</build_depend>
-  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
   <build_depend>trajectory_msgs</build_depend>
-  <build_depend>meka_posture</build_depend>
-  <run_depend>actionlib</run_depend>
-  <run_depend>actionlib_msgs</run_depend>
-  <run_depend>control_msgs</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>rospy</run_depend>
-  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
   <run_depend>trajectory_msgs</run_depend>
-  <run_depend>meka_posture</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
