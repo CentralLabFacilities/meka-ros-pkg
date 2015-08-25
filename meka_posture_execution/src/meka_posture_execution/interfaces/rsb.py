@@ -1,7 +1,0 @@
-import rsb
-
-
-class RSBInterface():
-  
-  
-
