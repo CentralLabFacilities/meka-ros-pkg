@@ -59,3 +59,80 @@ right_arm:
         nsecs: 500000000
         secs: 2
       velocities: []
+head:
+  nodding:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - head_j0
+    - head_j1
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+      - -0.37889830876755964
+      - 0.039616588417138096
+      time_from_start:
+        nsecs: 500000000
+        secs: 0
+      velocities: []
+    - accelerations: []
+      effort: []
+      positions:
+      - -0.011812504751842099
+      - 0.039616588417138096
+      time_from_start:
+        nsecs: 000000000
+        secs: 1
+      velocities: []
+  nodding_twice:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - head_j0
+    - head_j1
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+      - -0.37889830876755964
+      - 0.039616588417138096
+      time_from_start:
+        nsecs: 500000000
+        secs: 0
+      velocities: []
+    - accelerations: []
+      effort: []
+      positions:
+      - -0.011812504751842099
+      - 0.039616588417138096
+      time_from_start:
+        nsecs: 000000000
+        secs: 1
+      velocities: []
+    - accelerations: []
+      effort: []
+      positions:
+      - -0.37889830876755964
+      - 0.039616588417138096
+      time_from_start:
+        nsecs: 500000000
+        secs: 1
+      velocities: []
+    - accelerations: []
+      effort: []
+      positions:
+      - -0.011812504751842099
+      - 0.039616588417138096
+      time_from_start:
+        nsecs: 000000000
+        secs: 2
+      velocities: []
