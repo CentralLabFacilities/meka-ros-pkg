@@ -29,7 +29,7 @@ class MekaPostureRecorder(object):
     def __init__(self, name):
 
         self._name = name
-        rospy.init_node(name, anonymous=True, log_level=rospy.INFO)
+        rospy.init_node(name, anonymous=False, log_level=rospy.INFO)
 
         self._name = name
         self._prefix = "meka_roscontrol"
@@ -59,6 +59,7 @@ class MekaPostureRecorder(object):
             return False
         cm_list_client = rospy.ServiceProxy(service_name,
                                             ListControllers)
+        rospy.loginfo("Found %s", service_name)
 
         # get all the controllers
         try:
@@ -175,7 +176,7 @@ class MekaPostureRecorder(object):
         posture_name = req.posture_name
         resp = PostureRecordStopResponse()
         resp.error_code.val = PostureRecordErrorCodes.SUCCESS
-
+        group_to_clear = []
         for group in self._current_postures:
             if not self._mp.add_posture(group, posture_name,
                                         self._current_postures[group]):
@@ -183,8 +184,10 @@ class MekaPostureRecorder(object):
                              for group %s with name %s", group, posture_name)
                 resp.error_code.val = PostureRecordErrorCodes.FAILURE
             else:
-                self._current_postures.pop(group)
+                group_to_clear.append(group)
                 self._overall_time_from_start = 0.0
+        for group in group_to_clear:
+            self._current_postures.pop(group)
         return resp
 
     def add_waypoint_cb(self, req):
@@ -227,10 +230,9 @@ class MekaPostureRecorder(object):
                     max_time_from_start = req.time_from_start[i]
 
                 # set time_from_start
-                wp.time_from_start = self._overall_time_from_start +\
-                    req.time_from_start[i]
+                wp[group_name].time_from_start = rospy.Duration.from_sec(self._overall_time_from_start) + rospy.Duration.from_sec(req.time_from_start[i])
                 # store it
-                self._current_postures[group_name].points.append(wp)
+                self._current_postures[group_name].points.append(wp[group_name])
                 wp_nb.append(len(self._current_postures[group_name].points))
 
             # add the maximum time to overall time

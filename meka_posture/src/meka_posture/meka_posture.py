@@ -29,13 +29,13 @@ class MekaPosture(object):
             self._postures[group_name] = {}
         if posture_name not in self._postures[group_name]:
             self._postures[group_name][posture_name] = trajectory
-            rospy.logwarn("Adding non existing posture named %s for group %s",
+            rospy.loginfo("Adding non existing posture named %s for group %s",
                               posture_name, group_name)
             return True
         else:
             if strategy == "overwrite":
                 self._postures[group_name][posture_name] = trajectory
-                rospy.logwarn("Overwriting posture named %s for group %s",
+                rospy.loginfo("Overwriting posture named %s for group %s",
                               posture_name, group_name)
                 return True
             else:
@@ -115,6 +115,7 @@ class MekaPosture(object):
 
         # check if file exists
         file_exists = os.path.isfile(filepath)
+        posture_strategy = "append"
         if strategy == "append":
             posture_strategy = "overwrite"
             
