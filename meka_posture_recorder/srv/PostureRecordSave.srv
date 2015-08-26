@@ -1,0 +1,10 @@
+string  filepath
+# strategy can be 
+# - keep: append to existing file but not replace duplicate postures
+# - append: append to existing file and replace duplicate posture
+# - overwrite: erase any previous posture in existing file
+string  strategy
+---
+meka_posture_recorder/PostureRecordErrorCodes error_code
+float64 overall_time_from_start
+uint32  waypoints

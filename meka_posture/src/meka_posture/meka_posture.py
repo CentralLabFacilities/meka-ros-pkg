@@ -12,7 +12,7 @@ FollowJointTrajectoryGoal
 # code for loading from yaml inspired by sr_grasp/utils.py, 
 # available at Shadow Robot,  author: Mark Pitchless, licence GPL
 
-# authod: Guillaume WALCK (2015)
+# author: Guillaume WALCK (2015)
 
 class MekaPosture(object):
     
@@ -138,6 +138,9 @@ class MekaPosture(object):
         output_str = yaml.dump(yamldoc, outfile, default_flow_style=False)
         outfile.close()
 
+    def clear_postures(self):
+        self._postures = {}
+  
 def main():
 
     meka_posture = MekaPosture("whatever")
