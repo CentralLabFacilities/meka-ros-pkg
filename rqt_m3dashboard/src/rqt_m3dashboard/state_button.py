@@ -82,10 +82,10 @@ class ControlStateButton(MenuDashWidget):
         self.add_action('Run', self.on_run)
         self.add_action('Freeze', self.on_freeze)
         self.add_action('Standby', self.on_standby)
-        self.add_separator()
-        self.add_action('Run All Groups', self.on_run_all)
-        self.add_action('Freeze All Groups', self.on_freeze_all)
-        self.add_action('Standby All Groups', self.on_standby_all)
+        #self.add_separator()
+        #self.add_action('Run All Groups', self.on_run_all)
+        #self.add_action('Freeze All Groups', self.on_freeze_all)
+        #self.add_action('Standby All Groups', self.on_standby_all)
 
         self._state_control = rospy.ServiceProxy('/meka_roscontrol_state_manager/change_state', M3ControlStateChange)
         self._serial = 0
@@ -117,7 +117,6 @@ class ControlStateButton(MenuDashWidget):
             state_cmd = M3ControlStateChangeRequest()
             state_cmd.command.group_name.append(group)
             state_cmd.command.state.append(cmd)
-            print state_cmd
             self._state_control(state_cmd)
 
             return True

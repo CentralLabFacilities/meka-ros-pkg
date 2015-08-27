@@ -26,10 +26,18 @@
 import rospy
 
 from rqt_robot_dashboard.dashboard import Dashboard
+import actionlib
 
 from python_qt_binding.QtCore import QSize
+from QtGui import QPushButton, QVBoxLayout, QWidget
 
-from m3meka_msgs.msg import M3ControlState, M3ControlStates
+from m3meka_msgs.msg import M3ControlState, M3ControlStates,\
+    M3StateChangeGoal, M3StateChangeAction
+from m3meka_msgs.srv import M3ControlStateChange, M3ControlStateChangeResponse
+
+
+
+
 from std_msgs.msg import Bool
 from .emergency_button import EmergencyButton
 from .state_button import ControlStateButton
@@ -49,68 +57,71 @@ class M3Dashboard(Dashboard):
         self._widget_initialized = False
 
         NAMESPACE = '/m3dashboard'
-        if rospy.has_param(NAMESPACE):
-            # rosparam set /emergency_buttons_dashboard/emergency_button "{'emergency1': {'pressed_topic': '/emergency1', 'tooltip_name': 'EMERGENCY1'}}"
-            if rospy.has_param(NAMESPACE + '/emergency_buttons'):
-                self._emergency_buttons_list = rospy.get_param(NAMESPACE + '/emergency_buttons')
-            else:
-                rospy.logwarn("No emergency buttons to monitor found in param server under " + NAMESPACE)
-                
-            if rospy.has_param(NAMESPACE + '/state_buttons'):
-                self._state_buttons_list = rospy.get_param(NAMESPACE + '/state_buttons')
-            else:
-                rospy.logwarn("No state buttons to monitor found in param server under " + NAMESPACE)
-        else:
-            rospy.logerr("You must set " + NAMESPACE +" parameters to use this plugin. e.g.:\n" +
-                         "rosparam set "+ NAMESPACE + "/emergency_buttons \"{'emergency1': {'pressed_topic': '/emergency1', 'tooltip_name': 'EMERGENCY1'}}\""
-                         "rosparam set "+ NAMESPACE + "/state_buttons \"{'state1': {'state_topic': '/state1', 'tooltip_name': 'STATE1'}}\"")
-            exit(-1)
-
-        for emergency_button_elem in self._emergency_buttons_list:
-            for emer_name in emergency_button_elem.keys():
-                pressed_topic = emergency_button_elem[emer_name].get('pressed_topic', None)
-                tooltip_name = emergency_button_elem[emer_name].get('tooltip_name', None)
-                rospy.loginfo("Emergency button: " + str(emer_name) + " has pressed topic: " +
-                    str(pressed_topic)  + " and has tooltip name: " + str(tooltip_name))
-
-                emergency_button_elem[emer_name].update({'pressed_status': False})
-                emergency_button_elem[emer_name].update({'pressed_sub': rospy.Subscriber(pressed_topic,
-                                                                                    Bool,
-                                                                                    self.dashboard_callback,
-                                                                                    callback_args={'emergency': emer_name},
-                                                                                    queue_size=1)})
-
-                emergency_button_elem[emer_name].update({'emergency_widget': EmergencyButton(self.context, name=tooltip_name)})
-        
-        self._state_button = ControlStateButton('Main', 0)
+           
+        self._state_button = ControlStateButton('All', 0)
         self._dashboard_agg_sub = rospy.Subscriber("/meka_roscontrol_state_manager/state",M3ControlStates,
                                                                                     self.dashboard_callback,
-                                                                                    callback_args={'state': "Main"},
+                                                                                    callback_args={'state': "All"},
                                                                                     queue_size=1)
-        #for state_button_elem in self._state_buttons_list:
-            #for state_name in state_button_elem.keys():
-                #state_topic = state_button_elem[state_name].get('state_topic', None)
-                #tooltip_name = state_button_elem[state_name].get('tooltip_name', None)
-                #rospy.loginfo("State button: " + str(state_name) + " has pressed topic: " +
-                    #str(state_topic)  + " and has tooltip name: " + str(tooltip_name))
-
-                #state_button_elem[state_name].update({'state': 0})
-                #state_button_elem[state_name].update({'state_sub': rospy.Subscriber(state_topic,
-                                                                                    #Int,
-                                                                                    #self.dashboard_callback,
-                                                                                    #callback_args={'state': state_name},
-                                                                                    #queue_size=1)})
-
-                #state_button_elem[state_name].update({'state_widget': StateButton(self.context, name=tooltip_name)})
+                                                                                    
+        self._actionclient = actionlib.SimpleActionClient("/meka_state_manager", M3StateChangeAction)                                                        
+        if self._actionclient.wait_for_server(timeout=rospy.Duration(4)) is False:
+            rospy.logfatal("Failed to connect to state_manager action server in 4 sec")
+            
+        
+        self._main_widget = QWidget()
+        vlayout = QVBoxLayout()
+    
+        self.btn_start = QPushButton("start")
+        self.btn_stop = QPushButton("stop")
+        self.btn_freeze = QPushButton("freeze")
+        
+        vlayout.addWidget(self.btn_start)
+        vlayout.addWidget(self.btn_freeze)
+        vlayout.addWidget(self.btn_stop)
+        
+        self.btn_start.clicked.connect(self.on_btn_start_clicked)
+        self.btn_stop.clicked.connect(self.on_btn_stop_clicked)
+        self.btn_freeze.clicked.connect(self.on_btn_freeze_clicked)
+        
+        self._main_widget.setLayout(vlayout)
+        self.context.add_widget(self._main_widget)
+        #self._main_widget.addLayout(hlayout)
 
         self._widget_initialized = True
 
+    def change_state(self, name, cmd):
+        goal = M3StateChangeGoal()
+        goal.retries = 2
+        goal.strategy = M3StateChangeGoal.RETRY_N_TIMES
+        goal.command.group_name.append(name)
+        goal.command.state.append(cmd)
+        try:
+            self._actionclient.send_goal(goal)
+        except rospy.ROSException:
+            rospy.logerr("Failed to call change state")
+
+    def on_btn_start_clicked(self):
+        """
+        start
+        """
+        self.change_state("all", M3ControlStates.START)
+        
+    def on_btn_stop_clicked(self):
+        """
+        stop
+        """
+        self.change_state("all", M3ControlStates.STOP)
+
+    
+    def on_btn_freeze_clicked(self):
+        """
+        freeze
+        """
+        self.change_state("all", M3ControlStates.FREEZE)
 
     def get_widgets(self):
         widgets_list = []
-        for emergency_button_elem in self._emergency_buttons_list:
-            for emer_name in emergency_button_elem.keys():
-                widgets_list.append([emergency_button_elem[emer_name]['emergency_widget']])
         widgets_list.append([self._state_button])
 
         return widgets_list
@@ -127,11 +138,6 @@ class M3Dashboard(Dashboard):
         if not self._widget_initialized:
             return
 
-        if cb_args.has_key('emergency'):
-            emer_name = cb_args['emergency']
-            for emergency_button_elem in self._emergency_buttons_list:
-                if emergency_button_elem.has_key(emer_name):
-                    emergency_button_elem[emer_name].update({'pressed_status': msg.data})
         
         if cb_args.has_key('state'):
             state_name = cb_args['state']
@@ -142,18 +148,8 @@ class M3Dashboard(Dashboard):
             return
         self._last_dashboard_message_time = rospy.Time.now()
 
-        # Update all widgets
-        for emergency_button_elem in self._emergency_buttons_list:
-            for emer_name in emergency_button_elem.keys():
-                emergency_button_elem[emer_name]['emergency_widget'].set_pressed_status(emergency_button_elem[emer_name]['pressed_status'])
-                rospy.logdebug("Updated " + str(emer_name) + " with "
-                              + ("pressed." if emergency_button_elem[emer_name].get('pressed_status') else "not pressed."))
-
+    
 
     def shutdown_dashboard(self):
-        for emergency_button_elem in self._emergency_buttons_list:
-            for emer_name in emergency_button_elem.keys():
-                if emergency_button_elem[emer_name]['pressed_sub']:
-                    emergency_button_elem[emer_name]['pressed_sub'].unregister()
         self._dashboard_agg_sub.unregister()
         
