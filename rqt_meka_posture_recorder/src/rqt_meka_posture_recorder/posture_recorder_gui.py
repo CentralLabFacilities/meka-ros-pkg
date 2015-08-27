@@ -120,6 +120,9 @@ class MekaPostureRecorderGUI(Plugin):
         self._widget.btn_store_posture.clicked.connect(self.on_store_posture_clicked)
         self._widget.btn_browse.clicked.connect(self.on_btn_file_path_clicked)
         
+        self._widget.chk_select_all.stateChanged.connect(self.on_check_all_changed)
+        self._widget.time_from_start.valueChanged.connect(self.on_time_from_start_changed)
+        
         self._widget.btn_new_posture.setEnabled(True)
         self._widget.btn_store_posture.setEnabled(False)
         self._widget.btn_add_wp.setEnabled(False)
@@ -185,6 +188,14 @@ class MekaPostureRecorderGUI(Plugin):
         self._widget.edit_file_path.setText("")
         self._widget.btn_save_postures.setEnabled(False)
 
+    def on_check_all_changed(self):
+        for group in self._group_list:
+            self._group_check_box[group].setCheckState(self._widget.chk_select_all.checkState()) \
+    
+    def on_time_from_start_changed(self):
+        for group in self._group_spinbox:
+            self._group_spinbox[group].setValue(self._widget.time_from_start.value()) 
+
     def on_btn_file_path_clicked(self):
         """
         File browser
@@ -208,6 +219,9 @@ class MekaPostureRecorderGUI(Plugin):
         self._widget.edit_file_path.setText(filename)
 
         self._widget.btn_save_postures.setEnabled(True)
+        
+
+
 
 
     def on_save_postures_clicked(self):
@@ -262,6 +276,7 @@ class MekaPostureRecorderGUI(Plugin):
                 warn_message =  "Cannot start, store current recording first"
                 QMessageBox.warning(self._widget.btn_new_posture, "Failure", warn_message)
                 self._widget.btn_new_posture.setEnabled(False)
+                self._widget.btn_add_wp.setEnabled(True)
                 self._widget.btn_store_posture.setEnabled(True)
                 return
             else:
