@@ -64,22 +64,29 @@ class MekaPostureExecution(object):
         @param posture_name: posture in this group
         @param timescale: factor to scale the time_from_start of each point
         """
-        goal = self._meka_posture.get_trajectory_goal(group_name, posture_name)
-        if goal is not None:
-            if timescale != 1.0:
-                # rescale the time_from_start for each point
-                self.rescale_time_from_start(goal, timescale)
-
-            if group_name not in self._client:
-                rospy.logerr("Action client for %s not initialized. Trying to initialize it...", group_name)
-                try:
-                    self._set_up_action_client(group_name)
-                except:
-                    rospy.logerr("Could not set up action client for %s.", group_name)
-                    return
-            self._client[group_name].send_goal(goal)
+        
+        if group_name == "all":
+            rospy.loginfo("Calling all the groups")
+            groups = ["right_arm", "right_hand", "left_arm","left_hand","torso", "head"]
+            for names in groups:
+                self.execute(names, posture_name)
         else:
-            rospy.logerr("No goal found for posture %s in group  %s.", posture_name, group_name)
+            goal = self._meka_posture.get_trajectory_goal(group_name, posture_name)
+            if goal is not None:
+                if timescale != 1.0:
+                    # rescale the time_from_start for each point
+                    self.rescale_time_from_start(goal, timescale)
+
+                if group_name not in self._client:
+                    rospy.logerr("Action client for %s not initialized. Trying to initialize it...", group_name)
+                    try:
+                        self._set_up_action_client(group_name)
+                    except:
+                        rospy.logerr("Could not set up action client for %s.", group_name)
+                        return
+                self._client[group_name].send_goal(goal)
+            else:
+                rospy.logerr("No goal found for posture %s in group  %s.", posture_name, group_name)
 
     def load_postures(self, path):
         self._meka_posture.load_postures(path)
@@ -111,10 +118,16 @@ def main():
     
     meka_posture_exec.load_postures(opts.posture_path)
     
+    time.sleep(1)
+    #meka_posture_exec.execute("head", "nodding_twice");
+    print "Ready"
+    
     try:
         rsbiface =  interfaces.RSBInterface(opts.scope, meka_posture_exec.handle)
     except Exception, e:
         logging.error("Interface not brought up! Error was: \"%s\"", e)
+        
+    
     
 if __name__ == "__main__":
     main()
