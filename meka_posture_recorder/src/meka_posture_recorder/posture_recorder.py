@@ -34,9 +34,9 @@ class MekaPostureRecorder(object):
         self._name = name
         self._prefix = "meka_roscontrol"
         self._controller_list = {}
-        self.init_controller_list()
-        self._sub = {}
         self._state = {}
+        self._sub = {}
+        self.init_controller_list()
         self._current_postures = {}
         self._mp = MekaPosture("mypostures")
         self._overall_time_from_start = 0.0
@@ -82,6 +82,19 @@ class MekaPostureRecorder(object):
                                     cname_split[1]
                                 self._controller_list[group_name] =\
                                     controller.name
+        for group_name in self._controller_list:
+            if group_name not in self._sub:
+                try:
+                    self.set_up_subscriber(group_name)
+                    # give some time for the subscriber
+                    # to receive its first data
+                    rospy.sleep(0.5)
+                except rospy.ROSException:
+                    rospy.logerr("Could not set up subscriber \
+                                 for group %s.", group_name)
+                    resp.error_code.val =\
+                        PostureRecordErrorCodes.NOCONTROLLER
+                    
 
     def init_services(self):
         """
@@ -196,7 +209,8 @@ class MekaPostureRecorder(object):
         """
         resp = PostureRecordAddWaypointResponse()
         resp.error_code.val = PostureRecordErrorCodes.SUCCESS
-        resp.waypoints = 0
+        resp.waypoints = []
+        resp.overall_time_from_start = 0.0
         wp_nb = []
         max_time_from_start = 0.0
 
