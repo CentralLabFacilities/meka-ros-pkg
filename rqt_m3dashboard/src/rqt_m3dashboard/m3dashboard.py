@@ -29,7 +29,8 @@ from rqt_robot_dashboard.dashboard import Dashboard
 import actionlib
 
 from python_qt_binding.QtCore import QSize
-from QtGui import QPushButton, QVBoxLayout, QWidget
+from QtGui import QPushButton, QVBoxLayout, QHBoxLayout, QWidget,\
+    QCheckBox, QSpinBox, QLabel
 
 from m3meka_msgs.msg import M3ControlState, M3ControlStates,\
     M3StateChangeGoal, M3StateChangeAction
@@ -54,28 +55,60 @@ class M3Dashboard(Dashboard):
         self.max_icon_size = QSize(50, 30)
 
         self._last_dashboard_message_time = rospy.Time.now()
+        self._state_buttons = {}
         self._widget_initialized = False
-
+        self._service_ready = True
         NAMESPACE = '/m3dashboard'
-           
-        self._state_button = ControlStateButton('All', 0)
+        
+        
+        
+        #self._state_button = ControlStateButton("default", 9999)
+        #TODO read this list on the parameters
+        group_names = ["left_hand","left_arm","head","right_arm","right_hand","zlift","torso"]
+        # create as many buttons as groups received
+        for group_name in group_names:
+            self._state_buttons[group_name] = ControlStateButton(group_name, 0)
+            
+
         self._dashboard_agg_sub = rospy.Subscriber("/meka_roscontrol_state_manager/state",M3ControlStates,
                                                                                     self.dashboard_callback,
-                                                                                    callback_args={'state': "All"},
                                                                                     queue_size=1)
                                                                                     
-        self._actionclient = actionlib.SimpleActionClient("/meka_state_manager", M3StateChangeAction)                                                        
+        self._actionclient = actionlib.SimpleActionClient("/meka_state_manager", M3StateChangeAction)     
+        rospy.loginfo("Looking for state manager...")                                                   
         if self._actionclient.wait_for_server(timeout=rospy.Duration(4)) is False:
             rospy.logfatal("Failed to connect to state_manager action server in 4 sec")
-            
-        
+            self._service_ready = False
+        else:
+            rospy.loginfo("Found the state manager")
+
         self._main_widget = QWidget()
         vlayout = QVBoxLayout()
+        hlayout = QHBoxLayout()
     
+        self.chk_all = QCheckBox("enable_all")
+        self.chk_all.setChecked(True)
+        
+        self.spin_retries = QSpinBox()
+        # infinite number of times is -1
+        self.spin_retries.setMinimum(-1) 
+        self.spin_retries.setMaximum(10) 
+        self.spin_retries.setValue(2)
+        label_retries = QLabel("trial times")
+        
         self.btn_start = QPushButton("start")
         self.btn_stop = QPushButton("stop")
         self.btn_freeze = QPushButton("freeze")
+        if not self._service_ready:
+            self.btn_start.setEnabled(False)
+            self.btn_stop.setEnabled(False)
+            self.btn_freeze.setEnabled(False)
+            
+        hlayout.addWidget(self.chk_all)
+        hlayout.addWidget(label_retries)
+        hlayout.addWidget(self.spin_retries)
         
+        vlayout.addLayout(hlayout)
         vlayout.addWidget(self.btn_start)
         vlayout.addWidget(self.btn_freeze)
         vlayout.addWidget(self.btn_stop)
@@ -83,72 +116,101 @@ class M3Dashboard(Dashboard):
         self.btn_start.clicked.connect(self.on_btn_start_clicked)
         self.btn_stop.clicked.connect(self.on_btn_stop_clicked)
         self.btn_freeze.clicked.connect(self.on_btn_freeze_clicked)
+        self.chk_all.stateChanged.connect(self.on_enable_all_clicked)
         
         self._main_widget.setLayout(vlayout)
         self.context.add_widget(self._main_widget)
         #self._main_widget.addLayout(hlayout)
-
         self._widget_initialized = True
 
-    def change_state(self, name, cmd):
+    def change_state(self, cmd):
         goal = M3StateChangeGoal()
-        goal.retries = 2
-        goal.strategy = M3StateChangeGoal.RETRY_N_TIMES
-        goal.command.group_name.append(name)
-        goal.command.state.append(cmd)
+        goal.retries = 0
+        if self.spin_retries.value() == -1:
+            goal.strategy = M3StateChangeGoal.KEEP_TRYING
+        if self.spin_retries.value() == 0:
+            goal.strategy = M3StateChangeGoal.HALT_ON_FAILURE
+        if self.spin_retries.value() == 1:
+            goal.strategy = M3StateChangeGoal.BEST_POSSIBLE
+
+        if self.spin_retries.value() > 1:
+            goal.strategy = M3StateChangeGoal.RETRY_N_TIMES
+            goal.retries = self.spin_retries.value()
+        
+        
+        # find enabled groups
+        for group_name  in self._state_buttons:
+            if self._state_buttons[group_name]._enable_menu.isChecked():
+                goal.command.group_name.append(group_name)
+                goal.command.state.append(cmd)
         try:
-            self._actionclient.send_goal(goal)
+            if len(goal.command.group_name) > 0:
+                self._actionclient.send_goal(goal)
         except rospy.ROSException:
             rospy.logerr("Failed to call change state")
 
+    def on_enable_all_clicked(self):
+        """
+        start
+        """
+        for group_name  in self._state_buttons:
+            self._state_buttons[group_name]._enable_menu.setChecked(self.chk_all.isChecked())
+            self._state_buttons[group_name]._enable_menu.triggered.emit(self.chk_all.isChecked())
+            #stateChanged.emit( _set_enabled_signal.emit(self.chk_all.isChecked())
+        
     def on_btn_start_clicked(self):
         """
         start
         """
-        self.change_state("all", M3ControlStates.START)
+        self.change_state(M3ControlStates.START)
         
     def on_btn_stop_clicked(self):
         """
         stop
         """
-        self.change_state("all", M3ControlStates.STOP)
+        self.change_state(M3ControlStates.STOP)
 
     
     def on_btn_freeze_clicked(self):
         """
         freeze
         """
-        self.change_state("all", M3ControlStates.FREEZE)
+        self.change_state(M3ControlStates.FREEZE)
 
     def get_widgets(self):
         widgets_list = []
-        widgets_list.append([self._state_button])
+        for group_name in self._state_buttons:
+            widgets_list.append([self._state_buttons[group_name]])
 
         return widgets_list
 
-    def dashboard_callback(self, msg, cb_args):
+    def dashboard_callback(self, msg):
         """
-        callback to process messages
-
+        callback to process state messages
         :param msg:
-        :type msg: Float32 or Bool
-        :param cb_args:
-        :type cb_args: dictionary
+        :type msg: M3ControlStates
         """
-        if not self._widget_initialized:
-            return
-
         
-        if cb_args.has_key('state'):
-            state_name = cb_args['state']
-            self._state_button.set_state_msg(msg)
+        single_msg = M3ControlStates()
+        for group_name, state in zip(msg.group_name, msg.state):
+            if group_name in self._state_buttons:
+                self._state_buttons[group_name].set_state(state)
+                
+                
 
-        # Throttling to 1Hz the update of the widget whatever the rate of the topics is
-        if (rospy.Time.now() - self._last_dashboard_message_time) < rospy.Duration(1.0):
-            return
-        self._last_dashboard_message_time = rospy.Time.now()
+        if not self._service_ready:
+            # test reconnection only each 5 seconds
+            if (rospy.Time.now() - self._last_dashboard_message_time) < rospy.Duration(5.0):
+                return
+            self._last_dashboard_message_time = rospy.Time.now()
+            if self._actionclient.wait_for_server(timeout=rospy.Duration(1)) is False:
+                rospy.logfatal("Failed to connect to state_manager action server, trying again in 5 seconds")
+            else:
+                self._service_ready = True
+                self.btn_start.setEnabled(True)
+                self.btn_stop.setEnabled(True)
+                self.btn_freeze.setEnabled(True)
 
-    
 
     def shutdown_dashboard(self):
         self._dashboard_agg_sub.unregister()

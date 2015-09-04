@@ -36,7 +36,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 import rospy
 
-from python_qt_binding.QtCore import QSize
+from python_qt_binding.QtCore import QSize, pyqtSignal
 
 from m3meka_msgs.msg import M3ControlState, M3ControlStates
 from m3meka_msgs.srv import M3ControlStateChange, M3ControlStateChangeRequest
@@ -50,6 +50,9 @@ class ControlStateButton(MenuDashWidget):
     """
     Dashboard widget to display and interact with the Control state.
     """
+    # create a signal for external triggering
+    _set_enabled_signal = pyqtSignal(int)
+        
     def __init__(self, group_name, group_index):
         """
         :param group_name: Name of the group
@@ -58,12 +61,20 @@ class ControlStateButton(MenuDashWidget):
         :type group_index: int
         """
 
-        if group_name == 'Left Arm':
+        if group_name == 'left_arm':
             state_icon = 'ic-larm.svg'
-        elif group_name == 'Base':
-            state_icon = 'ic-base.svg'
-        elif group_name == 'Right Arm':
+        elif group_name == 'left_hand':
+            state_icon = 'ic-lhand.svg'
+        elif group_name == 'head':
+            state_icon = 'ic-head.svg'
+        elif group_name == 'right_arm':
             state_icon = 'ic-rarm.svg'
+        elif group_name == 'right_hand':
+            state_icon = 'ic-rhand.svg'
+        elif group_name == 'torso':
+            state_icon = 'ic-torso.svg'
+        elif group_name == 'zlift':
+            state_icon = 'ic-zlift.svg'
         else:
             state_icon = 'ic-breaker.svg'
 
@@ -71,17 +82,27 @@ class ControlStateButton(MenuDashWidget):
         ready_icon = ['bg-yellow.svg', state_icon]
         estop_icon = ['bg-red.svg', state_icon, 'ol-err-badge.svg']
         standby_icon = ['bg-grey.svg', state_icon]
+        disabled_icon = ['bg-light_grey.svg', state_icon]
 
-        icons = [estop_icon, standby_icon, ready_icon, running_icon]
+        icons = [disabled_icon, estop_icon, standby_icon, ready_icon, running_icon]
 
         super(ControlStateButton, self).__init__('State:' + group_name, icons=icons, icon_paths=[['rqt_m3dashboard', 'images']])
-        self.update_state(3)
+        
+        # init the button in disabled
+        self.update_state(0)
 
         self.setFixedSize(self._icons[0].actualSize(QSize(50, 30)))
 
         self.add_action('Run', self.on_run)
         self.add_action('Freeze', self.on_freeze)
         self.add_action('Standby', self.on_standby)
+        self._enable_menu = self.add_action('Enable/Disable', self.on_enable_disable)
+        self._enable_menu.setCheckable(True)
+        self._enable_menu.setChecked(False)
+        self.set_group_enabled(False)
+        
+        self._set_enabled_signal.connect(self.on_enable_disable)
+                
         #self.add_separator()
         #self.add_action('Run All Groups', self.on_run_all)
         #self.add_action('Freeze All Groups', self.on_freeze_all)
@@ -91,13 +112,14 @@ class ControlStateButton(MenuDashWidget):
         self._serial = 0
         self._index = group_index
         self._name = group_name
+        self._pending_msg =  None
         self._state = None
         self._last_status_msg = None
         self.setToolTip(group_name)
 
     def control(self, group, cmd):
         """
-        Sends a PowerBoardCommand srv to the pr2
+        Sends a change state to the m3ros_control
 
         :param group: group iname to send command to
         :type group: str
@@ -143,6 +165,17 @@ class ControlStateButton(MenuDashWidget):
 
     def on_standby(self):
         self.set_instandby()
+  
+    def on_enable_disable(self):
+        if self._enable_menu.isChecked():
+            if self._state is not None:
+                self.set_group_enabled(True)
+                self.set_state(self._pending_msg)
+            else:
+                self._enable_menu.setChecked(False)
+        else:
+            self.set_group_enabled(False)
+            
 
     def on_run_all(self):
         self.set_run_all()
@@ -176,7 +209,7 @@ class ControlStateButton(MenuDashWidget):
     def set_standby_all(self):
         self.control3(1)
 
-    def set_state_msg(self, msg):
+    def set_state(self, state):
         """
         Sets state of button based on msg
 
@@ -184,37 +217,47 @@ class ControlStateButton(MenuDashWidget):
         :type msg: m3meka_msgs.msg.M3ControlStates
         """
 
-        status_msg = "Running"
-        if len(msg.state)>0:
-            self._state = msg
-            if (msg.state[0] == M3ControlStates.ESTOP):
-                self.set_estop()
+        if (self._enable_menu.isChecked() or self._state is None):
+            status_msg = "Running"
+            # if first message received, enable the group
+            if self._state is None:
+                self.set_group_enabled(True)
+                self._enable_menu.setChecked(True)
+            self._state = state
+            if (state == M3ControlStates.ESTOP):
+                self.set_state_estop()
                 status_msg = "E-Stop"
-            elif (msg.state[0] == M3ControlStates.STOP):
-                self.set_standby()
+            elif (state == M3ControlStates.STOP):
+                self.set_state_standby()
                 status_msg = "Stop"
-            elif (msg.state[0] == M3ControlStates.FREEZE):
-                self.set_ready()
+            elif (state == M3ControlStates.FREEZE):
+                self.set_state_ready()
                 status_msg = "Freeze"
             else:
-                self.set_running()
+                self.set_state_running()
 
             if (status_msg != self._last_status_msg):
                 self.setToolTip("Group: %s \nState: %s" % (self._name, status_msg))
                 self._last_status_msg = status_msg
         else:
-            self._state = None
-            #no state received
+            self._pending_msg = state
             
+    def set_state_running(self):
+        self.update_state(4)
 
-    def set_running(self):
+    def set_state_ready(self):
         self.update_state(3)
 
-    def set_ready(self):
+    def set_state_standby(self):
         self.update_state(2)
 
-    def set_standby(self):
+    def set_state_estop(self):
         self.update_state(1)
-
-    def set_estop(self):
-        self.update_state(0)
+        
+    def set_group_enabled(self, val):
+        if not val:
+            self.update_state(0)
+        for action in self._menu.actions():
+            if not action.isCheckable():
+                action.setEnabled(val)
+                
