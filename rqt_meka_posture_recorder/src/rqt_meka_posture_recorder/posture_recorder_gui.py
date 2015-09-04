@@ -352,11 +352,9 @@ class MekaPostureRecorderGUI(Plugin):
                 for i, group in enumerate(self._group_list):
                     idx = self._filemodel.index(row_count-1, i)
                     data = self._filemodel.data(idx)
-                    print str(data)
                     if str(data) != "----":
                         new_str = str(data)
                         new_str = new_str.replace("???", posture_name)
-                        print "new", new_str
                         self._filemodel.setData(idx, new_str)  
                 self._table_view.resizeColumnsToContents()
               

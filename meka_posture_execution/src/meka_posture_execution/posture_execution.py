@@ -107,7 +107,7 @@ def main():
     parser = OptionParser()
     parser.add_option("--joints", help="Path to joints made available", default = sys.path[0]+"/../../cfg/joints.yml",
         dest="joint_path")
-    parser.add_option("--postures", help="Path to postures made available", default = sys.path[0]+"/../../cfg/postures.yml",
+    parser.add_option("--postures", help="Path to postures made available", default = "/home/meka/workspace/mekabot/meka-ros-pkg/meka_posture_execution/cfg/postures.yml",
         dest="posture_path")
     parser.add_option("--scope", help="Scope to listen to for remote calls", default = "/meka/posture_execution",
         dest="scope")
@@ -127,7 +127,6 @@ def main():
     except Exception, e:
         logging.error("Interface not brought up! Error was: \"%s\"", e)
         
-    
     
 if __name__ == "__main__":
     main()

@@ -133,7 +133,7 @@ class MekaPosture(object):
         for group_name in self._postures:
             yamldoc[group_name] = {}
             for posture_name in self._postures[group_name]:
-                print (genpy.message.strify_message(self._postures[group_name][posture_name]))
+                #print (genpy.message.strify_message(self._postures[group_name][posture_name]))
                 yamldoc[group_name][posture_name] = yaml.load(genpy.message.strify_message(self._postures[group_name][posture_name]))
 
         output_str = yaml.dump(yamldoc, outfile, default_flow_style=False)
