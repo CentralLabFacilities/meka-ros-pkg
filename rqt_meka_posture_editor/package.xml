@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>rqt_meka_posture_editor</name>
+  <version>0.0.1</version>
+  <description>rqt_meka_posture_editor is a GUI to interact with the meka_posture_execution and to edit postures</description>
+
+  <maintainer email="gwalck@techfak.uni-bielefeld.de">Guillaume WALCK</maintainer>
+  <license>GPL</license>
+  <author email="gwalck@techfak.uni-bielefeld.de">Guillaume WALCK</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>rqt_gui</run_depend>
+  <run_depend>rqt_gui_py</run_depend>
+  <run_depend>meka_posture_execution</run_depend>
+  <run_depend>meka_posture</run_depend>
+
+  <export>
+    <rqt_gui plugin="${prefix}/plugin.xml"/>
+  </export>
+</package>

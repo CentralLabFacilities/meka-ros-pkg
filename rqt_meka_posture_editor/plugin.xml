@@ -1,0 +1,17 @@
+<library path="src">
+  <class name="MekaPostureEditorGUI" type="rqt_meka_posture_editor.posture_editor_gui.MekaPostureEditorGUI" base_class_type="rqt_gui_py::Plugin">
+    <description>
+      A Python GUI plugin to interact with the meka postures and meka posture execution
+    </description>
+    <qtgui>
+      <group>
+        <label>Robot</label>
+        <icon type="theme">folder</icon>
+        <statustip>Plugins related to specific robots.</statustip>
+      </group>
+      <label>Meka PostureEditor</label>
+      <icon type="theme">task-past-due</icon>
+      <statustip>A Python GUI plugin to interact with the meka postures and meka posture execution.</statustip>
+    </qtgui>
+  </class>
+</library>
