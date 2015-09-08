@@ -66,15 +66,25 @@ class MekaPosture(object):
             rospy.logwarn("Posture %s in group %s does not exist", posture_name, group_name)
             return None
 
-    def list_postures(self, group_name):
+
+    def list_postures(self, group_name=None):
         """
         Retrieve the list of existing posture for the given group
         """
-        if group_name in self._postures:
-            return list(self._postures[group_name].keys())
+        if group_name is None:
+            posture_dict = {}
+            for group_name in self._postures:
+                if group_name not in posture_dict:
+                    posture_dict[group_name] = []
+                for posture_name in self._postures[group_name]:
+                    posture_dict[group_name].append(posture_name)
+            return posture_dict
         else:
-            rospy.logwarn("Group %s does not exist in the postures list", group)
-            return list()
+            if group_name in self._postures:
+                return list(self._postures[group_name].keys())
+            else:
+                rospy.logwarn("Group %s does not exist in the postures list", group)
+                return list()
 
     def load_postures(self, filepath):
         """

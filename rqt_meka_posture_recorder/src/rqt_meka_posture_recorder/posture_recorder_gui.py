@@ -26,6 +26,7 @@
 import rospy
 import rospkg
 import os
+from copy import deepcopy
 
 from qt_gui.plugin import Plugin
 from python_qt_binding import loadUi
@@ -33,17 +34,18 @@ from python_qt_binding import loadUi
 from python_qt_binding.QtCore import QSize
 
 from QtCore import Qt, QThread
-from QtGui import QWidget, QDoubleSpinBox, QStandardItemModel, QStandardItem, QTableView, QCheckBox, QFileDialog, QMessageBox, QPushButton, QFrame, QHBoxLayout, QVBoxLayout
+from QtGui import QWidget, QDoubleSpinBox, QStandardItemModel, QStandardItem, QTableView, QTreeWidget, QTreeWidgetItem, QCheckBox, QFileDialog, QMessageBox, QPushButton, QFrame, QHBoxLayout, QVBoxLayout
 from functools import partial
 
 from controller_manager_msgs.srv import ListControllersRequest, \
     ListControllers
     
-from meka_posture_recorder.msg import PostureRecordErrorCodes
+from meka_posture_recorder.msg import PostureRecordErrorCodes, PostureRecordWaypoint
 from meka_posture_recorder.srv import PostureRecordStart, PostureRecordStop,\
     PostureRecordSave, PostureRecordAddWaypoint, PostureRecordStartRequest,\
     PostureRecordStopRequest, PostureRecordAddWaypointRequest,\
-    PostureRecordSaveRequest
+    PostureRecordSaveRequest, PostureRecordGetAllPostures,\
+    PostureRecordGetAllPosturesRequest
 
 
 class MekaPostureRecorderGUI(Plugin):
@@ -78,32 +80,41 @@ class MekaPostureRecorderGUI(Plugin):
             rospy.logerr("No controllers available.")
             return
         
+        self._postureCount = 0
+        self._verticalHeader = []
+        
         # add a column and a checkbox per group
         
         hlayout = QHBoxLayout()
         vlayout = QVBoxLayout()
         all_group_layout = QHBoxLayout()
+                
+        self._tree_widget = QTreeWidget()
+        self._tree_widget.setColumnCount(nb_group + 1)
+       
+        self._tree_widget.setHeaderLabels(["    "] + self._group_list)
         
-        self._filemodel = QStandardItemModel(0, nb_group)
-        self._filemodel.setHorizontalHeaderLabels(self._group_list)
-        self._table_view = QTableView()
-        self._table_view.setModel(self._filemodel)
-        self._table_view.resizeColumnsToContents()
-        
-        group_layout = {}
-        for group_name in self._group_list:
-            group_layout[group_name] = QVBoxLayout()
-            self._group_check_box[group_name] = QCheckBox(group_name)
-            group_layout[group_name].addWidget(self._group_check_box[group_name])
-            self._group_spinbox[group_name] = QDoubleSpinBox()
-            self._group_spinbox[group_name].setValue(2.0)
-            self._group_spinbox[group_name].setSingleStep(0.5)
-            self._group_spinbox[group_name].setMinimum(0.0)
-            group_layout[group_name].addWidget(self._group_spinbox[group_name])
-            all_group_layout.addLayout(group_layout[group_name])
 
-        vlayout.addLayout(all_group_layout)
-        vlayout.addWidget(self._table_view)
+        group_item = QTreeWidgetItem(["group"])
+        self._tree_widget.addTopLevelItem(group_item)
+        time_item = QTreeWidgetItem(["time_from_start"])
+        self._tree_widget.addTopLevelItem(time_item)
+        
+        for index_item, group_name in enumerate(self._group_list):
+            check_box = QCheckBox("enable")
+            self._tree_widget.setItemWidget(group_item, index_item + 1, check_box)
+            self._group_check_box[group_name] = check_box
+            spinbox = QDoubleSpinBox()
+            spinbox.setValue(2.0)
+            spinbox.setSingleStep(0.5)
+            spinbox.setMinimum(0.0)
+            self._tree_widget.setItemWidget(time_item, index_item + 1, spinbox)
+            self._group_spinbox[group_name] = spinbox
+
+        self._postures_item = QTreeWidgetItem(["postures"])
+        self._tree_widget.addTopLevelItem(self._postures_item)
+
+        vlayout.addWidget(self._tree_widget)
         hlayout.addLayout(vlayout)
         self._widget.scrollarea.setLayout(hlayout)
 
@@ -113,6 +124,7 @@ class MekaPostureRecorderGUI(Plugin):
         self.init_services("stop_record", PostureRecordStop)
         self.init_services("save", PostureRecordSave)
         self.init_services("add_waypoint", PostureRecordAddWaypoint)
+        self.init_services("get_all_postures", PostureRecordGetAllPostures)
         
         self._widget.btn_new_posture.clicked.connect(self.on_new_posture_clicked)
         self._widget.btn_save_postures.clicked.connect(self.on_save_postures_clicked)
@@ -123,10 +135,7 @@ class MekaPostureRecorderGUI(Plugin):
         self._widget.chk_select_all.stateChanged.connect(self.on_check_all_changed)
         self._widget.time_from_start.valueChanged.connect(self.on_time_from_start_changed)
         
-        self._widget.btn_new_posture.setEnabled(True)
-        self._widget.btn_store_posture.setEnabled(False)
-        self._widget.btn_add_wp.setEnabled(False)
-
+        self.init_postures()
 
     def init_group_list(self):
         """
@@ -174,12 +183,128 @@ class MekaPostureRecorderGUI(Plugin):
         full_service_name = self._recorder_name + '/' + service_name
         rospy.loginfo("Waiting for %s", service_name)
         try:
-            rospy.wait_for_service(full_service_name, 5.0)
+            rospy.wait_for_service(full_service_name, 2.0)
         except rospy.ROSException:
             rospy.logerr("%s did not show up. Giving up", full_service_name)
             return False
         self._client[service_name] = rospy.ServiceProxy(full_service_name,
                                                 service_type)
+
+    def init_postures(self):
+      
+        is_unstored = False
+        idx_unstored = 0
+        # get postures from recorder
+        if "get_all_postures" in self._client:
+            req = PostureRecordGetAllPosturesRequest()
+            resp = self._client["get_all_postures"](req)
+            
+            
+            for i, posture in enumerate(resp.postures):
+                #print "-------------------",posture.posture_name
+                overall_time_from_start = 0.0
+                self.add_new_posture(posture.selected_groups, posture.posture_name)
+                # find unstored
+                if posture.posture_name == "unstored":
+                    is_unstored = True
+                    unstored_selected_groups = posture.selected_groups
+                # compute overall time
+                postponed_group_names = []
+                postponed_time_from_start = []
+                more_waypoints = True
+                idx_wp = 0
+                while more_waypoints:
+                    # get current waypoint if any left
+                    if idx_wp < len(posture.waypoints):
+                        process_group_names = list(posture.waypoints[idx_wp].group_names)
+                        process_time_from_start = list(posture.waypoints[idx_wp].time_from_start)
+                        idx_wp += 1
+                    else:
+                        process_group_names = []
+                        process_time_from_start = []
+
+                    
+                    # get the postponed elements    
+                    process_group_names += postponed_group_names
+                    process_time_from_start += postponed_time_from_start
+                    
+                    if len(process_group_names) == 0:
+                        more_waypoints = False
+                        continue
+                        
+                    postponed_group_names = []
+                    postponed_time_from_start = []
+                    #print idx_wp, " ", process_group_names, process_time_from_start
+                    
+                    # process the elements
+                    while (len(process_group_names)>0):
+                        # find min and max
+                        max_time = max(process_time_from_start)
+                        idx_max = process_time_from_start.index(max_time)
+                        min_time = min(process_time_from_start)
+                        idx_min = process_time_from_start.index(min_time)
+                        count_min = process_time_from_start.count(min_time)
+                        
+                        #print "idx_min",idx_min, count_min
+                        if (min_time == max_time):
+                            #print max_time, " overall", resp.overall_time_from_start[i]
+                            #print idx_wp ," < ", len(posture.waypoints)-1 
+                            # if max is the overall_time and there are other point to process, postpone max
+                            if (max_time == resp.overall_time_from_start[i] and idx_wp < len(posture.waypoints)-1 ): 
+                                postponed_group_names.append(process_group_names[idx_max])
+                                postponed_time_from_start.append(process_time_from_start[idx_max])
+                                process_group_names.pop(idx_max)
+                                process_time_from_start.pop(idx_max)
+                                #print "postpone"
+                            else:
+                                # identical time, add all in once
+                                self.add_waypoint(process_group_names, process_time_from_start, overall_time_from_start)
+                                next_overall_time_from_start = max(process_time_from_start)
+                                #print "add all",  process_group_names, "ovt ", overall_time_from_start
+                                break
+                        else:
+                            # separate in postponed and min list to add
+                            min_group_names = []
+                            min_time_from_start = []
+                            for g,t in zip(process_group_names, process_time_from_start):
+                                if t != min_time:
+                                    postponed_group_names.append(g)
+                                    postponed_time_from_start.append(t)
+                                else:
+                                    min_group_names.append(g)
+                                    min_time_from_start.append(t)
+                          
+                            # add only smallest time and loop
+                            self.add_waypoint(min_group_names, min_time_from_start, overall_time_from_start)
+                            # do not set time as long
+                            if overall_time_from_start < min_time:
+                                next_overall_time_from_start = min_time
+                            
+                            #print "add min" ,min_group_names, "ovt ", overall_time_from_start
+                            # clean the list
+                            break
+
+                    overall_time_from_start = next_overall_time_from_start
+                    #overall_time_from_start = max(waypoint.time_from_start)
+                    
+                    
+                if overall_time_from_start != resp.overall_time_from_start[i]:
+                    rospy.logwarn("inconsistency in posture %s overalltime", posture.posture_name)
+        if is_unstored:
+            # select groups that were initially started for the unstored posture
+            for group in self._group_list:
+                if group in unstored_selected_groups:
+                    self._group_check_box[group].setChecked(True)
+                else:
+                    self._group_check_box[group].setChecked(False)
+            
+            self._widget.btn_new_posture.setEnabled(False)
+            self._widget.btn_store_posture.setEnabled(True)
+            self._widget.btn_add_wp.setEnabled(True)
+        else:
+            self._widget.btn_new_posture.setEnabled(True)
+            self._widget.btn_store_posture.setEnabled(False)
+            self._widget.btn_add_wp.setEnabled(False)
 
     def reset_file_path(self):
         """
@@ -190,7 +315,7 @@ class MekaPostureRecorderGUI(Plugin):
 
     def on_check_all_changed(self):
         for group in self._group_list:
-            self._group_check_box[group].setCheckState(self._widget.chk_select_all.checkState()) \
+            self._group_check_box[group].setCheckState(self._widget.chk_select_all.checkState())
     
     def on_time_from_start_changed(self):
         for group in self._group_spinbox:
@@ -201,7 +326,7 @@ class MekaPostureRecorderGUI(Plugin):
         File browser
         """
         if self._file_path:
-            path_to_config = self.file_path
+            path_to_config = self._file_path
         else:
             path_to_config = "~"
         
@@ -219,9 +344,6 @@ class MekaPostureRecorderGUI(Plugin):
         self._widget.edit_file_path.setText(filename)
 
         self._widget.btn_save_postures.setEnabled(True)
-        
-
-
 
 
     def on_save_postures_clicked(self):
@@ -263,9 +385,9 @@ class MekaPostureRecorderGUI(Plugin):
         if len(start_group) == 0:
             QMessageBox.warning(self._widget.btn_new_posture, "Failure", "No group selected")
             return
-        
         req = PostureRecordStartRequest()
         req.group_names = start_group
+
         try:
             resp = self._client["start_record"](req)
             if resp.error_code.val == PostureRecordErrorCodes.NOSTATE:
@@ -280,37 +402,44 @@ class MekaPostureRecorderGUI(Plugin):
                 self._widget.btn_store_posture.setEnabled(True)
                 return
             else:
-                row_count = self._filemodel.rowCount()
-                for i, group in enumerate(self._group_list):
-                    if self._group_check_box[group].checkState():
-                        new_item = QStandardItem("???:0")
-                        new_item.setEditable(False)
-                    else:
-                        new_item = QStandardItem("----")
-                        new_item.setEditable(False)
-                    self._filemodel.setItem(row_count, i, new_item)
-                    #self._filemodel.appendRow(new_item)
-              
+                self.add_new_posture(start_group)
+
                 self._widget.btn_new_posture.setEnabled(False)
                 self._widget.btn_store_posture.setEnabled(True)
                 self._widget.btn_add_wp.setEnabled(True)
         except rospy.ServiceException:
             rospy.logerr("Cannot call start_record")
 
+    def add_new_posture(self, start_group, posture_name=None):
+        if posture_name is None:
+            posture_header = ["unknown" + str(self._postures_item.childCount())]
+        else:
+            posture_header = [posture_name]
+
+        for group in self._group_list:
+            if group in start_group:
+                header = ["selected"]
+            else:
+                header = ["-----"]
+            posture_header += header
+        self._current_posture_item = QTreeWidgetItem(self._postures_item, posture_header)
+        self._tree_widget.addTopLevelItem(self._current_posture_item)
+        self._postures_item.setExpanded(True)
+
     def on_add_wp_clicked(self):
         """
         add
         """
         add_group = []
-        time_from_start = []
+        time_from_previous = []
         for group in self._group_list:
             if self._group_check_box[group].checkState():
                 add_group.append(group)
-                time_from_start.append(self._group_spinbox[group].value())
+                time_from_previous.append(self._group_spinbox[group].value())
         
         req = PostureRecordAddWaypointRequest()
-        req.group_names = add_group
-        req.time_from_start = time_from_start
+        req.waypoint.group_names = add_group
+        req.waypoint.time_from_start = time_from_previous
         try:
             resp = self._client["add_waypoint"](req)
             if resp.error_code.val == PostureRecordErrorCodes.NOTSTARTED:
@@ -321,17 +450,27 @@ class MekaPostureRecorderGUI(Plugin):
                 warn_message =  "Missing state"
                 QMessageBox.warning(self._widget.btn_add_wp, "Failure", warn_message)
                 return
-            row_count = self._filemodel.rowCount()
-            wp_idx = 0
-            for i, group in enumerate(self._group_list):
-                if self._group_check_box[group].checkState():
-                    idx = self._filemodel.index(row_count-1, i)
-                    self._filemodel.setData(idx, "???:"+str(resp.waypoints[wp_idx]))
-                    wp_idx += 1
-            
+            self.add_waypoint(add_group, time_from_previous, 0.0)
+
         except rospy.ServiceException:
             rospy.logerr("Cannot call add waypoint")
 
+    def add_waypoint(self, selected_groups, time_from_start, previous_overall_time_from_start):
+        header = []
+        header += ["wp " + str(self._current_posture_item.childCount() + 1)]
+        wp_idx = 0
+        for i, group in enumerate(self._group_list):
+            if group in selected_groups:
+                header += [str(time_from_start[wp_idx]-previous_overall_time_from_start)]
+                wp_idx += 1
+            else:
+                header += ["--"]
+
+
+        waypoint_item = QTreeWidgetItem(self._current_posture_item, header)
+        self._tree_widget.addTopLevelItem(waypoint_item)
+        self._current_posture_item.setExpanded(True)
+      
     def on_store_posture_clicked(self):
         """
         stop record
@@ -347,17 +486,11 @@ class MekaPostureRecorderGUI(Plugin):
         try:
             resp = self._client["stop_record"](req)
             if resp.error_code.val == PostureRecordErrorCodes.SUCCESS:
-                row_count = self._filemodel.rowCount()
-                wp_idx = 0
-                for i, group in enumerate(self._group_list):
-                    idx = self._filemodel.index(row_count-1, i)
-                    data = self._filemodel.data(idx)
-                    if str(data) != "----":
-                        new_str = str(data)
-                        new_str = new_str.replace("???", posture_name)
-                        self._filemodel.setData(idx, new_str)  
-                self._table_view.resizeColumnsToContents()
-              
+                #row_count = self._filemodel.rowCount()
+                item = self._postures_item.child(self._postures_item.childCount() - 1)
+                if item:
+                    item.setText(0, posture_name)
+                
                 self._widget.btn_new_posture.setEnabled(True)
                 self._widget.btn_store_posture.setEnabled(False)
                 self._widget.btn_add_wp.setEnabled(False)
@@ -368,124 +501,6 @@ class MekaPostureRecorderGUI(Plugin):
         except rospy.ServiceException:
             rospy.logerr("Cannot call stop record")
 
-
-    def refresh_controller_tree_(self, controller_type="Motor Force"):
-        """
-        Get the controller settings and their ranges and display them in the tree.
-        Buttons and plots will be added unless in edit_only mode.
-        Move button will be added if controller is position type
-        Buttons "set all" "set selected" and "stop movements" are disabled in edit_only_mode
-        Controller settings must exist for every motor of every finger in the yaml file.
-        """
-
-        if self.sr_controller_tuner_app_.edit_only_mode:
-            self._widget.btn_set_selected.setEnabled(False)
-            self._widget.btn_set_all.setEnabled(False)
-            self._widget.btn_stop_mvts.setEnabled(False)
-        else:
-            self._widget.btn_set_selected.setEnabled(True)
-            self._widget.btn_set_all.setEnabled(True)
-            self._widget.btn_stop_mvts.setEnabled(True)
-
-        self.controller_type = controller_type
-        ctrl_settings = self.sr_controller_tuner_app_.get_controller_settings(controller_type)
-
-        self._widget.tree_ctrl_settings.clear()
-        self._widget.tree_ctrl_settings.setColumnCount(ctrl_settings.nb_columns)
-        # clear the ctrl_widgets as the motor name might change also now
-        self.ctrl_widgets = {}
-
-        tmp_headers = []
-        for header in ctrl_settings.headers:
-            tmp_headers.append(header["name"])
-        self._widget.tree_ctrl_settings.setHeaderLabels(tmp_headers)
-
-        hand_item = QTreeWidgetItem(ctrl_settings.hand_item)
-        self._widget.tree_ctrl_settings.addTopLevelItem(hand_item)
-        for index_finger, finger_settings in enumerate(ctrl_settings.fingers):
-            finger_item = QTreeWidgetItem(hand_item, finger_settings)
-            self._widget.tree_ctrl_settings.addTopLevelItem(finger_item)
-            for motor_settings in ctrl_settings.motors[index_finger]:
-                motor_name = motor_settings[1]
-
-                motor_item = QTreeWidgetItem(finger_item, motor_settings)
-                self._widget.tree_ctrl_settings.addTopLevelItem(motor_item)
-
-                parameter_values = self.sr_controller_tuner_app_.load_parameters(controller_type, motor_name)
-                if parameter_values != -1:
-                    # the parameters have been found
-                    self.ctrl_widgets[motor_name] = {}
-
-                    # buttons for plot/move are not added in edit_only_mode
-                    if not self.sr_controller_tuner_app_.edit_only_mode:
-                        # add buttons for the automatic procedures (plot / move / ...)
-                        frame_buttons = QFrame()
-                        layout_buttons = QHBoxLayout()
-                        btn_plot = QPushButton("Plot")
-                        self.ctrl_widgets[motor_name]["btn_plot"] = btn_plot
-                        self.ctrl_widgets[motor_name]["btn_plot"].clicked.connect(partial(self.on_btn_plot_pressed_,
-                                                                                          motor_name, self.ctrl_widgets[motor_name]["btn_plot"]))
-                        layout_buttons.addWidget(btn_plot)
-
-                        if self.controller_type in ["Position", "Muscle Position", "Mixed Position/Velocity"]:
-                            # only adding Move button for position controllers
-                            btn_move = QPushButton("Move")
-                            self.ctrl_widgets[motor_name]["btn_move"] = btn_move
-                            self.ctrl_widgets[motor_name]["btn_move"].clicked.connect(partial(self.on_btn_move_pressed_, motor_name,
-                                                                                              self.ctrl_widgets[motor_name]["btn_move"]))
-                            layout_buttons.addWidget(btn_move)
-                            frame_buttons.setLayout(layout_buttons)
-
-                        self._widget.tree_ctrl_settings.setItemWidget(motor_item, 0, frame_buttons)
-
-                    for index_item, item in enumerate(ctrl_settings.headers):
-                        if item["type"] == "Bool":
-                            check_box = QCheckBox()
-
-                            param_name = item["name"].lower()
-                            param_val = parameter_values[param_name]
-                            check_box.setChecked(param_val)
-                            if param_name == "sign":
-                                check_box.setToolTip("Check if you want a negative sign\n(if the motor is being driven\n the wrong way around).")
-
-                            self._widget.tree_ctrl_settings.setItemWidget(motor_item, index_item, check_box)
-
-                            self.ctrl_widgets[motor_name][param_name] = check_box
-
-                        if item["type"] == "Int":
-                            spin_box = QSpinBox()
-                            spin_box.setRange(int(item["min"]), int(item["max"]))
-
-                            param_name = item["name"].lower()
-                            spin_box.setValue(int(parameter_values[param_name]))
-                            self.ctrl_widgets[motor_name][param_name] = spin_box
-
-                            self._widget.tree_ctrl_settings.setItemWidget(motor_item, index_item, spin_box)
-
-                        if item["type"] == "Float":
-                            spin_box = QDoubleSpinBox()
-                            spin_box.setRange(-65535.0, 65535.0)
-                            spin_box.setDecimals(3)
-
-                            param_name = item["name"].lower()
-                            spin_box.setValue(float(parameter_values[param_name]))
-                            self.ctrl_widgets[motor_name][param_name] = spin_box
-
-                            self._widget.tree_ctrl_settings.setItemWidget(motor_item, index_item, spin_box)
-
-                        motor_item.setExpanded(True)
-                else:
-                    motor_item.setText(1, "parameters not found - controller tuning disabled")
-            finger_item.setExpanded(True)
-        hand_item.setExpanded(True)
-
-        for col in range(0, self._widget.tree_ctrl_settings.columnCount()):
-            self._widget.tree_ctrl_settings.resizeColumnToContents(col)
-
-    def on_btn_stop_mvts_clicked_(self):
-        for move_thread in self.move_threads:
-            move_thread.__del__()
-        self.move_threads = []
 
     #########
     # Default methods for the rqtgui plugins

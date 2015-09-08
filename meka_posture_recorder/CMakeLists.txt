@@ -48,6 +48,8 @@ catkin_python_setup()
 add_message_files(
   FILES
   PostureRecordErrorCodes.msg
+  PostureRecordPosture.msg
+  PostureRecordWaypoint.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -57,6 +59,7 @@ add_service_files(
   PostureRecordStop.srv
   PostureRecordSave.srv
   PostureRecordAddWaypoint.srv
+  PostureRecordGetAllPostures.srv
 )
 
 ## Generate actions in the 'action' folder

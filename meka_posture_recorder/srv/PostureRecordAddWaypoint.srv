@@ -1,6 +1,5 @@
-string[]  group_names
-float64[] time_from_start
+meka_posture_recorder/PostureRecordWaypoint waypoint
 ---
 meka_posture_recorder/PostureRecordErrorCodes error_code
 float64 overall_time_from_start
-uint32[]  waypoints
+uint32[]  waypoint_count

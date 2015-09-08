@@ -5,7 +5,8 @@
   <description>rqt_meka_posture_recorder is a GUI to interact with the meka_posture_recorder</description>
 
   <maintainer email="gwalck@techfak.uni-bielefeld.de">Guillaume WALCK</maintainer>
-  <license>BSD</license>
+  <license>GPL</license>
+  <author email="gwalck@techfak.uni-bielefeld.de">Guillaume WALCK</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 

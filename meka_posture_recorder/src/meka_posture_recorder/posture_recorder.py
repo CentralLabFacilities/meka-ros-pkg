@@ -6,6 +6,7 @@ import threading
 import functools
 
 import rospy
+from copy import deepcopy
 from control_msgs.msg import JointTrajectoryControllerState
 
 from controller_manager_msgs.srv import ListControllersRequest, \
@@ -13,11 +14,13 @@ from controller_manager_msgs.srv import ListControllersRequest, \
 
 from trajectory_msgs.msg import JointTrajectory
 
-from meka_posture_recorder.msg import PostureRecordErrorCodes
+from meka_posture_recorder.msg import PostureRecordErrorCodes,\
+    PostureRecordPosture, PostureRecordWaypoint
 from meka_posture_recorder.srv import PostureRecordStart, PostureRecordStop,\
     PostureRecordSave, PostureRecordAddWaypoint, PostureRecordStartResponse,\
     PostureRecordStopResponse, PostureRecordAddWaypointResponse,\
-    PostureRecordSaveResponse
+    PostureRecordSaveResponse, PostureRecordGetAllPosturesResponse,\
+    PostureRecordGetAllPostures
 
 from meka_posture.meka_posture import MekaPosture
 
@@ -115,6 +118,9 @@ class MekaPostureRecorder(object):
                                           self.add_waypoint_cb)
         self._save_serv = rospy.Service(service_prefix + 'save',
                                         PostureRecordSave, self.save_cb)
+                                        
+        self._getall_serv = rospy.Service(service_prefix + 'get_all_postures',
+                                        PostureRecordGetAllPostures, self.getall_cb)
 
     def set_up_subscriber(self, group_name):
         """
@@ -209,19 +215,19 @@ class MekaPostureRecorder(object):
         """
         resp = PostureRecordAddWaypointResponse()
         resp.error_code.val = PostureRecordErrorCodes.SUCCESS
-        resp.waypoints = []
+        resp.waypoint_count = []
         resp.overall_time_from_start = 0.0
         wp_nb = []
         max_time_from_start = 0.0
 
-        if len(req.group_names) != len(req.time_from_start):
+        if len(req.waypoint.group_names) != len(req.waypoint.time_from_start):
             resp.error_code.val = PostureRecordErrorCodes.INVALID
             return resp
 
         # for requested groups, check existance and way point first
         # so if it fails, we don't end up in an intermediate state
         wp = {}
-        for group_name in req.group_names:
+        for group_name in req.waypoint.group_names:
             # if exists
             if group_name not in self._current_postures:
                 rospy.logerr("Group %s was not started, start it first",
@@ -238,21 +244,22 @@ class MekaPostureRecorder(object):
 
         # if got all the way points
         if resp.error_code.val == PostureRecordErrorCodes.SUCCESS:
-            for i, group_name in enumerate(req.group_names):
+            for i, group_name in enumerate(req.waypoint.group_names):
 
-                if max_time_from_start < req.time_from_start[i]:
-                    max_time_from_start = req.time_from_start[i]
+                if max_time_from_start < req.waypoint.time_from_start[i]:
+                    max_time_from_start = req.waypoint.time_from_start[i]
 
                 # set time_from_start
-                wp[group_name].time_from_start = rospy.Duration.from_sec(self._overall_time_from_start) + rospy.Duration.from_sec(req.time_from_start[i])
+                wp[group_name].time_from_start = rospy.Duration.from_sec(self._overall_time_from_start) + rospy.Duration.from_sec(req.waypoint.time_from_start[i])
                 # store it
-                self._current_postures[group_name].points.append(wp[group_name])
+                self._current_postures[group_name].points.append(deepcopy(wp[group_name]))
                 wp_nb.append(len(self._current_postures[group_name].points))
 
+            #print self._current_postures
             # add the maximum time to overall time
             self._overall_time_from_start += max_time_from_start
             resp.overall_time_from_start = self._overall_time_from_start
-            resp.waypoints = wp_nb
+            resp.waypoint_count = wp_nb
 
         return resp
 
@@ -269,6 +276,81 @@ class MekaPostureRecorder(object):
         else:
             self._mp.save_postures(req.filepath, req.strategy)
             self._mp.clear_postures()
+        return resp
+
+    def getall_cb(self, req):
+        """
+        Callback for the get all postures service (included the non stored ones)
+        """
+        resp = PostureRecordGetAllPosturesResponse()
+        resp.error_code.val = PostureRecordErrorCodes.SUCCESS
+        posture_dict = self._mp.list_postures()
+        selected_groups_dict = {}
+        # invert the dictionnary
+        for group in posture_dict:
+            for posture_name in posture_dict[group]:
+                if posture_name not in selected_groups_dict:
+                    selected_groups_dict[posture_name] = []
+                selected_groups_dict[posture_name].append(group)
+                
+        # process stored postures
+        for posture_name in selected_groups_dict:
+            overall_time_from_start = 0.0
+            posture = PostureRecordPosture()
+            posture.posture_name = str(posture_name)
+            posture.selected_groups = selected_groups_dict[posture_name]
+            
+            no_more_waypoint = False
+            waypoint_idx = 0
+            while(not no_more_waypoint):
+                no_more_waypoint = True
+                wp = PostureRecordWaypoint()
+                for group_name in posture.selected_groups:
+                    joint_traj = self._mp.get_posture(group_name, posture_name)
+                    # is there a waypoint at this index ?
+                    if waypoint_idx < len(joint_traj.points):
+                        no_more_waypoint = False
+                        wp.group_names.append(group_name)
+                        wp.time_from_start.append(joint_traj.points[waypoint_idx].time_from_start.to_sec())
+                
+                # only the last max will be used
+                
+                if(not no_more_waypoint):
+                    #print "ovt:", overall_time_from_start, " max wp t:",max(wp.time_from_start)
+                    if overall_time_from_start < max(wp.time_from_start):
+                        overall_time_from_start = max(wp.time_from_start)
+                    posture.waypoints.append(deepcopy(wp))
+                waypoint_idx += 1
+            
+            resp.postures.append(posture)
+            resp.overall_time_from_start.append(overall_time_from_start)
+            
+        # process non stored postures
+        if self._current_postures:
+            overall_time_from_start = 0.0
+            posture = PostureRecordPosture()
+            posture.posture_name = str("unstored")
+            posture.selected_groups = list(self._current_postures.keys())
+            no_more_waypoint = False
+            waypoint_idx = 0
+            while(not no_more_waypoint):
+                no_more_waypoint = True
+                wp = PostureRecordWaypoint()
+                for group_name in self._current_postures:
+                    joint_traj = self._current_postures[group_name]
+                    # is there a waypoint at this index ?
+                    if waypoint_idx < len(joint_traj.points):
+                        no_more_waypoint = False
+                        wp.group_names.append(group_name)
+                        wp.time_from_start.append(joint_traj.points[waypoint_idx].time_from_start.to_sec())
+                # only the last max will be used
+                if(not no_more_waypoint):
+                    if overall_time_from_start < max(wp.time_from_start):
+                        overall_time_from_start = max(wp.time_from_start)
+                    posture.waypoints.append(deepcopy(wp))
+                waypoint_idx += 1
+            resp.postures.append(posture)
+            resp.overall_time_from_start.append(overall_time_from_start)
         return resp
 
     def state_cb(self, msg, group_name):
