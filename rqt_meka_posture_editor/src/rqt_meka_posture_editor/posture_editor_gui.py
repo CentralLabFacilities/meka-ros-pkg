@@ -37,6 +37,9 @@ from QtCore import Qt, QThread, SIGNAL, QObject
 from QtGui import QWidget, QDoubleSpinBox, QStandardItemModel, QStandardItem, QTableView, QTreeWidget, QTreeWidgetItem, QCheckBox, QFileDialog, QMessageBox, QPushButton, QFrame, QHBoxLayout, QVBoxLayout
 from functools import partial
 
+from actionlib import SimpleActionClient
+from control_msgs.msg import FollowJointTrajectoryAction, \
+FollowJointTrajectoryGoal
 from controller_manager_msgs.srv import ListControllersRequest, \
     ListControllers
 
@@ -109,6 +112,9 @@ class MekaPostureEditorGUI(Plugin):
                 
         self._widget.scrollarea.setLayout(all_group_layout)
         
+        #temporary set a value there
+        self._widget.edit_file_path.setText("/home/meka/workspace/mekabot/meka-ros-pkg/meka_posture_execution/cfg/postures.yml")
+        
         self._widget.btn_load_postures.clicked.connect(self.on_load_postures_clicked)
         self._widget.btn_save_postures.clicked.connect(self.on_save_postures_clicked)
         self._widget.btn_execute.clicked.connect(self.on_execute_clicked)
@@ -164,7 +170,7 @@ class MekaPostureEditorGUI(Plugin):
         """
         Sets up an action client to communicate with the trajectory controller
         """
-
+        rospy.loginfo("connecting to %s", (self._cm_prefix + "/"+ group_name + JNT_TRAJ_SRV_SUFFIX))
         self._client[group_name] = SimpleActionClient(
             self._cm_prefix + "/"+ group_name + JNT_TRAJ_SRV_SUFFIX,
             FollowJointTrajectoryAction
@@ -340,7 +346,7 @@ class MekaPostureEditorGUI(Plugin):
         elif self._widget.edit_file_path.text(): 
             path_to_config = self._widget.edit_file_path.text()
         else:
-            path_to_config = "~"
+            path_to_config = "/home/meka/workspace/mekabot/meka-ros-pkg/meka_posture_execution/cfg/postures.yml"
         
         filter_files = "YAML (*.yaml *.yml)"
 
@@ -462,7 +468,7 @@ class MekaPostureEditorGUI(Plugin):
                 if group_name not in self._client:
                     rospy.logerr("Action client for %s not initialized. Trying to initialize it...", group_name)
                     try:
-                        self._set_up_action_client(group_name)
+                        self.init_action_client(group_name)
                     except:
                         rospy.logerr("Could not set up action client for %s.", group_name)
                         return
