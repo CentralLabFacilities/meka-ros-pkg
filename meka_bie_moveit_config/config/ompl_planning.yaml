@@ -192,5 +192,5 @@ upper_body:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(zlift_joint,torso_j0)
+  projection_evaluator: joints(zlift_j0,torso_j0)
   longest_valid_segment_fraction: 0.05

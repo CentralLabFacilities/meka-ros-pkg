@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package>
+  <name>meka_description</name>
+  <version>0.0.1</version>
+  <description>Meka description</description>
+  <maintainer email="smeyerz@techfak.uni-bielefeld.de">Sebastian M. z. Borgsen</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/CentralLabFacilities/meka-ros-pkg.git</url>
+
+  <author email="gwalck@techfak.uni-bielefeld.de">Guillaume Walck</author>
+  <author email="smeyerz@techfak.uni-bielefeld.de">Sebastian M. z. Borgsen</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>urdf</build_depend>
+  <build_depend>xacro</build_depend>
+ 
+  <run_depend>urdf</run_depend>
+  <run_depend>xacro</run_depend>
+
+</package>

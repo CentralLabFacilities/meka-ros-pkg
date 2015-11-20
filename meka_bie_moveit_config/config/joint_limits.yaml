@@ -257,7 +257,7 @@ joint_limits:
     max_velocity: 0.174532925199
     has_acceleration_limits: false
     max_acceleration: 0
-  zlift_joint:
+  zlift_j0:
     has_velocity_limits: true
     max_velocity: 3.48
     has_acceleration_limits: false

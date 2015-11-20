@@ -81,7 +81,7 @@
         <joint name="torso_j2" />
     </group>
     <group name="z_lift">
-        <joint name="zlift_joint" />
+        <joint name="zlift_j0" />
     </group>
     <group name="both_hands">
         <group name="left_hand" />

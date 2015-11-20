@@ -57,7 +57,7 @@ controller_list:
       - torso_j1
   - name: fake_z_lift_controller
     joints:
-      - zlift_joint
+      - zlift_j0
   - name: fake_both_hands_controller
     joints:
       - left_hand_j0
@@ -72,7 +72,7 @@ controller_list:
       - right_hand_j4
   - name: fake_upper_body_controller
     joints:
-      - zlift_joint
+      - zlift_j0
       - torso_j0
       - torso_j1
       - head_j1
