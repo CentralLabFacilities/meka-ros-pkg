@@ -23,4 +23,23 @@ controller_list:
       - left_arm_j4
       - left_arm_j5
       - left_arm_j6
-
+  - name: /meka_roscontrol/right_hand_position_trajectory_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - right_hand_j0
+      - right_hand_j1
+      - right_hand_j2
+      - right_hand_j3
+      - right_hand_j4
+  - name: /meka_roscontrol/left_hand_position_trajectory_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - left_hand_j0
+      - left_hand_j1
+      - left_hand_j2
+      - left_hand_j3
+      - left_hand_j4
