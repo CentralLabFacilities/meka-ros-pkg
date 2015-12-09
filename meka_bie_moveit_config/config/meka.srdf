@@ -19,13 +19,15 @@
         <joint name="right_arm_j6" />
     </group>
     <group name="left_arm">
-        <joint name="left_arm_j0" />
+      <!-- tip_link is also IK tip link -->                                                                                                                                                                                                 
+      <joint name="left_arm_j0" />
         <joint name="left_arm_j1" />
         <joint name="left_arm_j2" />
         <joint name="left_arm_j3" />
         <joint name="left_arm_j4" />
         <joint name="left_arm_j5" />
-        <joint name="left_arm_j6" />
+        <joint name="left_arm_j6" /> 
+      <chain base_link="upper" tip_link="hand_tool_frame_left" />
     </group>
     <group name="both_arms">
         <group name="right_arm" />
@@ -173,9 +175,10 @@
         <joint name="torso_j2" value="0" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="right_hand" parent_link="handmount_RIGHT" group="right_hand" parent_group="right_arm" />
-    <end_effector name="left_hand" parent_link="handmount_LEFT" group="left_hand" parent_group="left_arm" />
-    <end_effector name="head_ee" parent_link="upper" group="head" parent_group="torso" />
+    <end_effector name="end_effector" parent_link="hand_tool_frame_left" group="left_hand" parent_group="left_arm" />
+    <!--end_effector name="right_hand" parent_link="handmount_RIGHT" group="right_hand" parent_group="right_arm" /-->
+    <!--end_effector name="left_hand" parent_link="handmount_LEFT" group="left_hand" parent_group="left_arm" /-->
+    <!--end_effector name="head_ee" parent_link="upper" group="head" parent_group="torso" /-->
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="torso_j2" />
     <passive_joint name="head_j2" />
@@ -432,6 +435,7 @@
     <disable_collisions link1="handmount_LEFT" link2="w_differential_LEFT" reason="Adjacent" />
     <disable_collisions link1="handmount_LEFT" link2="w_differential_RIGHT" reason="Never" />
     <disable_collisions link1="handmount_LEFT" link2="wrist_LEFT" reason="Default" />
+    <disable_collisions link1="handmount_LEFT" link2="hand_tool_frame_left" reason="Default" />
     <disable_collisions link1="handmount_RIGHT" link2="index0_left" reason="Never" />
     <disable_collisions link1="handmount_RIGHT" link2="index0_right" reason="Never" />
     <disable_collisions link1="handmount_RIGHT" link2="index1_right" reason="Never" />
@@ -607,6 +611,7 @@
     <disable_collisions link1="palm_left" link2="thumb1_left" reason="Default" />
     <disable_collisions link1="palm_left" link2="w_differential_LEFT" reason="Never" />
     <disable_collisions link1="palm_left" link2="wrist_LEFT" reason="Never" />
+    <disable_collisions link1="palm_left" link2="hand_tool_frame_left" reason="Never" />
     <disable_collisions link1="palm_right" link2="pinky0_right" reason="Adjacent" />
     <disable_collisions link1="palm_right" link2="pinky1_right" reason="Never" />
     <disable_collisions link1="palm_right" link2="ring0_right" reason="Adjacent" />
