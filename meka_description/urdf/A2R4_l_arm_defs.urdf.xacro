@@ -391,8 +391,6 @@
       </collision>
     </link>
 
-    
-
     <joint name="left_arm_j6" type="revolute">
 	    <axis xyz="-1 0 0" />
       <limit effort="8" velocity="${40*M_PI/180}" lower="${-60*M_PI/180}" upper="${60*M_PI/180}" /> 
