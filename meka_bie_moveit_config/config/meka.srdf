@@ -53,6 +53,13 @@
         <joint name="right_hand_j3" />
         <joint name="right_hand_j4" />
     </group>
+     <group name="right_hand_controlled_joints">
+        <joint name="right_hand_j0" />
+        <joint name="right_hand_j1" />
+        <joint name="right_hand_j2" />
+        <joint name="right_hand_j3" />
+        <joint name="right_hand_j4" />
+    </group>
     <group name="left_hand">
         <link name="palm_left" />
         <link name="thumb0_left" />
@@ -67,6 +74,13 @@
         <link name="ring0_left" />
         <link name="ring1_left" />
         <link name="ring2_left" />
+        <joint name="left_hand_j0" />
+        <joint name="left_hand_j1" />
+        <joint name="left_hand_j2" />
+        <joint name="left_hand_j3" />
+        <joint name="left_hand_j4" />
+    </group>
+    <group name="left_hand_controlled_joints">
         <joint name="left_hand_j0" />
         <joint name="left_hand_j1" />
         <joint name="left_hand_j2" />
