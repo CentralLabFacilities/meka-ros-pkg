@@ -102,7 +102,7 @@
   <joint name="hand_left_tool_frame_joint" type="fixed">
     <parent link="${parent}"/>
     <child link="hand_tool_frame_left" />
-    <origin xyz="-0.02 0 -0.12" rpy="0 -1.570796 0"/>
+    <origin xyz="-0.02 0 -0.12" rpy="-3.141592 1.570796 0"/>
   </joint>
 
   <link name="hand_tool_frame_left">
