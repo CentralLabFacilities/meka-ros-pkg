@@ -98,6 +98,40 @@
       
     </link>
 
+      <!-- this defines TCP Tool Center Point as described in: https://groups.google.com/forum/m/#!topic/moveit-users/VB7VWsgV9-g -->
+    <joint name="hand_right_tool_frame_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="hand_tool_frame_right" />
+      <origin xyz="-0.02 0 -0.12" rpy="-1.5708 0 1.5708"/>
+    </joint>
+
+    <link name="hand_tool_frame_right">
+      <!-- This is the coordinate system of the end effector (this is the position
+           used in IK); there is no actual arm part attached to this link -->
+
+      <!-- The fake geometry here is only present to work around https://github.com/ros-planning/moveit_core/issues/158 -->
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <box size="0.01 0.01 0.01"/>
+        </geometry>
+        <material name="red" />
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 -0.01"/>
+        <geometry>
+          <box size="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="red" />
+      </collision>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0"/>
+        <inertia ixx="0.0" ixy="0.0" ixz="0.0"
+          iyy="0.0" iyz="0.0"
+          izz="0.0" />
+      </inertial>
+    </link>
 <!-- Start Thumb -->
     <joint name="right_hand_j0" type="revolute">
       <axis xyz="0 0 1" />
