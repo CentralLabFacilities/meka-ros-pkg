@@ -189,7 +189,7 @@
         <joint name="torso_j2" value="0" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="end_effector" parent_link="hand_tool_frame_left" group="left_hand" parent_group="left_arm" />
+    <end_effector name="left_hand" parent_link="hand_tool_frame_left" group="left_hand" parent_group="left_arm" />
     <!--end_effector name="right_hand" parent_link="handmount_RIGHT" group="right_hand" parent_group="right_arm" /-->
     <!--end_effector name="left_hand" parent_link="handmount_LEFT" group="left_hand" parent_group="left_arm" /-->
     <!--end_effector name="head_ee" parent_link="upper" group="head" parent_group="torso" /-->
