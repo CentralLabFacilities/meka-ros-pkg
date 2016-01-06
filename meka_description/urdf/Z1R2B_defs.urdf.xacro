@@ -9,13 +9,12 @@
 
   <macro name="meka_zlift" params="side parent reflect *origin">
 
-    <!-- Shoulder pan -->
     <joint name="zlift_j0" type="prismatic">
       <axis xyz="0 0 1" />
       <insert_block name="origin" /> <!-- transform from parent link to this joint frame -->
       <parent link="${parent}"/>
       <child link="zlift_link"/>
-      <limit lower="${0*M_PI/180}"  upper="${40107*M_PI/180}"
+      <limit lower="${0*M_PI/180}"  upper="${40.107*M_PI/180}"
              effort="30" velocity="${34.8}" /> <!-- !!! this should be changed at some point !!! -->
 
       <dynamics damping="10.0" />
