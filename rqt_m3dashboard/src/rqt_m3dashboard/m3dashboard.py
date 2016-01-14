@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
+#
 # derived from rqt_emergency_buttons: emergency_buttons_dashboard.py
 #   original Authors Sammy Pfeiffer
 #
@@ -19,7 +19,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
 # OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-# 
+#
 
 # author Guillaume WALCK (2015)
 
@@ -29,19 +29,17 @@ from rqt_robot_dashboard.dashboard import Dashboard
 import actionlib
 
 from python_qt_binding.QtCore import QSize
-from QtGui import QPushButton, QVBoxLayout, QHBoxLayout, QWidget,\
+from QtGui import QPushButton, QVBoxLayout, QHBoxLayout, QWidget, \
     QCheckBox, QSpinBox, QLabel
 
-from m3meka_msgs.msg import M3ControlState, M3ControlStates,\
+from m3meka_msgs.msg import M3ControlState, M3ControlStates, \
     M3StateChangeGoal, M3StateChangeAction
 from m3meka_msgs.srv import M3ControlStateChange, M3ControlStateChangeResponse
 
-
-
-
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, String
 from .emergency_button import EmergencyButton
 from .state_button import ControlStateButton
+from PyQt4.Qt import QTextEdit
 
 class M3Dashboard(Dashboard):
     """
@@ -59,23 +57,22 @@ class M3Dashboard(Dashboard):
         self._widget_initialized = False
         self._service_ready = True
         NAMESPACE = '/m3dashboard'
-        
-        
-        
-        #self._state_button = ControlStateButton("default", 9999)
-        #TODO read this list on the parameters
-        group_names = ["left_hand","left_arm","head","right_arm","right_hand","zlift","torso"]
+
+        # self._state_button = ControlStateButton("default", 9999)
+        # TODO read this list on the parameters
+        group_names = ["left_hand", "left_arm", "head", "right_arm", "right_hand", "zlift", "torso"]
         # create as many buttons as groups received
         for group_name in group_names:
             self._state_buttons[group_name] = ControlStateButton(group_name, 0)
-            
 
-        self._dashboard_agg_sub = rospy.Subscriber("/meka_roscontrol_state_manager/state",M3ControlStates,
+        self._dashboard_mekaros_sub = rospy.Subscriber("/meka_ros_pub/generic", String, self.callback)
+        
+        self._dashboard_agg_sub = rospy.Subscriber("/meka_roscontrol_state_manager/state", M3ControlStates,
                                                                                     self.dashboard_callback,
                                                                                     queue_size=1)
-                                                                                    
-        self._actionclient = actionlib.SimpleActionClient("/meka_state_manager", M3StateChangeAction)     
-        rospy.loginfo("Looking for state manager...")                                                   
+
+        self._actionclient = actionlib.SimpleActionClient("/meka_state_manager", M3StateChangeAction)
+        rospy.loginfo("Looking for state manager...")
         if self._actionclient.wait_for_server(timeout=rospy.Duration(4)) is False:
             rospy.logfatal("Failed to connect to state_manager action server in 4 sec")
             self._service_ready = False
@@ -85,17 +82,26 @@ class M3Dashboard(Dashboard):
         self._main_widget = QWidget()
         vlayout = QVBoxLayout()
         hlayout = QHBoxLayout()
-    
+        hlayout2 = QHBoxLayout()
+
+        self.bat_lbb = QLabel("Battery voltage")
+        self.bat_txt = QTextEdit()
+        self.bat_txt.setReadOnly(True)
+        self.bat_txt.setHtml(str(0.0+" V"))
+
+        hlayout2.addWidget(self.bat_lbb)
+        hlayout2.addWidget(self.bat_txt)
+
         self.chk_all = QCheckBox("enable_all")
         self.chk_all.setChecked(True)
-        
+
         self.spin_retries = QSpinBox()
         # infinite number of times is -1
-        self.spin_retries.setMinimum(-1) 
-        self.spin_retries.setMaximum(10) 
+        self.spin_retries.setMinimum(-1)
+        self.spin_retries.setMaximum(10)
         self.spin_retries.setValue(2)
         label_retries = QLabel("trial times")
-        
+
         self.btn_start = QPushButton("start")
         self.btn_stop = QPushButton("stop")
         self.btn_freeze = QPushButton("freeze")
@@ -103,24 +109,25 @@ class M3Dashboard(Dashboard):
             self.btn_start.setEnabled(False)
             self.btn_stop.setEnabled(False)
             self.btn_freeze.setEnabled(False)
-            
+
         hlayout.addWidget(self.chk_all)
         hlayout.addWidget(label_retries)
         hlayout.addWidget(self.spin_retries)
-        
+
+        vlayout.addLayout(hlayout2)
         vlayout.addLayout(hlayout)
         vlayout.addWidget(self.btn_start)
         vlayout.addWidget(self.btn_freeze)
         vlayout.addWidget(self.btn_stop)
-        
+
         self.btn_start.clicked.connect(self.on_btn_start_clicked)
         self.btn_stop.clicked.connect(self.on_btn_stop_clicked)
         self.btn_freeze.clicked.connect(self.on_btn_freeze_clicked)
         self.chk_all.stateChanged.connect(self.on_enable_all_clicked)
-        
+
         self._main_widget.setLayout(vlayout)
         self.context.add_widget(self._main_widget)
-        #self._main_widget.addLayout(hlayout)
+        # self._main_widget.addLayout(hlayout)
         self._widget_initialized = True
 
     def change_state(self, cmd):
@@ -136,8 +143,8 @@ class M3Dashboard(Dashboard):
         if self.spin_retries.value() > 1:
             goal.strategy = M3StateChangeGoal.RETRY_N_TIMES
             goal.retries = self.spin_retries.value()
-        
-        
+
+
         # find enabled groups
         for group_name  in self._state_buttons:
             if self._state_buttons[group_name]._enable_menu.isChecked():
@@ -156,21 +163,21 @@ class M3Dashboard(Dashboard):
         for group_name  in self._state_buttons:
             self._state_buttons[group_name]._enable_menu.setChecked(self.chk_all.isChecked())
             self._state_buttons[group_name]._enable_menu.triggered.emit(self.chk_all.isChecked())
-            #stateChanged.emit( _set_enabled_signal.emit(self.chk_all.isChecked())
-        
+            # stateChanged.emit( _set_enabled_signal.emit(self.chk_all.isChecked())
+
     def on_btn_start_clicked(self):
         """
         start
         """
         self.change_state(M3ControlStates.START)
-        
+
     def on_btn_stop_clicked(self):
         """
         stop
         """
         self.change_state(M3ControlStates.STOP)
 
-    
+
     def on_btn_freeze_clicked(self):
         """
         freeze
@@ -184,19 +191,29 @@ class M3Dashboard(Dashboard):
 
         return widgets_list
 
+    def callback(self, msg):
+        """
+        callback to process meka ros str messages
+        :param msg:
+        :type msg: String
+        """
+        #rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+
+        val = str(msg.data)
+        self.bat_txt.setHtml(val)
+        
+
     def dashboard_callback(self, msg):
         """
         callback to process state messages
         :param msg:
         :type msg: M3ControlStates
         """
-        
+
         single_msg = M3ControlStates()
         for group_name, state in zip(msg.group_name, msg.state):
             if group_name in self._state_buttons:
                 self._state_buttons[group_name].set_state(state)
-                
-                
 
         if not self._service_ready:
             # test reconnection only each 5 seconds
@@ -213,5 +230,6 @@ class M3Dashboard(Dashboard):
 
 
     def shutdown_dashboard(self):
+        self._dashboard_mekaros_sub.unregister()
         self._dashboard_agg_sub.unregister()
-        
+
