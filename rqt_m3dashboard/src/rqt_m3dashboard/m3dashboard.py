@@ -85,9 +85,8 @@ class M3Dashboard(Dashboard):
         hlayout2 = QHBoxLayout()
 
         self.bat_lbb = QLabel("Battery voltage")
-        self.bat_txt = QTextEdit()
-        self.bat_txt.setReadOnly(True)
-        self.bat_txt.setHtml(str(0.0+" V"))
+        self.bat_txt = QLabel()
+        self.bat_txt.setText("0.0")
 
         hlayout2.addWidget(self.bat_lbb)
         hlayout2.addWidget(self.bat_txt)
@@ -197,10 +196,10 @@ class M3Dashboard(Dashboard):
         :param msg:
         :type msg: String
         """
-        #rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+        #rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
 
-        val = str(msg.data)
-        self.bat_txt.setHtml(val)
+        val = str(msg.data)[:5]
+        self.bat_txt.setText(val)
         
 
     def dashboard_callback(self, msg):
