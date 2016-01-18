@@ -65,6 +65,10 @@ class M3Dashboard(Dashboard):
         for group_name in group_names:
             self._state_buttons[group_name] = ControlStateButton(group_name, 0)
 
+	self.bat_lbb = QLabel("Battery voltage")
+        self.bat_txt = QLabel()
+        self.bat_txt.setText("0.0")
+
         self._dashboard_mekaros_sub = rospy.Subscriber("/meka_ros_pub/generic", String, self.callback)
         
         self._dashboard_agg_sub = rospy.Subscriber("/meka_roscontrol_state_manager/state", M3ControlStates,
@@ -83,10 +87,6 @@ class M3Dashboard(Dashboard):
         vlayout = QVBoxLayout()
         hlayout = QHBoxLayout()
         hlayout2 = QHBoxLayout()
-
-        self.bat_lbb = QLabel("Battery voltage")
-        self.bat_txt = QLabel()
-        self.bat_txt.setText("0.0")
 
         hlayout2.addWidget(self.bat_lbb)
         hlayout2.addWidget(self.bat_txt)
