@@ -28,7 +28,7 @@ class MekaRosPublisher(object):
         self.proxy.start()
 
         if(component_id == None):
-            cid = self.get_components()
+            cid = self.get_component()
         else:
             cid = component_id
 
