@@ -75,6 +75,8 @@ class ControlStateButton(MenuDashWidget):
             state_icon = 'ic-torso.svg'
         elif group_name == 'zlift':
             state_icon = 'ic-zlift.svg'
+        if group_name == 'base':
+            state_icon = 'ic-base.svg'
         else:
             state_icon = 'ic-breaker.svg'
 

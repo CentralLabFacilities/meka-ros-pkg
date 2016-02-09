@@ -60,17 +60,17 @@ class M3Dashboard(Dashboard):
 
         # self._state_button = ControlStateButton("default", 9999)
         # TODO read this list on the parameters
-        group_names = ["left_hand", "left_arm", "head", "right_arm", "right_hand", "zlift", "torso"]
+        group_names = ["left_hand", "left_arm", "head", "right_arm", "right_hand", "zlift", "torso", "base"]
         # create as many buttons as groups received
         for group_name in group_names:
             self._state_buttons[group_name] = ControlStateButton(group_name, 0)
 
-	self.bat_lbb = QLabel("Battery voltage")
+        self.bat_lbb = QLabel("Battery voltage")
         self.bat_txt = QLabel()
         self.bat_txt.setText("0.0")
 
         self._dashboard_mekaros_sub = rospy.Subscriber("/meka_ros_pub/generic", String, self.callback)
-        
+
         self._dashboard_agg_sub = rospy.Subscriber("/meka_roscontrol_state_manager/state", M3ControlStates,
                                                                                     self.dashboard_callback,
                                                                                     queue_size=1)
@@ -196,11 +196,11 @@ class M3Dashboard(Dashboard):
         :param msg:
         :type msg: String
         """
-        #rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
+        # rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
 
         val = str(msg.data)[:5]
         self.bat_txt.setText(val)
-        
+
 
     def dashboard_callback(self, msg):
         """
