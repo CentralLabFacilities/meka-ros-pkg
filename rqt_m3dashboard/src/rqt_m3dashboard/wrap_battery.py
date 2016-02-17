@@ -47,7 +47,7 @@ class WrappedBattery(BatteryDashWidget):
             charge_icons.append([charge_icon])
 
         icon_paths = []
-        icon_paths.append(['rqt_batteries', 'images'])
+        icon_paths.append(['rqt_m3dashboard', 'images'])
         self._wrapped_battery_name = name
         super(WrappedBattery, self).__init__(name=name,
                                                   icons=icons, charge_icons=charge_icons,
