@@ -39,6 +39,7 @@ from m3meka_msgs.srv import M3ControlStateChange, M3ControlStateChangeResponse
 from std_msgs.msg import Bool, String
 from .emergency_button import EmergencyButton
 from .state_button import ControlStateButton
+from .wrap_battery import WrappedBattery
 from PyQt4.Qt import QTextEdit
 
 class M3Dashboard(Dashboard):
@@ -53,28 +54,34 @@ class M3Dashboard(Dashboard):
         self.max_icon_size = QSize(50, 30)
 
         self._last_dashboard_message_time = rospy.Time.now()
+        self._battery_icons = {}
         self._state_buttons = {}
+        self._dashboard_mekaros_subs = {}
         self._widget_initialized = False
         self._service_ready = True
         NAMESPACE = '/m3dashboard'
 
         # self._state_button = ControlStateButton("default", 9999)
         # TODO read this list on the parameters
+        battery_names = ["m3pwr_pwr038", "m3pwr_pwr042"]
         group_names = ["left_hand", "left_arm", "head", "right_arm", "right_hand", "zlift", "torso", "base"]
         # create as many buttons as groups received
         for group_name in group_names:
             self._state_buttons[group_name] = ControlStateButton(group_name, 0)
+        
+        hlayout2 = QHBoxLayout()
+        for battery_name in battery_names:
+            self._battery_icons[battery_name] = WrappedBattery(self.context, battery_name)
+            hlayout2.addWidget(self._battery_icons[battery_name])
+            self._dashboard_mekaros_subs.append(rospy.Subscriber("/meka_ros_pub/"+str(battery_name)+"/bus_voltage", String, self.callback))
 
         self.bat_lbb = QLabel("Battery voltage")
         self.bat_txt = QLabel()
         self.bat_txt.setText("0.0")
 
-        self._dashboard_mekaros_sub = rospy.Subscriber("/meka_ros_pub/generic", String, self.callback)
-
         self._dashboard_agg_sub = rospy.Subscriber("/meka_roscontrol_state_manager/state", M3ControlStates,
                                                                                     self.dashboard_callback,
                                                                                     queue_size=1)
-
         self._actionclient = actionlib.SimpleActionClient("/meka_state_manager", M3StateChangeAction)
         rospy.loginfo("Looking for state manager...")
         if self._actionclient.wait_for_server(timeout=rospy.Duration(4)) is False:
@@ -86,10 +93,9 @@ class M3Dashboard(Dashboard):
         self._main_widget = QWidget()
         vlayout = QVBoxLayout()
         hlayout = QHBoxLayout()
-        hlayout2 = QHBoxLayout()
 
-        hlayout2.addWidget(self.bat_lbb)
-        hlayout2.addWidget(self.bat_txt)
+        #hlayout2.addWidget(self.bat_lbb)
+        #hlayout2.addWidget(self.bat_txt)
 
         self.chk_all = QCheckBox("enable_all")
         self.chk_all.setChecked(True)
@@ -196,10 +202,13 @@ class M3Dashboard(Dashboard):
         :param msg:
         :type msg: String
         """
-        # rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
-
+        rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
+        
         val = str(msg.data)[:5]
-        self.bat_txt.setText(val)
+        
+        for icon in self._battery_icons:
+            icon.set_power_state_perc(50, False)
+             
 
 
     def dashboard_callback(self, msg):
@@ -229,6 +238,8 @@ class M3Dashboard(Dashboard):
 
 
     def shutdown_dashboard(self):
-        self._dashboard_mekaros_sub.unregister()
+        for x in self._dashboard_mekaros_subs:
+            x.unregister()
+            
         self._dashboard_agg_sub.unregister()
 
