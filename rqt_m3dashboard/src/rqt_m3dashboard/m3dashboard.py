@@ -56,7 +56,7 @@ class M3Dashboard(Dashboard):
         self._last_dashboard_message_time = rospy.Time.now()
         self._battery_icons = {}
         self._state_buttons = {}
-        self._dashboard_mekaros_subs = {}
+        self._dashboard_mekaros_subs = []
         self._widget_initialized = False
         self._service_ready = True
         NAMESPACE = '/m3dashboard'
@@ -202,12 +202,11 @@ class M3Dashboard(Dashboard):
         :param msg:
         :type msg: String
         """
-        rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
+        #rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
         
         val = str(msg.data)[:5]
-        
-        for icon in self._battery_icons:
-            icon.set_power_state_perc(50, False)
+        for key, value in self._battery_icons.iteritems():
+            value.set_power_state_perc(float(val), False)
              
 
 
