@@ -59,7 +59,7 @@ joint_limits:
     max_acceleration: 0
   left_hand_j1a:
     has_velocity_limits: true
-    max_velocity: 1.308996939
+    max_velocity: 0.87
     has_acceleration_limits: false
     max_acceleration: 0
   left_hand_j1b:
@@ -79,12 +79,12 @@ joint_limits:
     max_acceleration: 0
   left_hand_j2b:
     has_velocity_limits: true
-    max_velocity: 27.9252680319
+    max_velocity: 0.87
     has_acceleration_limits: false
     max_acceleration: 0
   left_hand_j2c:
     has_velocity_limits: true
-    max_velocity: 27.9252680319
+    max_velocity: 0.87
     has_acceleration_limits: false
     max_acceleration: 0
   left_hand_j3:
@@ -99,12 +99,12 @@ joint_limits:
     max_acceleration: 0
   left_hand_j3b:
     has_velocity_limits: true
-    max_velocity: 27.9252680319
+    max_velocity: 0.87
     has_acceleration_limits: false
     max_acceleration: 0
   left_hand_j3c:
     has_velocity_limits: true
-    max_velocity: 27.9252680319
+    max_velocity: 0.87
     has_acceleration_limits: false
     max_acceleration: 0
   left_hand_j4:
@@ -119,12 +119,12 @@ joint_limits:
     max_acceleration: 0
   left_hand_j4b:
     has_velocity_limits: true
-    max_velocity: 27.9252680319
+    max_velocity: 0.87
     has_acceleration_limits: false
     max_acceleration: 0
   left_hand_j4c:
     has_velocity_limits: true
-    max_velocity: 27.9252680319
+    max_velocity: 0.87
     has_acceleration_limits: false
     max_acceleration: 0
   right_arm_j0:

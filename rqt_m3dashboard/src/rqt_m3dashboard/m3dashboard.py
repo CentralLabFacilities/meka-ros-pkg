@@ -42,6 +42,10 @@ from .state_button import ControlStateButton
 from .wrap_battery import WrappedBattery
 from PyQt4.Qt import QTextEdit
 
+MIN_V = 20
+MAX_V = 24
+CHARGE_V_THRES = 27
+
 class M3Dashboard(Dashboard):
     """
     Dashboard for Mekabot
@@ -206,7 +210,13 @@ class M3Dashboard(Dashboard):
         
         val = str(msg.data)[:5]
         for key, value in self._battery_icons.iteritems():
-            value.set_power_state_perc(float(val), False)
+            charging = False
+            perc = 100.0
+            if (val > CHARGE_V_THRES):
+                charging = True
+            else:
+                perc = ((float(val) - MIN_V) / (MAX_V-MIN_V)) * 100.0
+            value.set_power_state_perc(float(perc), charging)
              
 
 
