@@ -52,7 +52,7 @@ class ControlStateButton(MenuDashWidget):
     """
     # create a signal for external triggering
     _set_enabled_signal = pyqtSignal(int)
-        
+
     def __init__(self, group_name, group_index):
         """
         :param group_name: Name of the group
@@ -88,8 +88,9 @@ class ControlStateButton(MenuDashWidget):
 
         icons = [disabled_icon, estop_icon, standby_icon, ready_icon, running_icon]
 
-        super(ControlStateButton, self).__init__('State:' + group_name, icons=icons, icon_paths=[['rqt_m3dashboard', 'images']])
-        
+        super(ControlStateButton, self).__init__('State:' +
+                                                 group_name, icons=icons, icon_paths=[['rqt_m3dashboard', 'images']])
+
         # init the button in disabled
         self.update_state(0)
 
@@ -102,9 +103,9 @@ class ControlStateButton(MenuDashWidget):
         self._enable_menu.setCheckable(True)
         self._enable_menu.setChecked(False)
         self.set_group_enabled(False)
-        
+
         self._set_enabled_signal.connect(self.on_enable_disable)
-                
+
         #self.add_separator()
         #self.add_action('Run All Groups', self.on_run_all)
         #self.add_action('Freeze All Groups', self.on_freeze_all)
@@ -114,7 +115,7 @@ class ControlStateButton(MenuDashWidget):
         self._serial = 0
         self._index = group_index
         self._name = group_name
-        self._pending_msg =  None
+        self._pending_msg = None
         self._state = None
         self._last_status_msg = None
         self.setToolTip(group_name)
@@ -125,16 +126,18 @@ class ControlStateButton(MenuDashWidget):
 
         :param group: group iname to send command to
         :type group: str
-        :param cmd: command to be sent to the pr2 breaker
+        :param cmd: command to be sent
         :type cmd: int
         """
-        if (self._state==None):
-            QMessageBox.critical(self, "Error", self.tr("Cannot control until we have received a state message"))
+        if (self._state is None):
+            QMessageBox.critical(self, "Error",
+                                 self.tr("Cannot control until we have received a state message"))
             return False
 
         if (self._state == 0):
             if (cmd == 3):
-                QMessageBox.critical(self, "Error", self.tr("Group will not enable because one of the estops is pressed"))
+                QMessageBox.critical(self, "Error",
+                                     self.tr("Group will not enable because one of the estops is pressed"))
                 return False
 
         try:
@@ -167,7 +170,7 @@ class ControlStateButton(MenuDashWidget):
 
     def on_standby(self):
         self.set_instandby()
-  
+
     def on_enable_disable(self):
         if self._enable_menu.isChecked():
             if self._state is not None:
@@ -243,7 +246,7 @@ class ControlStateButton(MenuDashWidget):
                 self._last_status_msg = status_msg
         else:
             self._pending_msg = state
-            
+
     def set_state_running(self):
         self.update_state(4)
 
@@ -255,11 +258,10 @@ class ControlStateButton(MenuDashWidget):
 
     def set_state_estop(self):
         self.update_state(1)
-        
+
     def set_group_enabled(self, val):
         if not val:
             self.update_state(0)
         for action in self._menu.actions():
             if not action.isCheckable():
                 action.setEnabled(val)
-                
