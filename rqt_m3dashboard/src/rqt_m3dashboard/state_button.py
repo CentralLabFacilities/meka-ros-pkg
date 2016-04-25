@@ -46,6 +46,14 @@ from rqt_robot_dashboard.widgets import MenuDashWidget
 from python_qt_binding.QtGui import QMessageBox
 
 
+STATE_CMD_DISABLE = 1
+STATE_CMD_ENABLE = 2
+STATE_CMD_ESTOP = 3
+STATE_CMD_STOP = 4
+STATE_CMD_FREEZE = 5
+STATE_CMD_START = 6
+
+
 class ControlStateButton(MenuDashWidget):
     """
     Dashboard widget to display and interact with the Control state.
@@ -174,13 +182,15 @@ class ControlStateButton(MenuDashWidget):
     def on_enable_disable(self):
         if self._enable_menu.isChecked():
             if self._state is not None:
-                self.set_group_enabled(True)
-                self.set_state(self._pending_msg)
+                #self.set_group_enabled(True)
+                #self.set_state(self._pending_msg)
+                self.control(self._name, STATE_CMD_ENABLE)
             else:
-                self._enable_menu.setChecked(False)
+                self.control(self._name, STATE_CMD_ENABLE)
+                #self._enable_menu.setChecked(False)
         else:
-            self.set_group_enabled(False)
-            
+            #self.set_group_enabled(False)
+            self.control(self._name, STATE_CMD_DISABLE)
 
     def on_run_all(self):
         self.set_run_all()
@@ -192,27 +202,27 @@ class ControlStateButton(MenuDashWidget):
         self.set_standby_all()
 
     def set_run(self):
-        if (not self.control(self._name, 2)):
+        if (not self.control(self._name, STATE_CMD_FREEZE)):
             return
 
-        self.control(self._name, 3)
+        self.control(self._name, STATE_CMD_START)
 
     def set_freeze(self):
-        self.control(self._name, 2)
+        self.control(self._name, STATE_CMD_FREEZE)
 
     def set_instandby(self):
-        self.control(self._name, 1)
+        self.control(self._name, STATE_CMD_STOP)
 
     def set_run_all(self):
-        if (not self.control3(2)):
+        if (not self.control3(STATE_CMD_FREEZE)):
             return
-        self.control3(3)
+        self.control3(STATE_CMD_START)
 
     def set_freeze_all(self):
-        self.control3(2)
+        self.control3(STATE_CMD_FREEZE)
 
     def set_standby_all(self):
-        self.control3(1)
+        self.control3(STATE_CMD_STOP)
 
     def set_state(self, state):
         """
@@ -229,6 +239,10 @@ class ControlStateButton(MenuDashWidget):
                 self.set_group_enabled(True)
                 self._enable_menu.setChecked(True)
             self._state = state
+            if (state == M3ControlStates.DISABLE):
+                self.set_group_enabled(False)
+                self._enable_menu.setChecked(False)
+                status_msg = "Disabled"
             if (state == M3ControlStates.ESTOP):
                 self.set_state_estop()
                 status_msg = "E-Stop"
