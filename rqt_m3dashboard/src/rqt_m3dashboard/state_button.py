@@ -53,7 +53,6 @@ STATE_CMD_STOP = 4
 STATE_CMD_FREEZE = 5
 STATE_CMD_START = 6
 
-
 class ControlStateButton(MenuDashWidget):
     """
     Dashboard widget to display and interact with the Control state.
@@ -142,10 +141,10 @@ class ControlStateButton(MenuDashWidget):
                                  self.tr("Cannot control until we have received a state message"))
             return False
 
-        if (self._state == 0):
-            if (cmd == 3):
+        if (self._state <= M3ControlStates.ESTOP):
+            if (cmd == STATE_CMD_START):
                 QMessageBox.critical(self, "Error",
-                                     self.tr("Group will not enable because one of the estops is pressed"))
+                                     self.tr("Group will not start because disabled or estops is pressed"))
                 return False
 
         try:
@@ -185,12 +184,15 @@ class ControlStateButton(MenuDashWidget):
                 #self.set_group_enabled(True)
                 #self.set_state(self._pending_msg)
                 self.control(self._name, STATE_CMD_ENABLE)
+                print "enabling ",self._name
             else:
                 self.control(self._name, STATE_CMD_ENABLE)
+                print "state was none enabling ",self._name
                 #self._enable_menu.setChecked(False)
         else:
             #self.set_group_enabled(False)
             self.control(self._name, STATE_CMD_DISABLE)
+            print "disabling ",self._name
 
     def on_run_all(self):
         self.set_run_all()
@@ -232,34 +234,30 @@ class ControlStateButton(MenuDashWidget):
         :type msg: m3meka_msgs.msg.M3ControlStates
         """
 
-        if (self._enable_menu.isChecked() or self._state is None):
-            status_msg = "Running"
-            # if first message received, enable the group
-            if self._state is None:
-                self.set_group_enabled(True)
-                self._enable_menu.setChecked(True)
-            self._state = state
-            if (state == M3ControlStates.DISABLE):
-                self.set_group_enabled(False)
-                self._enable_menu.setChecked(False)
-                status_msg = "Disabled"
-            if (state == M3ControlStates.ESTOP):
-                self.set_state_estop()
-                status_msg = "E-Stop"
-            elif (state == M3ControlStates.STOP):
-                self.set_state_standby()
-                status_msg = "Stop"
-            elif (state == M3ControlStates.FREEZE):
-                self.set_state_ready()
-                status_msg = "Freeze"
-            else:
-                self.set_state_running()
-
-            if (status_msg != self._last_status_msg):
-                self.setToolTip("Group: %s \nState: %s" % (self._name, status_msg))
-                self._last_status_msg = status_msg
+        status_msg = "Running"
+        # if first message received, enable the group
+        if self._state is None:
+            self.set_group_enabled(True)
+            self._enable_menu.setChecked(True)
+        self._state = state
+        if (state == M3ControlStates.DISABLE):
+            self.set_state_disabled()
+            status_msg = "Disabled"
+        elif (state == M3ControlStates.ESTOP):
+            self.set_state_estop()
+            status_msg = "E-Stop"
+        elif (state == M3ControlStates.STOP):
+            self.set_state_standby()
+            status_msg = "Stop"
+        elif (state == M3ControlStates.FREEZE):
+            self.set_state_ready()
+            status_msg = "Freeze"
         else:
-            self._pending_msg = state
+            self.set_state_running()
+
+        if (status_msg != self._last_status_msg):
+            self.setToolTip("Group: %s \nState: %s" % (self._name, status_msg))
+            self._last_status_msg = status_msg
 
     def set_state_running(self):
         self.update_state(4)
@@ -273,9 +271,12 @@ class ControlStateButton(MenuDashWidget):
     def set_state_estop(self):
         self.update_state(1)
 
+    def set_state_disabled(self):
+        self.update_state(0)
+        
     def set_group_enabled(self, val):
-        if not val:
-            self.update_state(0)
+        #if not val:
+        #    self.update_state(0)
         for action in self._menu.actions():
             if not action.isCheckable():
                 action.setEnabled(val)
