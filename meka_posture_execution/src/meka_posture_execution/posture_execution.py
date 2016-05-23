@@ -4,6 +4,7 @@ import threading
 import yaml
 import time
 import logging
+import json
 
 from os import sys, path
 from optparse import OptionParser
@@ -38,6 +39,7 @@ class MekaPostureExecution(object):
         self._client = {}
         self._movement_finished = {}
         self._meka_posture = MekaPosture("mypostures")
+        self.all_done = True;
         
         threading.Thread(None, rospy.spin)
 
@@ -53,6 +55,7 @@ class MekaPostureExecution(object):
 
         if self._client[group_name].wait_for_server(timeout=rospy.Duration(4)) is False:
             rospy.logfatal("Failed to connect to %s action server in 4 sec",group_name)
+            del self._client[group_name]
             raise
         else:
             self._movement_finished[group_name] = True
@@ -84,6 +87,8 @@ class MekaPostureExecution(object):
         rospy.loginfo("All movement finished")
         if self._previous_posture != self._posture_when_done:
             self.execute("all", self._posture_when_done)
+        else:
+            self.all_done = True
 
     def execute(self, group_name, posture_name, timescale=1.0):
         """
@@ -116,6 +121,7 @@ class MekaPostureExecution(object):
                 
                 self._movement_finished[group_name] = False
                 self._client[group_name].send_goal(goal, done_cb=partial(self.on_done, group_name))
+                self.all_done = False;
             else:
                 rospy.logerr("No goal found for posture %s in group  %s.", posture_name, group_name)
 
@@ -123,22 +129,40 @@ class MekaPostureExecution(object):
         self._meka_posture.load_postures(path)
         
     def handle(self, event):
-                
         rospy.logdebug("Received event: %s" % event)
 
         call_str = event.data.split()
-        des_jnt, des_pos = call_str[0], call_str[1]
-        
+        des_jnt, des_pos = call_str[0], call_str[1]    
+
         self.execute(des_jnt, des_pos)
+    
+    def execute_rpc(self, request):
+        print "rpc called"
+        
+        call_str = request.split()
+        des_jnt, des_pos = call_str[0], call_str[1]
+
+        self.execute(des_jnt, des_pos)
+        while not self.all_done:
+            print "not done"
+            time.sleep(4)
+        return True
+        
+        
+    def get_postures(self, ev):
+        print "called get postures"
+        d = self._meka_posture.list_postures()    
+        return json.dumps(d)
+        
         
 def main():
     FORMAT = "%(levelname)s %(asctime)-15s %(name)s %(module)s - %(message)s"
     logging.basicConfig(format=FORMAT)
 
     parser = OptionParser()
-    parser.add_option("--joints", help="Path to joints made available", default = sys.path[0]+"/../../cfg/joints.yml",
+    parser.add_option("--joints", help="Path to joints made available", default = sys.path[0]+"/../../config/joints.yml",
         dest="joint_path")
-    parser.add_option("--postures", help="Path to postures made available", default = "/home/meka/workspace/mekabot/meka-ros-pkg/meka_posture_execution/cfg/postures.yml",
+    parser.add_option("--postures", help="Path to postures made available", default = "/home/meka/workspace/mekabot/meka-ros-pkg/meka_posture_execution/config/postures.yml",
         dest="posture_path")
     parser.add_option("--scope", help="Scope to listen to for remote calls", default = "/meka/posture_execution",
         dest="scope")
@@ -151,13 +175,21 @@ def main():
     
     time.sleep(1)
     #meka_posture_exec.execute("head", "nodding_twice");
-    print "Ready"
     
     try:
-        rsbiface =  interfaces.RSBInterface(opts.scope, meka_posture_exec.handle)
+        rsbif = interfaces.RSBInterface(opts.scope, meka_posture_exec.handle, 
+                                        assumePoseRPC=meka_posture_exec.execute_rpc,
+                                        getPosesRPC=meka_posture_exec.get_postures
+                                        )
     except Exception, e:
         logging.error("Interface not brought up! Error was: \"%s\"", e)
         
+    print "Postures:"
+    print meka_posture_exec.get_postures("bla")
+    
+    rospy.spin()
+    #while True:
+    #    time.sleep(1)
     
 if __name__ == "__main__":
     main()
