@@ -23,7 +23,7 @@ from meka_posture.meka_posture import MekaPosture
 
 from functools import partial
 
-import interfaces
+from meka_posture_execution.interfaces import rsbServer
 
 JNT_TRAJ_SRV_SUFFIX = "_position_trajectory_controller/follow_joint_trajectory"
 
@@ -160,9 +160,9 @@ def main():
     logging.basicConfig(format=FORMAT)
 
     parser = OptionParser()
-    parser.add_option("--joints", help="Path to joints made available", default = sys.path[0]+"/../../config/joints.yml",
+    parser.add_option("--joints", help="Path to joints made available", default = "/vol/meka/nightly/share/meka_posture_execution/config/joints.yml",
         dest="joint_path")
-    parser.add_option("--postures", help="Path to postures made available", default = "/home/meka/workspace/mekabot/meka-ros-pkg/meka_posture_execution/config/postures.yml",
+    parser.add_option("--postures", help="Path to postures made available", default = "/vol/meka/nightly/share/meka_posture_execution/config/postures.yml",
         dest="posture_path")
     parser.add_option("--scope", help="Scope to listen to for remote calls", default = "/meka/posture_execution",
         dest="scope")
@@ -177,7 +177,7 @@ def main():
     #meka_posture_exec.execute("head", "nodding_twice");
     
     try:
-        rsbif = interfaces.RSBInterface(opts.scope, meka_posture_exec.handle, 
+        rsbif = rsbServer.RSBInterface(opts.scope, meka_posture_exec.handle, 
                                         assumePoseRPC=meka_posture_exec.execute_rpc,
                                         getPosesRPC=meka_posture_exec.get_postures
                                         )
