@@ -130,14 +130,7 @@ install(DIRECTORY
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
-## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
-install(PROGRAMS
-   src/meka_posture_execution/posture_execution.py
-   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-catkin_install_python(PROGRAMS src/meka_posture_execution/posture_execution.py
+catkin_install_python(PROGRAMS nodes/execute_posture_server
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 include_directories(
