@@ -130,7 +130,7 @@ install(DIRECTORY
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
-catkin_install_python(PROGRAMS nodes/execute_posture_server
+catkin_install_python(PROGRAMS nodes/posture_execution_server
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 include_directories(

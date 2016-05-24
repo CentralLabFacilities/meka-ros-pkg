@@ -5,23 +5,29 @@ import logging
 
 class RSBInterface():
         
-    def __init__(self, scope, funct, assumePoseRPC, getPosesRPC):
+    def __init__(self, scope, serverscope, handler, assumePoseRPC, getPosesRPC):
         self.log = logging.getLogger(self.__class__.__name__)  
         self.log.setLevel(logging.DEBUG)
-        self.scope_server = scope+'/server'
+        self._serverscope = serverscope
+        self._scope = scope
+
+        # ------------------------------------------------------------------
         
-        self.__localServer = rsb.createServer(self.scope_server)
+        self.__localServer = rsb.createServer(self._serverscope)
         self.__localServer.addMethod('assumePose', assumePoseRPC, requestType=str, replyType=bool)
         self.__localServer.addMethod('getPoses', getPosesRPC, replyType=str)
         self.__localServer.activate();
                 
-        self.log.debug('rsb server started on' + self.scope_server)
-        print 'rsb server started on' + self.scope_server
+        self.log.debug('rsb server started on' + self._serverscope)
+        print 'rsb server started on' + self._serverscope
+
+        # ------------------------------------------------------------------
         
-        
-        with rsb.createListener(scope) as listener:
-    
-            listener.addHandler(funct)           
+        self._listener = rsb.createListener(self._scope)
+        self._listener.addHandler(handler)         
+
+        self.log.debug('rsb listener started on' + self._scope)
+        print 'rsb server started on' + self._scope  
 
     def publish(self, scope, msg):
         

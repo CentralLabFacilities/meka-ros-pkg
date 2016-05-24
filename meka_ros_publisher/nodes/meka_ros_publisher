@@ -1,0 +1,4 @@
+#! /usr/bin/env python
+import meka_ros_publisher.ros_publisher as rp
+if __name__ == '__main__':
+    rp.main()

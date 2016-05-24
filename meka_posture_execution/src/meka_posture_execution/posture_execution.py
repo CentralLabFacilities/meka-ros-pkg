@@ -164,8 +164,10 @@ def main():
         dest="joint_path")
     parser.add_option("--postures", help="Path to postures made available", default = "/vol/meka/nightly/share/meka_posture_execution/config/postures.yml",
         dest="posture_path")
-    parser.add_option("--scope", help="Scope to listen to for remote calls", default = "/meka/posture_execution",
+    parser.add_option("--scope", help="Scope to listen to for remote events", default = "/meka/posture_execution",
         dest="scope")
+    parser.add_option("--serverScope", help="Scope to listen to for remote procedure calls", default = "/meka/posture_execution/server",
+        dest="serverscope")
     
     (opts, args_) = parser.parse_args()
         
@@ -177,7 +179,9 @@ def main():
     #meka_posture_exec.execute("head", "nodding_twice");
     
     try:
-        rsbif = rsbServer.RSBInterface(opts.scope, meka_posture_exec.handle, 
+        rsbif = rsbServer.RSBInterface(scope=opts.scope,
+                                        serverscope=opts.serverscope,
+                                        handler=meka_posture_exec.handle, 
                                         assumePoseRPC=meka_posture_exec.execute_rpc,
                                         getPosesRPC=meka_posture_exec.get_postures
                                         )
