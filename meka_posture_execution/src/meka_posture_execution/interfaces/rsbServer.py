@@ -47,7 +47,7 @@ if __name__ == '__main__':
          
          #print('server replied to synchronous getPoses: "%s"' % server.getPoses())
          
-         reply = server.assumePose.async('all waiting')
+         reply = server.assumePose.async('allwaiting')
          
          while not reply.isDone():
              print "not done"

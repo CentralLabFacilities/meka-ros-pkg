@@ -130,16 +130,28 @@ class MekaPostureExecution(object):
         
     def handle(self, event):
         rospy.logdebug("Received event: %s" % event)
+        
+        if event.getType() != str:
+            rospy.logerr("Received non string  event")
+            return
 
         call_str = event.data.split()
+        if len(call_str) < 2:
+            rospy.logerr("recieved garbage")
+            return
+        
         des_jnt, des_pos = call_str[0], call_str[1]    
 
         self.execute(des_jnt, des_pos)
     
     def execute_rpc(self, request):
-        print "rpc called"
-        
+        rospy.logdebug("Received request: %s" % request)
+
         call_str = request.split()
+        if len(call_str) < 2:
+            rospy.logerr("recieved garbage")
+            return False
+            
         des_jnt, des_pos = call_str[0], call_str[1]
 
         self.execute(des_jnt, des_pos)
@@ -190,6 +202,8 @@ def main():
         
     print "Postures:"
     print meka_posture_exec.get_postures("bla")
+    
+    rospy.logdebug("current ver")
     
     rospy.spin()
     #while True:
