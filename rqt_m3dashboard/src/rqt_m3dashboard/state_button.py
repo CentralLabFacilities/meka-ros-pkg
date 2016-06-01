@@ -59,6 +59,7 @@ class ControlStateButton(MenuDashWidget):
     """
     # create a signal for external triggering
     _set_enabled_signal = pyqtSignal(int)
+    _set_disabled_signal = pyqtSignal(int)
 
     def __init__(self, group_name, group_index):
         """
@@ -106,12 +107,18 @@ class ControlStateButton(MenuDashWidget):
         self.add_action('Run', self.on_run)
         self.add_action('Freeze', self.on_freeze)
         self.add_action('Standby', self.on_standby)
-        self._enable_menu = self.add_action('Enable/Disable', self.on_enable_disable)
+        self._enable_menu = self.add_action('Enable', self.on_enable)
+        self._enable_menu.setEnabled(True)
         self._enable_menu.setCheckable(True)
         self._enable_menu.setChecked(False)
+        self._disable_menu = self.add_action('Disable', self.on_disable)
+        self._disable_menu.setEnabled(False)
+        self._disable_menu.setCheckable(True)
+        self._disable_menu.setChecked(True)
         self.set_group_enabled(False)
 
-        self._set_enabled_signal.connect(self.on_enable_disable)
+        self._set_enabled_signal.connect(self.on_enable)
+        self._set_disabled_signal.connect(self.on_disable)
 
         #self.add_separator()
         #self.add_action('Run All Groups', self.on_run_all)
@@ -178,21 +185,30 @@ class ControlStateButton(MenuDashWidget):
     def on_standby(self):
         self.set_instandby()
 
-    def on_enable_disable(self):
+    def on_enable_(self):
         if self._enable_menu.isChecked():
+            self.control(self._name, STATE_CMD_ENABLE)
+            print "enabling ",self._name
+            self._enable_menu.setEnabled(False)
+            self._disable_menu.setEnabled(True)
+            self._disable_menu.setChecked(False)
+            
+    def on_disable(self):
+        if self._disable_menu.isChecked():
             if self._state is not None:
-                #self.set_group_enabled(True)
-                #self.set_state(self._pending_msg)
-                self.control(self._name, STATE_CMD_ENABLE)
-                print "enabling ",self._name
+                # if disabling while running, first send a stop
+                if (self._state > M3ControlStates.STOP )
+                    self.control(self._name, STATE_CMD_STOP)
+                # then disable
+                self.control(self._name, STATE_CMD_DISABLE)
+                print "disabling ",self._name
             else:
-                self.control(self._name, STATE_CMD_ENABLE)
-                print "state was none enabling ",self._name
-                #self._enable_menu.setChecked(False)
-        else:
-            #self.set_group_enabled(False)
-            self.control(self._name, STATE_CMD_DISABLE)
-            print "disabling ",self._name
+                self.control(self._name, STATE_CMD_DISABLE)
+                print "state was none disabling ",self._name
+                
+            self._disable_menu.setEnabled(False)
+            self._enable_menu.setEnabled(True)
+            self._enable_menu.setChecked(False)
 
     def on_run_all(self):
         self.set_run_all()
@@ -277,6 +293,7 @@ class ControlStateButton(MenuDashWidget):
     def set_group_enabled(self, val):
         #if not val:
         #    self.update_state(0)
+        # enable or disable the menus other than the checkable ones
         for action in self._menu.actions():
             if not action.isCheckable():
                 action.setEnabled(val)

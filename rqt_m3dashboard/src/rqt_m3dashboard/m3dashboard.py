@@ -72,7 +72,7 @@ class M3Dashboard(Dashboard):
         # create as many buttons as groups received
         for group_name in group_names:
             self._state_buttons[group_name] = ControlStateButton(group_name, 0)
-        
+
         hlayout2 = QHBoxLayout()
         for battery_name in battery_names:
             self._battery_icons[battery_name] = WrappedBattery(self.context, battery_name)
@@ -102,7 +102,7 @@ class M3Dashboard(Dashboard):
         #hlayout2.addWidget(self.bat_txt)
 
         self.chk_all = QCheckBox("enable_all")
-        self.chk_all.setChecked(True)
+        self.chk_all.setChecked(False)
 
         self.spin_retries = QSpinBox()
         # infinite number of times is -1
@@ -153,9 +153,8 @@ class M3Dashboard(Dashboard):
             goal.strategy = M3StateChangeGoal.RETRY_N_TIMES
             goal.retries = self.spin_retries.value()
 
-
         # find enabled groups
-        for group_name  in self._state_buttons:
+        for group_name in self._state_buttons:
             if self._state_buttons[group_name]._enable_menu.isChecked():
                 goal.command.group_name.append(group_name)
                 goal.command.state.append(cmd)
@@ -167,12 +166,14 @@ class M3Dashboard(Dashboard):
 
     def on_enable_all_clicked(self):
         """
-        start
+        enable all
         """
-        for group_name  in self._state_buttons:
-            self._state_buttons[group_name]._enable_menu.setChecked(self.chk_all.isChecked())
-            self._state_buttons[group_name]._enable_menu.triggered.emit(self.chk_all.isChecked())
-            # stateChanged.emit( _set_enabled_signal.emit(self.chk_all.isChecked())
+        if self.chk_all.isChecked():
+            for group_name in self._state_buttons:
+                self._state_buttons[group_name]._enable_menu.triggered.emit(True)
+        else:
+            for group_name in self._state_buttons:
+                self._state_buttons[group_name]._disable_menu.triggered.emit(True)
 
     def on_btn_start_clicked(self):
         """
@@ -185,7 +186,6 @@ class M3Dashboard(Dashboard):
         stop
         """
         self.change_state(M3ControlStates.STOP)
-
 
     def on_btn_freeze_clicked(self):
         """
@@ -207,7 +207,7 @@ class M3Dashboard(Dashboard):
         :type msg: String
         """
         #rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
-        
+
         val = str(msg.data)[:5]
         for key, value in self._battery_icons.iteritems():
             charging = False
@@ -217,8 +217,6 @@ class M3Dashboard(Dashboard):
             else:
                 perc = ((float(val) - MIN_V) / (MAX_V-MIN_V)) * 100.0
             value.set_power_state_perc(float(perc), charging)
-             
-
 
     def dashboard_callback(self, msg):
         """
@@ -245,10 +243,8 @@ class M3Dashboard(Dashboard):
                 self.btn_stop.setEnabled(True)
                 self.btn_freeze.setEnabled(True)
 
-
     def shutdown_dashboard(self):
         for x in self._dashboard_mekaros_subs:
             x.unregister()
-            
-        self._dashboard_agg_sub.unregister()
 
+        self._dashboard_agg_sub.unregister()
