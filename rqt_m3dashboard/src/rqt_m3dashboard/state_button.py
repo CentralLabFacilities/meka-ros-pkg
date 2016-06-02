@@ -254,21 +254,25 @@ class ControlStateButton(MenuDashWidget):
         # if first message received, enable the group
         if self._state is None:
             self.set_group_enabled(True)
-            self._enable_menu.setChecked(True)
         self._state = state
         if (state == M3ControlStates.DISABLE):
+            self.set_group_enabled(False)
             self.set_state_disabled()
             status_msg = "Disabled"
         elif (state == M3ControlStates.ESTOP):
+            self.set_group_enabled(False)
             self.set_state_estop()
             status_msg = "E-Stop"
         elif (state == M3ControlStates.STOP):
+            self.set_group_enabled(True)
             self.set_state_standby()
             status_msg = "Stop"
         elif (state == M3ControlStates.FREEZE):
+            self.set_group_enabled(True)
             self.set_state_ready()
             status_msg = "Freeze"
         else:
+            self.set_group_enabled(True)
             self.set_state_running()
 
         if (status_msg != self._last_status_msg):

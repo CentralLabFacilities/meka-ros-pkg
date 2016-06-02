@@ -34,7 +34,8 @@ from QtGui import QPushButton, QVBoxLayout, QHBoxLayout, QWidget, \
 
 from m3meka_msgs.msg import M3ControlState, M3ControlStates, \
     M3StateChangeGoal, M3StateChangeAction
-from m3meka_msgs.srv import M3ControlStateChange, M3ControlStateChangeResponse
+from m3meka_msgs.srv import M3ControlStateChange, M3ControlStateChangeResponse, \
+    M3ControlStateChangeRequest
 
 from std_msgs.msg import Bool, String
 from .emergency_button import EmergencyButton
@@ -45,6 +46,13 @@ from PyQt4.Qt import QTextEdit
 MIN_V = 20
 MAX_V = 24
 CHARGE_V_THRES = 27
+
+STATE_CMD_DISABLE = 1
+STATE_CMD_ENABLE = 2
+STATE_CMD_ESTOP = 3
+STATE_CMD_STOP = 4
+STATE_CMD_FREEZE = 5
+STATE_CMD_START = 6
 
 class M3Dashboard(Dashboard):
     """
@@ -93,6 +101,8 @@ class M3Dashboard(Dashboard):
             self._service_ready = False
         else:
             rospy.loginfo("Found the state manager")
+            
+        self._state_control = rospy.ServiceProxy('/meka_roscontrol_state_manager/change_state', M3ControlStateChange)
 
         self._main_widget = QWidget()
         vlayout = QVBoxLayout()
@@ -168,12 +178,26 @@ class M3Dashboard(Dashboard):
         """
         enable all
         """
-        if self.chk_all.isChecked():
-            for group_name in self._state_buttons:
-                self._state_buttons[group_name]._enable_menu.triggered.emit(True)
-        else:
-            for group_name in self._state_buttons:
-                self._state_buttons[group_name]._disable_menu.triggered.emit(True)
+        state_cmd = M3ControlStateChangeRequest()
+                    
+        for group_name in self._state_buttons:
+            state_cmd.command.group_name.append(group_name)
+            if self.chk_all.isChecked():
+                self._state_buttons[group_name]._enable_menu.setChecked(True)
+                self._state_buttons[group_name]._disable_menu.setChecked(False)
+                self._state_buttons[group_name]._enable_menu.setEnabled(False)
+                self._state_buttons[group_name]._disable_menu.setEnabled(True)
+                state_cmd.command.state.append(STATE_CMD_ENABLE)
+            else:
+                self._state_buttons[group_name]._enable_menu.setChecked(False)
+                self._state_buttons[group_name]._disable_menu.setChecked(True)
+                self._state_buttons[group_name]._enable_menu.setEnabled(True)
+                self._state_buttons[group_name]._disable_menu.setEnabled(False)
+                state_cmd.command.state.append(STATE_CMD_DISABLE)
+        try:
+            self._state_control(state_cmd)
+        except rospy.ServiceException, e:
+            QMessageBox.critical(self, "Error", "Service call failed with error: %s" % (e), "Error")
 
     def on_btn_start_clicked(self):
         """
