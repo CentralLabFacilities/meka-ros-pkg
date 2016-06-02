@@ -185,7 +185,7 @@ class ControlStateButton(MenuDashWidget):
     def on_standby(self):
         self.set_instandby()
 
-    def on_enable_(self):
+    def on_enable(self):
         if self._enable_menu.isChecked():
             self.control(self._name, STATE_CMD_ENABLE)
             print "enabling ",self._name
@@ -197,7 +197,7 @@ class ControlStateButton(MenuDashWidget):
         if self._disable_menu.isChecked():
             if self._state is not None:
                 # if disabling while running, first send a stop
-                if (self._state > M3ControlStates.STOP )
+                if self._state > M3ControlStates.STOP:
                     self.control(self._name, STATE_CMD_STOP)
                 # then disable
                 self.control(self._name, STATE_CMD_DISABLE)
