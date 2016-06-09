@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+  <name>meka_stiffness_control</name>
+  <version>0.0.1</version>
+  <description>Permit easy access to the stiffness controller</description>
+  <maintainer email="gwalck@techfak.uni-bielefeld.de">Guillaume Walck</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/CentralLabFacilities/meka-ros-pkg.git</url>
+
+  <author email="gwalck@techfak.uni-bielefeld.de">Guillaume Walck</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>control_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <run_depend>control_msgs</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- You can specify that this package is a metapackage here: -->
+    <!-- <metapackage/> -->
+
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

@@ -1,0 +1,4 @@
+#! /usr/bin/env python
+import meka_stiffness_control.stiffness_control as sc
+if __name__ == '__main__':
+    sc.main()
