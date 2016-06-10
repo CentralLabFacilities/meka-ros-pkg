@@ -1,0 +1,10 @@
+# Goal specifies a sequence of tasks to be executed
+hri_msgs/HriTask[] tasks
+---
+# Result show state
+hri_msgs/HriTaskResult result
+---
+# Feedback
+uint32  seq
+hri_msgs/HriTaskPhase phase
+
