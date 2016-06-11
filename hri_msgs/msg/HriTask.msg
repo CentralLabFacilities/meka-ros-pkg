@@ -19,7 +19,7 @@ uint8 WAIT=2
 bool interaction_expected
 hri_msgs/HriInteraction interaction
 
-moveit_msgs/Grasp grasps
+moveit_msgs/Grasp grasp
 trajectory_msgs/JointTrajectory joint_motion
 
 

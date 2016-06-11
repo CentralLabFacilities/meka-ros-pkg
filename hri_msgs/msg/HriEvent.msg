@@ -7,9 +7,10 @@ int32 id
 uint8 type
 uint8 ID=1
 uint8 CONTACT=2
-uint8 PHYSIC=4
-uint8 VOICE=8
-uint8 VISUAL=16
+uint8 FORCE=4
+uint8 TORQUE=8
+uint8 VOICE=16
+uint8 VISUAL=32
 
 geometry_msgs/Wrench physic_event_value
 std_msgs/Float64 contact_event_value
