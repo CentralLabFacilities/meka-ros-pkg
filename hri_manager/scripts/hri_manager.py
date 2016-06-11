@@ -2,13 +2,20 @@
 
 import rospy
 import numpy
+from functools import partial
+
 import actionlib
+from actionlib import SimpleActionClient
 from hri_msgs.msg import HriAction, HriGoal, HriFeedback, HriResult
-from hri_msgs.msg import HriEvent, HriInteraction, HriTask, HriTaskResult
+from hri_msgs.msg import HriEvent, HriInteraction, HriTask, HriTaskResult, HriTaskPhase
 
 from meka_posture.meka_posture import MekaPosture
 
-#from trajectory_msgs.msg import JointTrajectoryPoint
+from control_msgs.msg import FollowJointTrajectoryAction, \
+    FollowJointTrajectoryGoal
+from trajectory_msgs.msg import JointTrajectoryPoint
+
+JNT_TRAJ_SRV_SUFFIX = "_position_trajectory_controller/follow_joint_trajectory"
 
 
 class HriManager(object):
@@ -23,6 +30,8 @@ class HriManager(object):
         self._as = actionlib.SimpleActionServer(self._action_name, HriAction,
                                                 execute_cb=self.execute_cb, auto_start=False)
         self._meka_posture = MekaPosture("mypostures")
+        self._client = {}
+        self._movement_finished = {}
         self._cond = {}
         self._valid = {}
         self._timeout = 0
@@ -107,6 +116,30 @@ class HriManager(object):
             self._valid['VISUAL'] = False
         self._timeout = rospy.Time.now + interaction.timeout
 
+    def _set_up_action_client(self, group_name):
+        """
+        Sets up an action client to communicate with the trajectory controller
+        """
+
+        self._client[group_name] = SimpleActionClient(
+            self._prefix + "/" + group_name + JNT_TRAJ_SRV_SUFFIX,
+            FollowJointTrajectoryAction
+        )
+
+        if self._client[group_name].wait_for_server(timeout=rospy.Duration(4)) is False:
+            rospy.logfatal("Failed to connect to %s action server in 4 sec", group_name)
+            del self._client[group_name]
+            raise
+        else:
+            self._movement_finished[group_name] = True
+
+    def get_motion_goal_from_task(self, task):
+        goal = None
+        group_name = task.group_name
+        if task.description in self._meka_posture.list_postures(group_name):
+            goal = self._meka_posture.get_trajectory_goal(group_name, task.description)
+        return goal
+
     def event_handle(self, msg):
         self._last_event_id = msg.id
         if (msg.type & HriInteraction.ID) == HriInteraction.ID:
@@ -143,6 +176,11 @@ class HriManager(object):
                 else:
                     self._valid['TORQUE'] = False
 
+    def on_motion_done(self, group_name, *cbargs):
+        msg = cbargs[1]
+        #if msg.error_code == 0:
+        self._movement_finished[group_name] = True
+
     def _check_all_cond(self, cond_type):
         if cond_type == HriInteraction.ANY:
             for key in self._valid:
@@ -161,7 +199,8 @@ class HriManager(object):
             # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
-                self._as.set_preempted()
+                self._result.success = False
+                self._as.set_preempted(self._result)
                 success = False
                 break
 
@@ -176,64 +215,93 @@ class HriManager(object):
                     break
 
             # check motion end
-            # if motion_test
-            #TODO
+            if motion_test:
+                if self._movement_finished[task.group_name]:
+                    break
 
             self._as.publish_feedback(self._feedback)
             self._r.sleep()
         return success
 
+    def start_motion(self, task):
+        goal = self.get_motion_goal_from_task(task)
+        if goal is not None:
+            if task.group_name not in self._client:
+                rospy.logerr("Action client for %s not initialized. Trying to initialize it...", task.group_name)
+                try:
+                    self._set_up_action_client(task.group_name)
+                except:
+                    rospy.logerr("Could not set up action client for %s.", task.group_name)
+                    return False
+
+            if self._client[task.group_name].send_goal(goal, done_cb=partial(self.on_motion_done, task.group_name)):
+                self._movement_finished[task.group_name] = False
+                return True
+            else:
+                return False
+        else:
+            rospy.logerr("No goal found for posture %s in group  %s.", task.description, task.group_name)
+            return False
+
     def execute_motion_until(self, task):
         # execution the motion here and be ready to preempt it
-        motion_started = True
-        success = self.wait_for_condition(task, test_condition=True, motion_test=True, time_out_test=True)
+        success = True
+        if self.start_motion(task):
+            self._feedback.phase.id = HriTaskPhase.STARTED_UNTIL
+            self._as.publish_feedback(self._feedback)
+            success = self.wait_for_condition(task, test_condition=True, motion_test=True, time_out_test=True)
 
-        if success:
-            self._result.event_triggered = True
-            self._result.event_id = self._last_event_id
+            if success:
+                self._result.event_triggered = True
+                self._result.event_id = self._last_event_id
 
-        if motion_started:
-            # cancel motion
-            motion_started = False
-            #TODO
+            # if motion still running
+            if self._movement_finished[task.group_name] is False:
+                # cancel motion
+                self._client[task.group_name].cancel_goal()
+                self._movement_finished[task.group_name] = True
+        else:
+            success = False
+            self._result.error_code = HriTaskResult.MOTION_ERROR
 
         return success
 
     def execute_motion_if(self, task):
-        motion_started = False
+        self._feedback.phase.id = HriTaskPhase.STARTING_IF
+        self._as.publish_feedback(self._feedback)
         success = self.wait_for_condition(task, test_condition=True, motion_test=False, time_out_test=True)
-
         if success:
+            self._feedback.phase.id = HriTaskPhase.STARTED_IF
+            self._as.publish_feedback(self._feedback)
             self._result.event_triggered = True
             self._result.event_id = self._last_event_id
 
             # run the motion now, until it ends or action is pre-empted
-            #TODO
-            motion_started = True
+            if self.start_motion(task):
+                # wait for result of the motion here
+                while self._movement_finished[task.group_name] is False:
+                    # check that preempt has not been requested by the client
+                    if self._as.is_preempt_requested():
+                        rospy.loginfo('%s: Preempted' % self._action_name)
 
-            # wait for result of the motion here
-            while 1:
-                # check that preempt has not been requested by the client
-                if self._as.is_preempt_requested():
-                    rospy.loginfo('%s: Preempted' % self._action_name)
+                        self._result.success = False
+                        self._as.set_preempted(self._result)
+                        success = False
+                        break
+                    self._r.sleep()
 
-                    self._as.set_preempted()
-                    success = False
-                    stop_processing_task = True
-                    break
-
-                # check if motion finished in order to break
-                #TODO
-
-            if motion_started:
-                # cancel motion
-                motion_started = False
-                #TODO
+                # if motion still running
+                if self._movement_finished[task.group_name] is False:
+                    # cancel motion
+                    self._client[task.group_name].cancel_goal()
+                    self._movement_finished[task.group_name] = True
+            else:
+                success = False
+                self._result.error_code = HriTaskResult.MOTION_ERROR
 
         return success
 
     def execute_motion_while(self, task):
-        motion_started = False
         success = self.wait_for_condition(task, test_condition=True, motion_test=False, time_out_test=True)
 
         if success:
@@ -241,22 +309,21 @@ class HriManager(object):
             self._result.event_id = self._last_event_id
 
             # run the motion now,
-            #TODO
-            motion_started = True
+            if self.start_motion(task):
+                # until it ends or action is pre-empted of wait for condition is false again
+                success = self.wait_for_condition(task, test_condition=False, motion_test=True, time_out_test=False)
 
-            # until it ends or action is pre-empted of wait for condition is false again
-            success = self.wait_for_condition(task, test_condition=False, motion_test=True, time_out_test=False)
-
-            if motion_started:
-                # cancel motion
-                motion_started = False
-                #TODO
+                if self._movement_finished[task.group_name] is False:
+                    # cancel motion
+                    self._client[task.group_name].cancel_goal()
+                    self._movement_finished[task.group_name] = True
+            else:
+                success = False
+                self._result.error_code = HriTaskResult.MOTION_ERROR
 
         return success
 
     def execute_cb(self, goal):
-        # helper variables
-
         success = True
 
         # prepare the feedback
@@ -305,10 +372,9 @@ class HriManager(object):
 
         if not success:
             #check if it was pre-empted
-            #TODO
-            #else
-            rospy.loginfo('%s: Goal invalid' % self._action_name)
-            self._as.set_aborted(self._result)
+            if self._as.is_active():
+                rospy.loginfo('%s: Goal invalid' % self._action_name)
+                self._as.set_aborted(self._result)
 
         if success:
             self._result.last_seq = 0
