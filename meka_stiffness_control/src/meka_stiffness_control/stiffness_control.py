@@ -29,40 +29,37 @@ class MekaStiffnessControl(object):
         self._name = name
         self._prefix = "meka_roscontrol"
         self._joint_names = ["right_arm_j0",
-            "right_arm_j1",
-            "right_arm_j2",
-            "right_arm_j3",
-            "right_arm_j4",
-            "right_arm_j5",
-            "right_arm_j6",
-            "left_arm_j0",
-            "left_arm_j1",
-            "left_arm_j2",
-            "left_arm_j3",
-            "left_arm_j4",
-            "left_arm_j5",
-            "left_arm_j6",
-            "right_hand_j0",
-            "right_hand_j1",
-            "right_hand_j2",
-            "right_hand_j3",
-            "right_hand_j4",
-            "left_hand_j0",
-            "left_hand_j1",
-            "left_hand_j2",
-            "left_hand_j3",
-            "left_hand_j4",
-            "head_j0",
-            "head_j1",
-            "torso_j0",
-            "torso_j1",
-            "zlift_j0"]
-        self._stiffness_dict = OrderedDict( (name, 1.0) for name in self._joint_names)
-        self.init_pub()
+                             "right_arm_j1",
+                             "right_arm_j2",
+                             "right_arm_j3",
+                             "right_arm_j4",
+                             "right_arm_j5",
+                             "right_arm_j6",
+                             "left_arm_j0",
+                             "left_arm_j1",
+                             "left_arm_j2",
+                             "left_arm_j3",
+                             "left_arm_j4",
+                             "left_arm_j5",
+                             "left_arm_j6",
+                             "right_hand_j0",
+                             "right_hand_j1",
+                             "right_hand_j2",
+                             "right_hand_j3",
+                             "right_hand_j4",
+                             "left_hand_j0",
+                             "left_hand_j1",
+                             "left_hand_j2",
+                             "left_hand_j3",
+                             "left_hand_j4",
+                             "head_j0",
+                             "head_j1",
+                             "torso_j0",
+                             "torso_j1",
+                             "zlift_j0"]
+        self._stiffness_dict = OrderedDict((name, 1.0) for name in self._joint_names)
+        self._pub = rospy.Publisher("/" + self._prefix + "/" + STIFFNESS_CONTROLLER, Float64MultiArray, queue_size=1)
         threading.Thread(None, rospy.spin)
-
-    def init_pub(self):
-        self._pub = rospy.Publisher("/" + self._prefix + "/"+ STIFFNESS_CONTROLLER, Float64MultiArray, queue_size=1)
 
     def apply_stiffness(self):
         msg = Float64MultiArray()
@@ -82,7 +79,7 @@ class MekaStiffnessControl(object):
         @param names: vector of string with joint names to change
         @param values: vector of the values to set for given joint names
         """
-        if len(names)==len(values):
+        if len(names) == len(values):
             for name, val in zip(names, values):
                 if name in self._stiffness_dict:
                     self._stiffness_dict[name] = min(1., max(val, 0.))
@@ -107,7 +104,7 @@ def main():
     rospy.logdebug("current ver")
 
     stiffness_control_exec.apply_stiffness()
-    stiffness_control_exec.change_stiffness(["right_arm_j3", "left_arm_j3"],[0.5, 0.2])
+    stiffness_control_exec.change_stiffness(["right_arm_j3", "left_arm_j3"], [0.5, 0.2])
     stiffness_control_exec.set_all_stiffness(0.3)
 
     rospy.spin()
