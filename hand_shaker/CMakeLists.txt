@@ -12,6 +12,8 @@ find_package(catkin REQUIRED COMPONENTS
   trajectory_msgs
   control_msgs
   std_msgs
+  meka_stiffness_control
+  message_generation
 )
 
 
@@ -36,7 +38,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hand_shaker
-  CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS message_runtime actionlib actionlib_msgs geometry_msgs meka_posture trajectory_msgs control_msgs std_msgs meka_stiffness_control
 #  DEPENDS system_lib
 )
 

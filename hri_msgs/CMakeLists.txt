@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   grasping_msgs
   moveit_msgs
   trajectory_msgs
+  message_generation
 )
 
 add_message_files(
