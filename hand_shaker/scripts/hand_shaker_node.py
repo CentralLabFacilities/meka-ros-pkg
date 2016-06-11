@@ -4,6 +4,9 @@ import rospy
 import numpy
 from functools import partial
 
+from os import sys, path
+from optparse import OptionParser
+
 import time
 
 import actionlib
@@ -47,16 +50,18 @@ class HandShaker(object):
 
         self._as.start()
 
+    def load_postures(self, path):
+        self._meka_posture.load_postures(path)
+
     def _set_up_action_client(self, group_name):
         """
         Sets up an action client to communicate with the trajectory controller
         """
 
-        self._client[group_name] = SimpleActionClient(
+        self._client[group_name] = SimpleActionClient("/" +
             self._prefix + "/" + group_name + JNT_TRAJ_SRV_SUFFIX,
             FollowJointTrajectoryAction
         )
-
         if self._client[group_name].wait_for_server(timeout=rospy.Duration(4)) is False:
             rospy.logfatal("Failed to connect to %s action server in 4 sec", group_name)
             del self._client[group_name]
@@ -65,9 +70,9 @@ class HandShaker(object):
             self._movement_finished[group_name] = True
 
     def handle(self, msg):
-
-        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.y])
-        self.force_variation = numpy.fabs(current_force - self.previous_force)
+        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
+        self.force_variation = (current_force - self.previous_force)
+        self.previous_force = current_force
 
     def on_motion_done(self, group_name, *cbargs):
         msg = cbargs[1]
@@ -90,6 +95,8 @@ class HandShaker(object):
 
             if timeout is not None:
                 if rospy.Time.now() > timeout_time:
+                    rospy.loginfo("timeout waiting for force")
+                    print numpy.linalg.norm(self.force_variation), "not larger than ", threshold
                     success = False
                     break
 
@@ -101,20 +108,18 @@ class HandShaker(object):
     def start_motion(self, group_name, posture):
         if posture in self._meka_posture.list_postures(group_name):
             goal = self._meka_posture.get_trajectory_goal(group_name, posture)
-
+            print goal
             if group_name not in self._client:
-                rospy.logerr("Action client for %s not initialized. Trying to initialize it...", group_name)
+                rospy.logwarn("Action client for %s not initialized. Trying to initialize it...", group_name)
                 try:
                     self._set_up_action_client(group_name)
                 except:
                     rospy.logerr("Could not set up action client for %s.", group_name)
                     return False
-
-            if self._client[group_name].send_goal(goal, done_cb=partial(self.on_motion_done, group_name)):
-                self._movement_finished[group_name] = False
-                return True
-            else:
-                return False
+            
+            self._client[group_name].send_goal(goal, done_cb=partial(self.on_motion_done, group_name))
+            self._movement_finished[group_name] = False
+            return True
         else:
             rospy.logerr("No goal found for posture %s in group  %s.", posture, group_name)
             return False
@@ -136,7 +141,7 @@ class HandShaker(object):
 
     def approach(self, group_name):
         success = True
-        if self.start_motion(group_name, "shake_hand_posture"):
+        if self.start_motion(group_name, "pointing_screen"): #shake_hand_posture
             self._feedback.phase = ShakeHandFeedback.PHASE_APPROACH
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -146,7 +151,7 @@ class HandShaker(object):
 
     def retreat(self, group_name):
         success = True
-        if self.start_motion(group_name, "rest_posture"):
+        if self.start_motion(group_name, "waiting"): #rest_posture
             self._feedback.phase = ShakeHandFeedback.PHASE_RETREAT
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -155,7 +160,7 @@ class HandShaker(object):
         return success
 
     def shake(self, group_name):
-        if "Left" in group_name:
+        if "left" in group_name:
             joint_name = "left_arm_j3"
         else:
             joint_name = "right_arm_j3"
@@ -164,7 +169,7 @@ class HandShaker(object):
         self._stiffness_control.change_stiffness([joint_name], [0.2])
 
         success = True
-        if self.start_motion(group_name, "shake_for_shaking"):
+        if self.start_motion(group_name, "pointing_kitchen"): #shake_for_shaking
             self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -179,12 +184,12 @@ class HandShaker(object):
 
     def close_for_shaking(self, group_name):
         success = True
-        if "Left" in group_name:
-            hand_name = "LeftHand"
+        if "left" in group_name:
+            hand_name = "left_hand"
         else:
-            hand_name = "RightHand"
+            hand_name = "right_hand"
 
-        if self.start_motion(hand_name, "close_for_shaking"):
+        if self.start_motion(hand_name, "pointing_screen"): #close_for_shaking
             self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
@@ -195,12 +200,12 @@ class HandShaker(object):
 
     def open_hand(self, group_name):
         success = True
-        if "Left" in group_name:
-            hand_name = "LeftHand"
+        if "left" in group_name:
+            hand_name = "left_hand"
         else:
-            hand_name = "RightHand"
+            hand_name = "right_hand"
 
-        if self.start_motion(hand_name, "open"):
+        if self.start_motion(hand_name, "waiting"): #open
             self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
@@ -217,7 +222,7 @@ class HandShaker(object):
 
         group_name = goal.group_name
         # check goal validity
-        if group_name == "RightArm" or group_name == "LeftArm":
+        if group_name == "right_arm" or group_name == "left_arm":
 
             # approach
             if self.approach(group_name):
@@ -244,12 +249,14 @@ class HandShaker(object):
                     success = False
             else:
                 success = False
+        else:
+            success = False
 
         self._result.success = success
 
         if not success:
             #check if it was pre-empted
-            if self._as.is_active():
+            if not self._as.is_preempt_requested():
                 rospy.loginfo('%s: preempted' % self._action_name)
                 self._as.set_aborted(self._result)
 
@@ -258,6 +265,14 @@ class HandShaker(object):
             self._as.set_succeeded(self._result)
 
 if __name__ == '__main__':
-    rospy.init_node('hri_manager')
-    HandShaker(rospy.get_name())
+
+    parser = OptionParser()
+    parser.add_option("--postures", help="Path to postures made available", default = "/vol/meka/nightly/share/meka_posture_execution/config/postures.yml",
+        dest="posture_path")
+
+    (opts, args_) = parser.parse_args()
+
+    rospy.init_node('hand_shaker')
+    hs = HandShaker(rospy.get_name())
+    hs.load_postures(opts.posture_path)
     rospy.spin()
