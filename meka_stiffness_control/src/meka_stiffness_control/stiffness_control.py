@@ -24,8 +24,6 @@ class MekaStiffnessControl(object):
 
     def __init__(self, name):
 
-        rospy.init_node('meka_stiffness_control', anonymous=True, log_level=rospy.DEBUG)
-
         self._name = name
         self._prefix = "meka_roscontrol"
         self._joint_names = ["right_arm_j0",
@@ -97,6 +95,8 @@ def main():
     FORMAT = "%(levelname)s %(asctime)-15s %(name)s %(module)s - %(message)s"
     logging.basicConfig(format=FORMAT)
 
+    rospy.init_node('meka_stiffness_control', anonymous=True, log_level=rospy.DEBUG)
+    
     stiffness_control_exec = MekaStiffnessControl("whatever")
 
     time.sleep(1)
