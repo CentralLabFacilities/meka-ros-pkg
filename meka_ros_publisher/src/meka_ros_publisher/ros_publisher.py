@@ -181,8 +181,7 @@ class MekaRosPublisher(object):
         print 'disconnect called'
         self.proxy.stop(force_safeop=False)  # allow other clients to continue running
 
-
-if __name__ == '__main__':
+def main(): 
     try:
         # Set up logging.
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
@@ -216,3 +215,5 @@ if __name__ == '__main__':
         print e
     	logging.log(logging.ERROR, "Unknown error!")
 
+if __name__ == '__main__':
+    main()
