@@ -41,13 +41,17 @@ class HandShaker(object):
 
         self._client = {}
         self._movement_finished = {}
+        self.force_variation = {}
+        self.previous_force = {}
         self._r = rospy.Rate(10)
 
-        self.force_variation = numpy.array([0, 0, 0])
-        self.previous_force = numpy.array([0, 0, 0])
+        self.force_variation['left_arm'] = numpy.array([0, 0, 0])
+        self.force_variation['right_arm'] = numpy.array([0, 0, 0])
+        self.previous_force['left_arm'] = numpy.array([0, 0, 0])
+        self.previous_force['right_arm'] = numpy.array([0, 0, 0])
 
-        self.sub = rospy.Subscriber("/my_wrench", Wrench, self.handle)
-
+        self.sub_left = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma30_l0/wrench", Wrench, self.handle_left)
+        self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", Wrench, self.handle_right)
         self._as.start()
 
     def load_postures(self, path):
@@ -69,22 +73,27 @@ class HandShaker(object):
         else:
             self._movement_finished[group_name] = True
 
-    def handle(self, msg):
+    def handle_left(self, msg):
         current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
-        self.force_variation = (current_force - self.previous_force)
-        self.previous_force = current_force
+        self.force_variation['left_arm'] = (current_force - self.previous_force['left_arm'])
+        self.previous_force['left_arm'] = current_force
+
+    def handle_right(self, msg):
+        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
+        self.force_variation['right_arm'] = (current_force - self.previous_force['right_arm'])
+        self.previous_force['right_arm'] = current_force
 
     def on_motion_done(self, group_name, *cbargs):
         msg = cbargs[1]
         #if msg.error_code == 0:
         self._movement_finished[group_name] = True
 
-    def wait_for_force(self, threshold, timeout=None):
+    def wait_for_force(self, threshold, group_name, timeout=None):
         success = True
          # wait for condition
         if timeout is not None:
             timeout_time = rospy.Time.now() + rospy.Duration(timeout)
-        while numpy.linalg.norm(self.force_variation) < threshold:
+        while numpy.linalg.norm(self.force_variation[group_name]) < threshold:
             # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
@@ -96,7 +105,7 @@ class HandShaker(object):
             if timeout is not None:
                 if rospy.Time.now() > timeout_time:
                     rospy.loginfo("timeout waiting for force")
-                    print numpy.linalg.norm(self.force_variation), "not larger than ", threshold
+                    print numpy.linalg.norm(self.force_variation[group_name]), "not larger than ", threshold
                     success = False
                     break
 
@@ -116,7 +125,7 @@ class HandShaker(object):
                 except:
                     rospy.logerr("Could not set up action client for %s.", group_name)
                     return False
-            
+
             self._client[group_name].send_goal(goal, done_cb=partial(self.on_motion_done, group_name))
             self._movement_finished[group_name] = False
             return True
@@ -141,7 +150,7 @@ class HandShaker(object):
 
     def approach(self, group_name):
         success = True
-        if self.start_motion(group_name, "pointing_screen"): #shake_hand_posture
+        if self.start_motion(group_name, "shake_approach"):
             self._feedback.phase = ShakeHandFeedback.PHASE_APPROACH
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -151,7 +160,18 @@ class HandShaker(object):
 
     def retreat(self, group_name):
         success = True
-        if self.start_motion(group_name, "waiting"): #rest_posture
+        if "left" in group_name:
+            joint_name = "left_arm_j3"
+        else:
+            joint_name = "right_arm_j3"
+        # recover stiffness slowly
+        self._stiffness_control.change_stiffness([joint_name], [0.1])
+        time.sleep(1)
+        self._stiffness_control.change_stiffness([joint_name], [0.5])
+        time.sleep(0.5)
+        self._stiffness_control.change_stiffness([joint_name], [1.0])
+
+        if self.start_motion(group_name, "shake_retreat"):
             self._feedback.phase = ShakeHandFeedback.PHASE_RETREAT
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -166,19 +186,15 @@ class HandShaker(object):
             joint_name = "right_arm_j3"
 
         # reduce stiffness
-        self._stiffness_control.change_stiffness([joint_name], [0.2])
+        self._stiffness_control.change_stiffness([joint_name], [0.35])
 
         success = True
-        if self.start_motion(group_name, "pointing_kitchen"): #shake_for_shaking
+        if self.start_motion(group_name, "shake_movement"):
             self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
         else:
             success = False
-        # recover stiffness slowly
-        self._stiffness_control.change_stiffness([joint_name], [0.1])
-        time.sleep(2)
-        self._stiffness_control.change_stiffness([joint_name], [1.0])
 
         return success
 
@@ -186,10 +202,23 @@ class HandShaker(object):
         success = True
         if "left" in group_name:
             hand_name = "left_hand"
+            j0 = "left_hand_j0"
+            j1 = "left_hand_j1"
+            j2 = "left_hand_j2"
+            j3 = "left_hand_j3"
+            j4 = "left_hand_j4"
         else:
             hand_name = "right_hand"
+            j0 = "right_hand_j0"
+            j1 = "right_hand_j1"
+            j2 = "right_hand_j2"
+            j3 = "right_hand_j3"
+            j4 = "right_hand_j4"
 
-        if self.start_motion(hand_name, "pointing_screen"): #close_for_shaking
+        # reduce stiffness
+        self._stiffness_control.change_stiffness([j0, j1, j2, j3, j4], [0.35, 0.35, 0.35, 0.35, 0.35])
+
+        if self.start_motion(hand_name, "shake_close"):
             self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
@@ -200,18 +229,33 @@ class HandShaker(object):
 
     def open_hand(self, group_name):
         success = True
+
         if "left" in group_name:
             hand_name = "left_hand"
+            j0 = "left_hand_j0"
+            j1 = "left_hand_j1"
+            j2 = "left_hand_j2"
+            j3 = "left_hand_j3"
+            j4 = "left_hand_j4"
         else:
             hand_name = "right_hand"
+            j0 = "right_hand_j0"
+            j1 = "right_hand_j1"
+            j2 = "right_hand_j2"
+            j3 = "right_hand_j3"
+            j4 = "right_hand_j4"
 
-        if self.start_motion(hand_name, "waiting"): #open
+        if self.start_motion(hand_name, "shake_open"): #open
             self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
             success = self.wait_for_motion(hand_name)
         else:
             success = False
+
+        # recovert stiffness
+        self._stiffness_control.change_stiffness([j0, j1, j2, j3, j4], [1, 1, 1, 1, 1])
+
         return success
 
     def execute_cb(self, goal):
@@ -229,7 +273,7 @@ class HandShaker(object):
                 # wait for touch
                 self._feedback.phase = ShakeHandFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
-                if self.wait_for_force(threshold=2.0, timeout=20.0):
+                if self.wait_for_force(threshold=2000.0, group_name=group_name, timeout=20.0):
                     # close hand
                     if self.close_for_shaking(group_name):
                         # shake
