@@ -12,6 +12,7 @@ import m3.component_factory as mcf
 
 import rospy
 from std_msgs.msg import String
+from geometry_msgs.msg import Wrench
 from rospy.exceptions import ROSException
 
 DEFAULT_NODE_NAME = "meka_ros_publisher"
@@ -20,11 +21,11 @@ DEFAULT_HZ = 1
 
 class MekaRosPublisher(object):
 
-    def __init__(self, components=[], fields=[]):
+    def __init__(self, components=[], fields=[], dataTypes=[]):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
         self.initialized = False
-        
+
         if(len(components) != len(fields)):
             rospy.logerr("Inequal amount of arguments for components and fields! Exiting..")
             
@@ -64,6 +65,8 @@ class MekaRosPublisher(object):
                     self.fields.append(fields[i])
                 i += 1
 
+	self.dataTypes = dataTypes
+
         rospy.loginfo("Subscribing to fields " + str(self.fields))
 
 #       print 'Select Y-Range? [n]'
@@ -80,32 +83,62 @@ class MekaRosPublisher(object):
 
         # proxy.publish_param(comps)
 
-    def run(self, scope):
+    def run(self, scope, verbose, rate):
         # yrange = None
         # scopez = m3t.M3Scope(xwidth=100, yrange=yrange)
         try:
             rospy.loginfo("Setting up ROS publishers on parent scope: " + str(scope))
             publishers = []
+	    id=0;
             for c in self.comps:
                 idx = self.comps.index(c)
-                publishers.append(rospy.Publisher(str(scope)+"/"+str(c.name)+"/"+str(self.fields[idx]), String, queue_size=1))
+
+		try:
+			dt=self.dataTypes[id]
+			if dt=="Wrench":
+				dt=Wrench
+			id = id+1
+		except AttributeError:
+			dt=String
+		except IndexError:
+			dt=String
+
+		publishers.append(rospy.Publisher(str(scope)+"/"+str(c.name)+"/"+str(self.fields[idx]), dt, queue_size=1))
             rospy.loginfo("Setting up ROS node..")
             rospy.init_node("meka_ros_publisher", anonymous=True)
             rospy.loginfo("ROS node started..")
-            rate = rospy.Rate(DEFAULT_HZ)
+            ros_rate = rospy.Rate(rate)
             ts = time.time()
-            rospy.loginfo("Entering publish loop with HZ: " + str(DEFAULT_HZ))
+            rospy.loginfo("Entering publish loop with HZ: " + str(rate))
             while True and not rospy.is_shutdown():
-                self.proxy.step()
+		self.proxy.step()
                 for c in self.comps:
                     idx = self.comps.index(c)
                     if self.repeated:
                         v = m3t.get_msg_field_value(self.comps[idx].status, self.fields[idx])[self.idx]
                     else:
                         v = m3t.get_msg_field_value(self.comps[idx].status, self.fields[idx])
-                    rospy.loginfo(v)
-                    publishers[idx].publish(str(v))
-                rate.sleep()
+
+                    if verbose:
+			 rospy.loginfo(str(v))
+		    if dt==Wrench:
+				float_list = map(float, str(v).strip('[]').split(','))
+				msg = Wrench()
+			    	msg.force.x = float_list[0]
+				msg.force.y = float_list[1]
+		    		msg.force.z = float_list[2]
+
+		    		msg.torque.x = float_list[3]
+		    		msg.torque.y = float_list[4]
+		    		msg.torque.z = float_list[5]
+		    elif dt==String:
+				    msg=str(v)
+		    else:
+				rospy.logerror("unknown Data type " + dt)
+
+
+                    publishers[idx].publish(msg)
+                ros_rate.sleep()
 
                 # scope.plot(v)
 #                 if False:
@@ -148,7 +181,7 @@ class MekaRosPublisher(object):
         print 'disconnect called'
         self.proxy.stop(force_safeop=False)  # allow other clients to continue running
 
-def main():
+def main(): 
     try:
         # Set up logging.
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
@@ -156,19 +189,22 @@ def main():
 
         # Parse the command line options for the robot ip etc.
         parser = argparse.ArgumentParser(description='M3 system introspection publisher for ROS.')
-        parser.add_argument("--scope", help="ROS scope of the publisher", default=DEFAULT_PUBLISHER_SCOPE, type=str)
-        parser.add_argument("--components", help="M3Component index", default=[],
-                          nargs='+')
-        parser.add_argument("--fields", help="Field of selected m3component to publish", default=[],
-                          nargs='+')
+        parser.add_argument("-s", "--scope-prefix", help="ROS scope prefix of the publisher", dest="scope", nargs=1, default=DEFAULT_PUBLISHER_SCOPE)
+        parser.add_argument("-c", "--components", help="M3Component index", default=[], nargs='+')
+        parser.add_argument("-f", "--fields", help="Field of selected m3component to publish", default=[], nargs='+')
+        parser.add_argument("-t", "--data-types", help="Data Type for each field", default=[], nargs='+', dest='dataTypes')
+        parser.add_argument("-r", "--rate", help="Rate to publish data at", default=DEFAULT_HZ, type=float)
+        parser.add_argument("-v", "--verbose", help="Be verbose", action="store_true")
         # parser.add_option("--yrange", help="Field of selected m3component to publish",
         #                  metavar="FIELD", dest="fields")
         
         args = parser.parse_args()
 
-        mekarospub = MekaRosPublisher(args.components, args.fields)
+        mekarospub = MekaRosPublisher(args.components, args.fields, args.dataTypes)
         if mekarospub.initialized:
-            mekarospub.run(args.scope)
+            mekarospub.run(args.scope, args.verbose, args.rate)
+	
+	mekarospub.disconnect()
     
     except rospy.ROSInterruptException as e:
         logging.log(logging.ERROR, "Exception caught. " + str(e))
@@ -177,9 +213,7 @@ def main():
     except:
         e = sys.exc_info()[0]
         print e
-    logging.log(logging.ERROR, "Unknown error!")
-
-    mekarospub.disconnect()
+    	logging.log(logging.ERROR, "Unknown error!")
 
 if __name__ == '__main__':
-   main()
+    main()
