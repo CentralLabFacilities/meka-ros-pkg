@@ -15,6 +15,7 @@
   <run_depend>rqt_robot_dashboard</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>m3meka_msgs</run_depend>
+  <run_depend>rospy_tutorials</run_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml"/>

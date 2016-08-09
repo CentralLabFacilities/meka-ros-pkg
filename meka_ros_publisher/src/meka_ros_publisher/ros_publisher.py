@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -- coding: utf-8 --
 
 import time
 import logging
@@ -11,8 +12,12 @@ import m3.toolbox as m3t
 import m3.component_factory as mcf
 
 import rospy
-from std_msgs.msg import String
+from rospy_tutorials.msg import Floats
 from geometry_msgs.msg import Wrench
+from meka_ros_publisher.srv import ListComponents, ListComponentsResponse, ListFields, ListFieldsResponse, RequestValues, RequestValuesResponse
+
+import threading
+
 from rospy.exceptions import ROSException
 
 DEFAULT_NODE_NAME = "meka_ros_publisher"
@@ -21,22 +26,34 @@ DEFAULT_HZ = 1
 
 class MekaRosPublisher(object):
 
-    def __init__(self, components=[], fields=[], dataTypes=[]):
+    def __init__(self, scope, components=[], fields=[], dataTypes=[]):
+        self.name = "meka_ros_publisher"
+
+        self.lock = threading.Lock()
+
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
         self.initialized = False
+        self.scope = scope
+
+        self.publishers = {}
 
         if(len(components) != len(fields)):
             rospy.logerr("Inequal amount of arguments for components and fields! Exiting..")
-            
             return
 
-        rospy.loginfo("Initializing m3rt proxy.")
-        self.proxy = m3p.M3RtProxy()
-        self.proxy.start()
+        rospy.loginfo("Initializing m3rt rt_proxy.")
+        self.rt_proxy = m3p.M3RtProxy()
+        self.rt_proxy.start()
+
+        rospy.loginfo("Setting up ROS node..")
+        rospy.init_node(self.name, anonymous=False, log_level=rospy.INFO)
+        rospy.loginfo("ROS node started..")
+
+        self.init_services()
 
         names = []
-        comps = self.proxy.get_available_components()
+        comps = self.rt_proxy.get_available_components()
         if(components == []):
             cid = self.get_component()
             names.append(comps[int(cid)])
@@ -46,26 +63,28 @@ class MekaRosPublisher(object):
                     names.append(c)
 
         rospy.loginfo("Subscribing to components " + str(names))
+
+        self.comps = {}
+        self.fields = {}
         
-        self.comps = []
         for x in names:
-            self.comps.append(mcf.create_component(str(x)))
-            self.proxy.subscribe_status(self.comps[-1])
-        
-        self.fields = []
+            self.comps[x] = mcf.create_component(x)
+            self.fields[x] = []
+            self.rt_proxy.subscribe_status(self.comps[x])
+
         self.repeated = False
         if(fields == []):
-            for x in self.comps:
-                self.fields.append(self.get_field(x))
+            for k, v in self.comps.iteritems():
+                self.fields[k].append(self.get_field(v))
         else:
             i = 0
-            for x in self.comps:
-                temp = x.status.DESCRIPTOR.fields_by_name.keys()
+            for k, v in self.comps.iteritems():
+                temp = v.status.DESCRIPTOR.fields_by_name.keys()
                 if fields[i] in temp:
-                    self.fields.append(fields[i])
+                    self.fields[k].append(fields[i])
                 i += 1
 
-	self.dataTypes = dataTypes
+        self.dataTypes = dataTypes
 
         rospy.loginfo("Subscribing to fields " + str(self.fields))
 
@@ -81,64 +100,82 @@ class MekaRosPublisher(object):
         self.initialized = True
 
 
-        # proxy.publish_param(comps)
+        # rt_proxy.publish_param(comps)
 
-    def run(self, scope, verbose, rate):
+    def init_services(self):
+        """
+        Initialize the service servers
+        """
+        service_prefix = rospy.get_name() + "/"
+
+        self._request_components_serv = rospy.Service(service_prefix +
+                                                'list_components',
+                                                ListComponents,
+                                                self.get_components)
+        self._request_fields_serv = rospy.Service(service_prefix +
+                                                'list_fields',
+                                                ListFields,
+                                                self.get_fields)
+        self._request_values_serv = rospy.Service(service_prefix +
+                                                'request_values',
+                                                RequestValues,
+                                                self.get_values)
+
+
+    def run(self, verbose, rate):
         # yrange = None
         # scopez = m3t.M3Scope(xwidth=100, yrange=yrange)
+       
         try:
-            rospy.loginfo("Setting up ROS publishers on parent scope: " + str(scope))
-            publishers = []
-	    id=0;
-            for c in self.comps:
-                idx = self.comps.index(c)
+            rospy.loginfo("Setting up ROS publishers on parent scope: " + str(self.scope))
 
-		try:
-			dt=self.dataTypes[id]
-			if dt=="Wrench":
-				dt=Wrench
-			id = id+1
-		except AttributeError:
-			dt=String
-		except IndexError:
-			dt=String
-
-		publishers.append(rospy.Publisher(str(scope)+"/"+str(c.name)+"/"+str(self.fields[idx]), dt, queue_size=1))
-            rospy.loginfo("Setting up ROS node..")
-            rospy.init_node("meka_ros_publisher", anonymous=True)
-            rospy.loginfo("ROS node started..")
-            ros_rate = rospy.Rate(rate)
+            id = 0;
+            for k, v in self.comps.iteritems():
+                try:
+                    dt = self.dataTypes[id]
+                    if dt == "Wrench":
+                        dt = Wrench
+                    id = id + 1
+                except AttributeError:
+                    dt = Floats
+                except IndexError:
+                    dt = Floats
+                for field in self.fields[k]:
+                    self.publishers[(k, field)] = rospy.Publisher(str(self.scope) + "/" + k + "/" + field, dt, queue_size=1)
+                    rospy.loginfo("Added publisher for " + str((k, field)))
+            self.ros_rate = rospy.Rate(rate)
             ts = time.time()
             rospy.loginfo("Entering publish loop with HZ: " + str(rate))
             while True and not rospy.is_shutdown():
-		self.proxy.step()
-                for c in self.comps:
-                    idx = self.comps.index(c)
-                    if self.repeated:
-                        v = m3t.get_msg_field_value(self.comps[idx].status, self.fields[idx])[self.idx]
+                self.rt_proxy.step()
+                self.lock.acquire()
+                for k, v in self.publishers.iteritems():
+                    field_val = Floats()
+                    tmp = m3t.get_msg_field_value(self.comps[k[0]].status, k[1])
+                    if hasattr(tmp, '__len__'):
+                        for val in tmp:
+                            field_val.data.append(val)
                     else:
-                        v = m3t.get_msg_field_value(self.comps[idx].status, self.fields[idx])
-
+                        field_val.data.append(tmp)
                     if verbose:
-			 rospy.loginfo(str(v))
-		    if dt==Wrench:
-				float_list = map(float, str(v).strip('[]').split(','))
-				msg = Wrench()
-			    	msg.force.x = float_list[0]
-				msg.force.y = float_list[1]
-		    		msg.force.z = float_list[2]
+                        rospy.loginfo(str(field_val))
+                    if dt == Wrench:
+                        float_list = map(float, str(field_val).strip('[]').split(','))
+                        msg = Wrench()
+                        msg.force.x = float_list[0]
+                        msg.force.y = float_list[1]
+                        msg.force.z = float_list[2]
 
-		    		msg.torque.x = float_list[3]
-		    		msg.torque.y = float_list[4]
-		    		msg.torque.z = float_list[5]
-		    elif dt==String:
-				    msg=str(v)
-		    else:
-				rospy.logerror("unknown Data type " + dt)
-
-
-                    publishers[idx].publish(msg)
-                ros_rate.sleep()
+                        msg.torque.x = float_list[3]
+                        msg.torque.y = float_list[4]
+                        msg.torque.z = float_list[5]
+                    elif dt == Floats:
+                        msg = field_val
+                    else:
+                        rospy.logerr("unknown Data type " + dt)
+                    v.publish(msg)
+                self.lock.release()
+                self.ros_rate.sleep()
 
                 # scope.plot(v)
 #                 if False:
@@ -155,10 +192,96 @@ class MekaRosPublisher(object):
             self.logger.error("Exception caught! " + str(e))
 
 
-        self.proxy.stop(force_safeop=False)  # allow other clients to continue running
+        self.rt_proxy.stop(force_safeop=False)  # allow other clients to continue running
+
+    def get_components(self, req):
+        """
+        Callback for the get_components service request
+        """
+        request_name = req.request
+
+        names = []
+        if(request_name == ""):
+            comps = self.rt_proxy.get_available_components()  # get all
+        else:
+            comps = self.rt_proxy.get_available_components(request_name)
+
+        for c in comps:
+            names.append(str(c))
+
+        resp = ListComponentsResponse(names)
+
+        return resp
+
+
+    def get_fields(self, req):
+        """
+        Callback for the get_fields service request
+        """
+        request_name = req.component
+
+        if request_name not in self.comps.keys():
+            try:
+                comp = mcf.create_component(str(request_name))
+                self.rt_proxy.subscribe_status(comp)
+            except AttributeError, e:
+                rospy.logwarn("No fields available for %s", request_name)
+                return
+            self.comps[request_name] = comp
+            
+        else:
+            comp = self.comps[request_name]
+            
+        fields = comp.status.DESCRIPTOR.fields_by_name.keys()
+
+        names = []
+        for f in fields:
+            names.append(str(f))
+
+        resp = ListFieldsResponse(names)
+
+        return resp
+
+    def get_values(self, req):
+        """
+        Callback for the get_values service request
+        """
+        
+        rospy.loginfo("Requesting values for " + str(req.component) +" " + str(req.field))
+        
+        request_component = req.component
+        request_field = req.field
+        self.ros_rate = rospy.Rate(req.hz) #adjust rate. careful: for all!
+        rospy.loginfo("Changing HZ of publish loop: " + str(req.hz))
+        
+        values = []
+        
+        if request_component not in self.comps.keys():
+            comp = mcf.create_component(str(request_component))
+            self.comps[request_component] = comp 
+            self.rt_proxy.subscribe_status(comp)
+        
+        rt_field_vals = m3t.get_msg_field_value(self.comps[request_component].status, request_field)
+        
+        if hasattr(rt_field_vals, '__len__'):
+            for val in rt_field_vals:
+                values.append(str(val))
+        else:
+            values.append(str(rt_field_vals))
+        
+        resp = RequestValuesResponse()
+        resp.values = values
+        
+        dt = Floats
+        if (str(req.component), str(req.field)) not in self.publishers.keys():
+            rospy.loginfo("adding publisher for " + str((req.component, req.field)))
+            with self.lock:    
+                self.publishers[(req.component, req.field)] = rospy.Publisher(str(self.scope) + "/" + req.component + "/" + request_field, dt, queue_size=1)
+            rospy.loginfo("done")
+        return resp
 
     def get_component(self):
-        comps = self.proxy.get_available_components()
+        comps = self.rt_proxy.get_available_components()
         print '------- Components ------'
         for i in range(len(comps)):
             print i, ' : ', comps[i]
@@ -179,9 +302,9 @@ class MekaRosPublisher(object):
 
     def disconnect(self):
         print 'disconnect called'
-        self.proxy.stop(force_safeop=False)  # allow other clients to continue running
+        self.rt_proxy.stop(force_safeop=False)  # allow other clients to continue running
 
-def main(): 
+def main():
     try:
         # Set up logging.
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
@@ -197,15 +320,15 @@ def main():
         parser.add_argument("-v", "--verbose", help="Be verbose", action="store_true")
         # parser.add_option("--yrange", help="Field of selected m3component to publish",
         #                  metavar="FIELD", dest="fields")
-        
+
         args = parser.parse_args()
 
-        mekarospub = MekaRosPublisher(args.components, args.fields, args.dataTypes)
+        mekarospub = MekaRosPublisher(args.scope, args.components, args.fields, args.dataTypes)
         if mekarospub.initialized:
-            mekarospub.run(args.scope, args.verbose, args.rate)
-	
-	mekarospub.disconnect()
-    
+            mekarospub.run(args.verbose, args.rate)
+
+        mekarospub.disconnect()
+
     except rospy.ROSInterruptException as e:
         logging.log(logging.ERROR, "Exception caught. " + str(e))
         print e
@@ -213,7 +336,7 @@ def main():
     except:
         e = sys.exc_info()[0]
         print e
-    	logging.log(logging.ERROR, "Unknown error!")
+        logging.log(logging.ERROR, "Unknown error!")
 
 if __name__ == '__main__':
     main()

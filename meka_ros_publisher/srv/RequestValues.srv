@@ -1,0 +1,5 @@
+string component
+string field
+int8 hz
+---
+string[] values
