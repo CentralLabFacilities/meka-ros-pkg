@@ -142,7 +142,7 @@ class MekaRosPublisher(object):
                     dt = Floats
                 for field in self.fields[k]:
                     self.publishers[(k, field)] = rospy.Publisher(str(self.scope) + "/" + k + "/" + field, dt, queue_size=1)
-                    rospy.loginfo("Added publisher for " + str((k, field)))
+                    rospy.loginfo("Added publisher for " + str((k, field)) + " with type " + str(dt))
             self.ros_rate = rospy.Rate(rate)
             ts = time.time()
             rospy.loginfo("Entering publish loop with HZ: " + str(rate))
@@ -150,17 +150,9 @@ class MekaRosPublisher(object):
                 self.rt_proxy.step()
                 self.lock.acquire()
                 for k, v in self.publishers.iteritems():
-                    field_val = Floats()
                     tmp = m3t.get_msg_field_value(self.comps[k[0]].status, k[1])
-                    if hasattr(tmp, '__len__'):
-                        for val in tmp:
-                            field_val.data.append(val)
-                    else:
-                        field_val.data.append(tmp)
-                    if verbose:
-                        rospy.loginfo(str(field_val))
                     if dt == Wrench:
-                        float_list = map(float, str(field_val).strip('[]').split(','))
+                        float_list = map(float, str(tmp).strip('[]').split(','))
                         msg = Wrench()
                         msg.force.x = float_list[0]
                         msg.force.y = float_list[1]
@@ -170,7 +162,13 @@ class MekaRosPublisher(object):
                         msg.torque.y = float_list[4]
                         msg.torque.z = float_list[5]
                     elif dt == Floats:
-                        msg = field_val
+                        msg = Floats()
+                        if hasattr(tmp, '__len__'):
+                            for val in tmp:
+                                msg.data.append(val)
+                        else:
+                            msg.data.append(tmp)
+                        
                     else:
                         rospy.logerr("unknown Data type " + dt)
                     v.publish(msg)
@@ -340,3 +338,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
