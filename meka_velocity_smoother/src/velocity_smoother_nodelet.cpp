@@ -1,0 +1,353 @@
+/**
+ * @file /src/velocity_smoother_nodelet.cpp
+ *
+ * @brief Velocity smoother implementation.
+ *
+ * License: BSD
+ *   https://raw.github.com/yujinrobot/yujin_ocs/hydro/yocs_velocity_smoother/LICENSE
+ **/
+/*****************************************************************************
+ ** Includes
+ *****************************************************************************/
+
+#include <ros/ros.h>
+#include <nodelet/nodelet.h>
+#include <pluginlib/class_list_macros.h>
+
+#include <dynamic_reconfigure/server.h>
+#include <meka_velocity_smoother/paramsConfig.h>
+
+#include <ecl/threads/thread.hpp>
+
+#include "meka_velocity_smoother/velocity_smoother_nodelet.hpp"
+
+/*****************************************************************************
+ ** Preprocessing
+ *****************************************************************************/
+
+#define PERIOD_RECORD_SIZE    5
+#define ZERO_VEL_COMMAND      geometry_msgs::Twist();
+#define IS_ZERO_VEOCITY(a)   ((a.linear.x == 0.0) && (a.angular.z == 0.0))
+
+/*****************************************************************************
+ ** Namespaces
+ *****************************************************************************/
+
+namespace meka_velocity_smoother {
+
+/*********************
+ ** Implementation
+ **********************/
+
+VelocitySmoother::VelocitySmoother(const std::string &name) :
+        name(name), quiet(false), shutdown_req(false), input_active(false), pr_next(0), dynamic_reconfigure_server(
+                NULL), last_acc_vx(0.0), last_acc_vy(0.0), last_acc_w(0.0) {
+};
+
+void VelocitySmoother::reconfigCB(meka_velocity_smoother::paramsConfig &config, uint32_t level) {
+    ROS_INFO("Reconfigure request : %f %f %f %f %f %f %f",
+            config.speed_lim_v, config.speed_lim_w, config.accel_lim_v, config.accel_lim_w,
+            config.jerk_lim_v, config.jerk_lim_w, config.decel_factor);
+
+    speed_lim_v = config.speed_lim_v;
+    speed_lim_w = config.speed_lim_w;
+    accel_lim_v = config.accel_lim_v;
+    accel_lim_w = config.accel_lim_w;
+    jerk_lim_v = config.jerk_lim_v;
+    jerk_lim_w = config.jerk_lim_w;
+    decel_lim_v = decel_factor * accel_lim_v;
+    decel_lim_w = decel_factor * accel_lim_w;
+    decel_d_lim_v = decel_factor * jerk_lim_v;
+    decel_d_lim_w = decel_factor * jerk_lim_w;
+    decel_factor = config.decel_factor;
+}
+
+void VelocitySmoother::velocityCB(const geometry_msgs::Twist::ConstPtr& msg) {
+    // Estimate commands frequency; we do continuously as it can be very different depending on the
+    // publisher type, and we don't want to impose extra constraints to keep this package flexible
+    if (period_record.size() < PERIOD_RECORD_SIZE) {
+        period_record.push_back((ros::Time::now() - last_cb_time).toSec());
+    } else {
+        period_record[pr_next] = (ros::Time::now() - last_cb_time).toSec();
+    }
+
+    pr_next++;
+    pr_next %= period_record.size();
+    last_cb_time = ros::Time::now();
+
+    if (period_record.size() <= PERIOD_RECORD_SIZE / 2) {
+        // wait until we have some values; make a reasonable assumption (10 Hz) meanwhile
+        cb_avg_time = 0.1;
+    } else {
+        // enough; recalculate with the latest input
+        cb_avg_time = median(period_record);
+    }
+
+    input_active = true;
+
+    // Bound speed with the maximum values
+    target_vel.linear.x =
+            msg->linear.x > 0.0 ? std::min(msg->linear.x, speed_lim_v) : std::max(msg->linear.x, -speed_lim_v);
+    target_vel.angular.z =
+            msg->angular.z > 0.0 ? std::min(msg->angular.z, speed_lim_w) : std::max(msg->angular.z, -speed_lim_w);
+}
+
+void VelocitySmoother::odometryCB(const nav_msgs::Odometry::ConstPtr& msg) {
+    if (robot_feedback == ODOMETRY)
+        current_vel = msg->twist.twist;
+
+    // ignore otherwise
+}
+
+void VelocitySmoother::robotVelCB(const geometry_msgs::Twist::ConstPtr& msg) {
+    if (robot_feedback == COMMANDS)
+        current_vel = *msg;
+
+    // ignore otherwise
+}
+
+void VelocitySmoother::spin() {
+    double period = 1.0 / frequency;
+    ros::Rate spin_rate(frequency);
+
+    while (!shutdown_req && ros::ok()) {
+        if ((input_active == true) && (cb_avg_time > 0.0)
+                && ((ros::Time::now() - last_cb_time).toSec() > std::min(3.0 * cb_avg_time, 0.5))) {
+            // Velocity input no active anymore; normally last command is a zero-velocity one, but reassure
+            // this, just in case something went wrong with our input, or he just forgot good manners...
+            // Issue #2, extra check in case cb_avg_time is very big, for example with several atomic commands
+            // The cb_avg_time > 0 check is required to deal with low-rate simulated time, that can make that
+            // several messages arrive with the same time and so lead to a zero median
+            input_active = false;
+            if (IS_ZERO_VEOCITY(target_vel) == false) {
+                ROS_WARN_STREAM(
+                        "Velocity Smoother : input got inactive leaving us a non-zero target velocity (" << target_vel.linear.x << ", " << target_vel.linear.y << ", " << target_vel.angular.z << "), zeroing...[" << name << "]");
+                target_vel = ZERO_VEL_COMMAND;
+            }
+        }
+
+        if ((robot_feedback != NONE) && (input_active == true) && (cb_avg_time > 0.0)
+                && (((ros::Time::now() - last_cb_time).toSec() > 5.0 * cb_avg_time)
+                        || // 5 missing msgs
+                        (std::abs(current_vel.linear.x - last_cmd_vel.linear.x) > 0.2)
+                        || (std::abs(current_vel.linear.y - last_cmd_vel.linear.y) > 0.2)
+                        || (std::abs(current_vel.angular.z - last_cmd_vel.angular.z) > 2.0))) {
+            // If the publisher has been inactive for a while, or if our current commanding differs a lot
+            // from robot velocity feedback, we cannot trust the former; relay on robot's feedback instead
+            // TODO: current command/feedback difference thresholds are 진짜 arbitrary; they should somehow
+            // be proportional to max v and w...
+            // The one for angular velocity is very big because is it's less necessary (for example the
+            // reactive controller will never make the robot spin) and because the gyro has a 15 ms delay
+            if (!quiet) {
+                // this condition can be unavoidable due to preemption of current velocity control on
+                // velocity multiplexer so be quiet if we're instructed to do so
+                ROS_WARN_STREAM(
+                        "Velocity Smoother : using robot velocity feedback " << std::string(robot_feedback == ODOMETRY ? "odometry" : "end commands") << " instead of last command: " << (ros::Time::now() - last_cb_time).toSec() << ", " << current_vel.linear.x - last_cmd_vel.linear.x << ", " << current_vel.linear.y - last_cmd_vel.linear.y << ", " << current_vel.angular.z - last_cmd_vel.angular.z << ", [" << name << "]");
+            }
+            last_cmd_vel = current_vel;
+        }
+
+        geometry_msgs::TwistPtr cmd_vel;
+
+        if ((target_vel.linear.x != last_cmd_vel.linear.x) || (target_vel.linear.y != last_cmd_vel.linear.y)
+                || (target_vel.angular.z != last_cmd_vel.angular.z)) {
+
+            // Try to reach target velocity ensuring that we don't exceed the acceleration limits
+            cmd_vel.reset(new geometry_msgs::Twist(target_vel));
+
+            double vx_inc, vy_inc, w_inc, max_vx_inc, max_vy_inc, max_w_inc, accdy_inc, accdw_inc;
+
+            vx_inc = target_vel.linear.x - last_cmd_vel.linear.x;
+            if ((robot_feedback == ODOMETRY) && (current_vel.linear.x * target_vel.linear.x < 0.0)) {
+                // countermarch (on robots with significant inertia; requires odometry feedback to be detected)
+                max_vx_inc = decel_lim_v * period;
+            } else {
+                max_vx_inc = ((vx_inc * target_vel.linear.x > 0.0) ? accel_lim_v : decel_lim_v) * period;
+            }
+
+            vy_inc = target_vel.linear.y - last_cmd_vel.linear.y;
+            if ((robot_feedback == ODOMETRY) && (current_vel.linear.y * target_vel.linear.y < 0.0)) {
+                // countermarch (on robots with significant inertia; requires odometry feedback to be detected)
+                max_vy_inc = decel_lim_v * period;
+            } else {
+                max_vy_inc = ((vx_inc * target_vel.linear.y > 0.0) ? accel_lim_v : decel_lim_v) * period;
+            }
+
+            w_inc = target_vel.angular.z - last_cmd_vel.angular.z;
+            if ((robot_feedback == ODOMETRY) && (current_vel.angular.z * target_vel.angular.z < 0.0)) {
+                // countermarch (on robots with significant inertia; requires odometry feedback to be detected)
+                max_w_inc = decel_lim_w * period;
+            } else {
+                max_w_inc = ((w_inc * target_vel.angular.z > 0.0) ? accel_lim_w : decel_lim_w) * period;
+            }
+
+            //double x = (last_cmd_vel.linear.x - min_) / (target_vel.linear.x - min_);
+            double diff_x = std::abs(target_vel.linear.x - last_cmd_vel.linear.x);
+            if (diff_x >= 0.001) {
+                double des_acc = (sign(vx_inc) * max_vx_inc); // desired acceleration
+                double diff_acc = des_acc - last_acc_vx; // difference now, last. if diff is zero, the ramp becomes flat.
+                double jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
+                double act_acc = 0.0;  // actual acceleration
+
+                if(diff_x <= ((des_acc*(des_acc+jerk_inc)) / 2) * 1000) { // see n(n+1)/2 where +1 is the step
+                    //jerk_lim_v becomes the jerk_dec_rate
+                    act_acc = ((target_vel.linear.x > last_cmd_vel.linear.x) ? std::max(0.001, last_acc_vx - jerk_lim_v) : std::min(-0.001, last_acc_vx + jerk_lim_v));
+                } else {
+                    act_acc = last_acc_vx + jerk_inc;
+                }
+
+                cmd_vel->linear.x = last_cmd_vel.linear.x + act_acc;
+                last_acc_vx = act_acc;
+            }
+
+            double diff_y = std::abs(target_vel.linear.y - last_cmd_vel.linear.y);
+            if (diff_y >= 0.001) {
+                double des_acc = (sign(vy_inc) * max_vy_inc); // desired acceleration
+                double diff_acc = des_acc - last_acc_vy; // difference now, last. if diff is zero, the ramp becomes flat.
+                double jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
+                double act_acc = 0.0;  // actual acceleration
+
+                if(diff_x <= ((des_acc*(des_acc+jerk_inc)) / 2) * 1000) {
+                    act_acc = ((target_vel.linear.y > last_cmd_vel.linear.y) ? std::max(0.001, last_acc_vy - jerk_lim_v) : std::min(-0.001, last_acc_vy + jerk_lim_v));
+                } else {
+                    act_acc = last_acc_vy + jerk_inc;
+                }
+
+                cmd_vel->linear.y = last_cmd_vel.linear.y + act_acc;
+                last_acc_vy = act_acc;
+            }
+
+
+            double diff_w = std::abs(target_vel.angular.z - last_cmd_vel.angular.z);
+            if (diff_w >= 0.001) {
+                double des_acc = (sign(w_inc) * max_w_inc); // desired acceleration
+                double diff_acc = des_acc - last_acc_w; // difference now, last. if diff is zero, the ramp becomes flat.
+                double jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
+                double act_acc = 0.0;  // actual acceleration
+
+                if(diff_w <= ((des_acc*(des_acc+jerk_inc)) / 2) * 1000) {
+                    act_acc = ((target_vel.angular.z > last_cmd_vel.angular.z) ? std::max(0.001, last_acc_w - jerk_lim_v) : std::min(-0.001, last_acc_w + jerk_lim_v));
+                } else {
+                    act_acc = last_acc_w + jerk_inc;
+                }
+
+                cmd_vel->angular.z = last_cmd_vel.angular.z + act_acc;
+                last_acc_w = act_acc;
+            }
+
+            smooth_vel_pub.publish(cmd_vel);
+            last_cmd_vel = *cmd_vel;
+        } else if (input_active == true) {
+            // We already reached target velocity; just keep resending last command while input is active
+            last_acc_vx = 0.0;
+            last_acc_vy = 0.0;
+            last_acc_w = 0.0;
+
+            cmd_vel.reset(new geometry_msgs::Twist(last_cmd_vel));
+            smooth_vel_pub.publish(cmd_vel);
+        }
+
+        spin_rate.sleep();
+    }
+}
+
+/**
+ * Initialise from a nodelet's private nodehandle.
+ * @param nh : private nodehandle
+ * @return bool : success or failure
+ */
+bool VelocitySmoother::init(ros::NodeHandle& nh) {
+    // Dynamic Reconfigure
+    dynamic_reconfigure_callback = boost::bind(&VelocitySmoother::reconfigCB, this, _1, _2);
+
+    dynamic_reconfigure_server = new dynamic_reconfigure::Server<meka_velocity_smoother::paramsConfig>(nh);
+    dynamic_reconfigure_server->setCallback(dynamic_reconfigure_callback);
+
+    // Optional parameters
+    int feedback;
+    nh.param("frequency", frequency, 20.0);
+    nh.param("quiet", quiet, quiet);
+    nh.param("decel_factor", decel_factor, 1.0);
+    nh.param("robot_feedback", feedback, (int) NONE);
+
+    if ((int(feedback) < NONE) || (int(feedback) > COMMANDS)) {
+        ROS_WARN("Invalid robot feedback type (%d). Valid options are 0 (NONE, default), 1 (ODOMETRY) and 2 (COMMANDS)",
+                feedback);
+        feedback = NONE;
+    }
+
+    robot_feedback = static_cast<RobotFeedbackType>(feedback);
+
+    // Mandatory parameters
+    if ((nh.getParam("speed_lim_v", speed_lim_v) == false) || (nh.getParam("speed_lim_w", speed_lim_w) == false)) {
+        ROS_ERROR("Missing velocity limit parameter(s)");
+        return false;
+    }
+
+    if ((nh.getParam("accel_lim_v", accel_lim_v) == false) || (nh.getParam("accel_lim_w", accel_lim_w) == false)) {
+        ROS_ERROR("Missing acceleration limit parameter(s)");
+        return false;
+    }
+
+    if ((nh.getParam("jerk_lim_v", jerk_lim_v) == false) || (nh.getParam("jerk_lim_w", jerk_lim_w) == false)) {
+        ROS_ERROR("Missing jerk limit parameter(s)");
+        return false;
+    }
+
+    // Deceleration can be more aggressive, if necessary
+    decel_lim_v = decel_factor * accel_lim_v;
+    decel_lim_w = decel_factor * accel_lim_w;
+
+    decel_d_lim_v = decel_factor * jerk_lim_v;
+    decel_d_lim_w = decel_factor * jerk_lim_w;
+
+    // Publishers and subscribers
+    odometry_sub = nh.subscribe("odometry", 1, &VelocitySmoother::odometryCB, this);
+    current_vel_sub = nh.subscribe("robot_cmd_vel", 1, &VelocitySmoother::robotVelCB, this);
+    raw_in_vel_sub = nh.subscribe("raw_cmd_vel", 1, &VelocitySmoother::velocityCB, this);
+    smooth_vel_pub = nh.advertise<geometry_msgs::Twist>("smooth_cmd_vel", 1);
+
+    return true;
+}
+
+/*********************
+ ** Nodelet
+ **********************/
+
+class VelocitySmootherNodelet: public nodelet::Nodelet {
+public:
+    VelocitySmootherNodelet() {
+    }
+    ~VelocitySmootherNodelet() {
+        NODELET_DEBUG("Velocity Smoother : waiting for worker thread to finish...");
+        vel_smoother_->shutdown();
+        worker_thread_.join();
+    }
+
+    std::string unresolvedName(const std::string &name) const {
+        size_t pos = name.find_last_of('/');
+        return name.substr(pos + 1);
+    }
+
+    virtual void onInit() {
+        ros::NodeHandle ph = getPrivateNodeHandle();
+        std::string resolved_name = ph.getUnresolvedNamespace(); // this always returns like /robosem/goo_arm - why not unresolved?
+        std::string name = unresolvedName(resolved_name); // unresolve it ourselves
+        NODELET_DEBUG_STREAM("Velocity Smoother : initialising nodelet...[" << name << "]");
+        vel_smoother_.reset(new VelocitySmoother(name));
+        if (vel_smoother_->init(ph)) {
+            NODELET_DEBUG_STREAM("Velocity Smoother : nodelet initialised [" << name << "]");
+            worker_thread_.start(&VelocitySmoother::spin, *vel_smoother_);
+        } else {
+            NODELET_ERROR_STREAM("Velocity Smoother : nodelet initialisation failed [" << name << "]");
+        }
+    }
+
+private:
+    boost::shared_ptr<VelocitySmoother> vel_smoother_;
+    ecl::Thread worker_thread_;
+};
+
+} // namespace meka_velocity_smoother
+
+PLUGINLIB_EXPORT_CLASS(meka_velocity_smoother::VelocitySmootherNodelet, nodelet::Nodelet);

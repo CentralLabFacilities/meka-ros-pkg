@@ -1,0 +1,10 @@
+<library path="lib/libmeka_velocity_smoother_nodelet">
+  <class name="meka_velocity_smoother/VelocitySmootherNodelet"
+         type="meka_velocity_smoother::VelocitySmootherNodelet"
+         base_class_type="nodelet::Nodelet">
+    <description>
+      Implementation for the command velocity smoother as a nodelet.
+    </description>
+  </class>
+</library>
+
