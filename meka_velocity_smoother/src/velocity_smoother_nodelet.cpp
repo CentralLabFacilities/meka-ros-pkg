@@ -41,7 +41,7 @@ namespace meka_velocity_smoother {
 
 VelocitySmoother::VelocitySmoother(const std::string &name) :
         name(name), quiet(false), shutdown_req(false), input_active(false), pr_next(0), dynamic_reconfigure_server(
-                NULL), last_acc_vx(0.0), last_acc_vy(0.0), last_acc_w(0.0) {
+                NULL), last_acc_vx(0.0), last_acc_vy(0.0), last_acc_w(0.0), x_max_acc(0.0), acc_vx_reached(false) {
 };
 
 void VelocitySmoother::reconfigCB(meka_velocity_smoother::paramsConfig &config, uint32_t level) {
@@ -155,7 +155,7 @@ void VelocitySmoother::spin() {
             // Try to reach target velocity ensuring that we don't exceed the acceleration limits
             cmd_vel.reset(new geometry_msgs::Twist(target_vel));
 
-            double vx_inc, vy_inc, w_inc, max_vx_inc, max_vy_inc, max_w_inc, accdy_inc, accdw_inc;
+            double vx_inc, vy_inc, w_inc, max_vx_inc, max_vy_inc, max_w_inc;
 
             vx_inc = target_vel.linear.x - last_cmd_vel.linear.x;
             if ((robot_feedback == ODOMETRY) && (current_vel.linear.x * target_vel.linear.x < 0.0)) {
@@ -181,55 +181,32 @@ void VelocitySmoother::spin() {
                 max_w_inc = ((w_inc * target_vel.angular.z > 0.0) ? accel_lim_w : decel_lim_w) * period;
             }
 
-            //double x = (last_cmd_vel.linear.x - min_) / (target_vel.linear.x - min_);
-            double diff_x = std::abs(target_vel.linear.x - last_cmd_vel.linear.x);
-            if (diff_x >= 0.001) {
+
+            if (std::abs(vx_inc) > max_vx_inc) {
                 double des_acc = (sign(vx_inc) * max_vx_inc); // desired acceleration
                 double diff_acc = des_acc - last_acc_vx; // difference now, last. if diff is zero, the ramp becomes flat.
                 double jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
-                double act_acc = 0.0;  // actual acceleration
-
-                if(diff_x <= ((des_acc*(des_acc+jerk_inc)) / 2) * 1000) { // see n(n+1)/2 where +1 is the step
-                    //jerk_lim_v becomes the jerk_dec_rate
-                    act_acc = ((target_vel.linear.x > last_cmd_vel.linear.x) ? std::max(0.001, last_acc_vx - jerk_lim_v) : std::min(-0.001, last_acc_vx + jerk_lim_v));
-                } else {
-                    act_acc = last_acc_vx + jerk_inc;
-                }
+                double act_acc = last_acc_vx + jerk_inc;  // actual acceleration
 
                 cmd_vel->linear.x = last_cmd_vel.linear.x + act_acc;
                 last_acc_vx = act_acc;
             }
 
-            double diff_y = std::abs(target_vel.linear.y - last_cmd_vel.linear.y);
-            if (diff_y >= 0.001) {
+            if (std::abs(vy_inc) > max_vy_inc) {
                 double des_acc = (sign(vy_inc) * max_vy_inc); // desired acceleration
                 double diff_acc = des_acc - last_acc_vy; // difference now, last. if diff is zero, the ramp becomes flat.
                 double jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
-                double act_acc = 0.0;  // actual acceleration
-
-                if(diff_x <= ((des_acc*(des_acc+jerk_inc)) / 2) * 1000) {
-                    act_acc = ((target_vel.linear.y > last_cmd_vel.linear.y) ? std::max(0.001, last_acc_vy - jerk_lim_v) : std::min(-0.001, last_acc_vy + jerk_lim_v));
-                } else {
-                    act_acc = last_acc_vy + jerk_inc;
-                }
+                double act_acc = last_acc_vy + jerk_inc;  // actual acceleration
 
                 cmd_vel->linear.y = last_cmd_vel.linear.y + act_acc;
                 last_acc_vy = act_acc;
             }
 
-
-            double diff_w = std::abs(target_vel.angular.z - last_cmd_vel.angular.z);
-            if (diff_w >= 0.001) {
+            if (std::abs(w_inc) > max_w_inc) {
                 double des_acc = (sign(w_inc) * max_w_inc); // desired acceleration
                 double diff_acc = des_acc - last_acc_w; // difference now, last. if diff is zero, the ramp becomes flat.
-                double jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
-                double act_acc = 0.0;  // actual acceleration
-
-                if(diff_w <= ((des_acc*(des_acc+jerk_inc)) / 2) * 1000) {
-                    act_acc = ((target_vel.angular.z > last_cmd_vel.angular.z) ? std::max(0.001, last_acc_w - jerk_lim_v) : std::min(-0.001, last_acc_w + jerk_lim_v));
-                } else {
-                    act_acc = last_acc_w + jerk_inc;
-                }
+                double jerk_inc = sign(diff_acc) * std::min(jerk_lim_w, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
+                double act_acc = last_acc_w + jerk_inc;  // actual acceleration
 
                 cmd_vel->angular.z = last_cmd_vel.angular.z + act_acc;
                 last_acc_w = act_acc;
