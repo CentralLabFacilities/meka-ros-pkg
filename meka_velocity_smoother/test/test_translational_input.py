@@ -63,15 +63,15 @@ def main():
     odom.twist.twist.angular.z = 0.0
     state = STATE_RAMP_UP
     count = 0
-    count_max = 1000
+    count_max = 500
     publish = True
     #period = 0.01
     timer = rospy.Rate(100) # 10hz
     rospy.loginfo("Test Input : STATE_RAMP_UP")
     while not rospy.is_shutdown():
         if state == STATE_RAMP_UP:
-            cmd_vel.linear.x = cmd_vel.linear.x + param['ramp_increment']
-            if cmd_vel.linear.x >= param['velocity_maximum']:
+            cmd_vel.angular.z = cmd_vel.angular.z + param['ramp_increment']
+            if cmd_vel.angular.z >= param['velocity_maximum']:
                 state = STATE_RAMP_LEVEL
                 count = 0
                 rospy.loginfo("Test Input : STATE_RAMP_UP -> STATE_RAMP_LEVEL")
@@ -83,16 +83,16 @@ def main():
             else:
                 count = count + 1
         elif state == STATE_RAMP_DOWN:
-            cmd_vel.linear.x = cmd_vel.linear.x - param['ramp_decrement']
-            if cmd_vel.linear.x <= 0.0:
-                cmd_vel.linear.x = 0.0
+            cmd_vel.angular.z = cmd_vel.angular.z - param['ramp_decrement']
+            if cmd_vel.angular.z <= 0.0:
+                cmd_vel.angular.z = 0.0
                 state = STATE_ZERO
                 count = 0
                 rospy.loginfo("Test Input : STATE_RAMP_DOWN -> STATE_ZERO")
         elif state == STATE_ZERO:
             if count > count_max: # 0.5s
                 state = STATE_UP
-                cmd_vel.linear.x = param['velocity_maximum']
+                cmd_vel.angular.z = param['velocity_maximum']
                 count = 0
                 rospy.loginfo("Test Input : STATE_ZERO -> STATE_UP")
             else:
@@ -100,7 +100,7 @@ def main():
         elif state == STATE_UP:
             if count > count_max: # 0.5s
                 state = STATE_DOWN
-                cmd_vel.linear.x = 0.0
+                cmd_vel.angular.z = 0.0
                 count = 0
                 rospy.loginfo("Test Input : STATE_UP -> STATE_DOWN")
             else:
@@ -108,10 +108,10 @@ def main():
         elif state == STATE_DOWN:
             if count > count_max: # 0.5s
                 #state = STATE_UP_AGAIN
-                #cmd_vel.linear.x = param['velocity_maximum']
+                #cmd_vel.angular.z = param['velocity_maximum']
                 #rospy.loginfo("Test Input : STATE_DOWN -> STATE_UP_AGAIN")
                 state = STATE_RAMP_UP
-                cmd_vel.linear.x = 0.0
+                cmd_vel.angular.z = 0.0
                 rospy.loginfo("Test Input : STATE_DOWN -> STATE_RAMP_UP")
                 count = 0
             else:
@@ -127,7 +127,7 @@ def main():
         elif state == STATE_NOTHING:
             if count > count_max: # 0.5s
                 state = STATE_RAMP_UP
-                cmd_vel.linear.x = 0.0
+                cmd_vel.angular.z = 0.0
                 count = 0
                 publish = True
                 rospy.loginfo("Test Input : STATE_NOTHING -> STATE_RAMP_UP")

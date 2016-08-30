@@ -87,6 +87,7 @@ private:
   void velocityCB(const geometry_msgs::Twist::ConstPtr& msg);
   void robotVelCB(const geometry_msgs::Twist::ConstPtr& msg);
   void odometryCB(const nav_msgs::Odometry::ConstPtr& msg);
+  double calcCommand();
 
   double sign(double x)  { return x < 0.0 ? -1.0 : +1.0; };
 
