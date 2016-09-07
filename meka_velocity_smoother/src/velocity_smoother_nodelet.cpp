@@ -188,15 +188,15 @@ void VelocitySmoother::spin() {
                 des_acc = (sign(vx_inc) * max_vx_inc);
                 gauss_sum = jerk_lim_v * ((std::pow(des_acc/jerk_lim_v, 2) + des_acc/jerk_lim_v)/2); //based on gaussian sum, modifed by mzb
                 if(std::abs(vx_inc) <= gauss_sum + max_vx_inc || std::abs(vx_inc) <= gauss_sum - max_vx_inc) {
-                    des_acc = 0;
+                    des_acc = 0.0;
                 }
                 diff_acc = des_acc - last_acc_vx; // difference now, last. if diff is zero, the ramp becomes flat.
                 jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
                 act_acc = last_acc_vx + jerk_inc;  // actual acceleration
-                if(std::abs(vx_inc) >= eps && des_acc == 0 && act_acc == 0) { // draw the velocity to the target.
+                if(std::abs(vx_inc) >= eps && des_acc == 0.0 && act_acc == 0.0) { // draw the velocity to the target.
                     act_acc = sign(vx_inc) * jerk_lim_v;
-                    if(target_vel.linear.x == 0) //if the diff is already small and the command is to stop moving, set vel to zero.
-                        cmd_vel->linear.x = 0;
+                    if(target_vel.linear.x == 0.0) //if the diff is already small and the command is to stop moving, set vel to zero.
+                        cmd_vel->linear.x = 0.0;
                 }
                 //ROS_DEBUG_STREAM("diff_x " << diff_x << " jerk_lim_v " << jerk_inc << " des_acc " << des_acc << " actual " << act_acc);
 
@@ -208,15 +208,15 @@ void VelocitySmoother::spin() {
                 des_acc = (sign(vy_inc) * max_vy_inc);
                 gauss_sum = jerk_lim_v * ((std::pow(des_acc/jerk_lim_v, 2) + des_acc/jerk_lim_v)/2); //based on gaussian sum
                 if(std::abs(vy_inc) <= gauss_sum + max_vy_inc || std::abs(vy_inc) <= gauss_sum - max_vy_inc) {
-                    des_acc = 0;
+                    des_acc = 0.0;
                 }
                 diff_acc = des_acc - last_acc_vy; // difference now, last. if diff is zero, the ramp becomes flat.
                 jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
                 act_acc = last_acc_vy + jerk_inc;  // actual acceleration
-                if(std::abs(vy_inc) >= eps && des_acc == 0 && act_acc == 0) { // draw the velocity to the target.
+                if(std::abs(vy_inc) >= eps && des_acc == 0.0 && act_acc == 0.0) { // draw the velocity to the target.
                     act_acc = sign(vy_inc) * jerk_lim_v;
-                    if(target_vel.linear.y == 0) //if the diff is already small and the command is to stop moving, set vel to zero.
-                        cmd_vel->linear.y = 0;
+                    if(target_vel.linear.y == 0.0) //if the diff is already small and the command is to stop moving, set vel to zero.
+                        cmd_vel->linear.y = 0.0;
                 }
                 //ROS_DEBUG_STREAM("diff_x " << diff_x << " jerk_lim_v " << jerk_inc << " des_acc " << des_acc << " actual " << act_acc);
 
@@ -228,15 +228,15 @@ void VelocitySmoother::spin() {
                 des_acc = (sign(w_inc) * max_w_inc);
                 gauss_sum = jerk_lim_w * ((std::pow(des_acc/jerk_lim_w, 2) + des_acc/jerk_lim_w)/2); //based on gaussian sum
                 if(std::abs(w_inc) <= gauss_sum + max_w_inc || std::abs(w_inc) <= gauss_sum - max_w_inc) {
-                    des_acc = 0;
+                    des_acc = 0.0;
                 }
                 diff_acc = des_acc - last_acc_w; // difference now, last. if diff is zero, the ramp becomes flat.
                 jerk_inc = sign(diff_acc) * std::min(jerk_lim_w, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
                 act_acc = last_acc_w + jerk_inc;  // actual acceleration
-                if(std::abs(w_inc) >= eps && des_acc == 0 && act_acc == 0) { // draw the velocity to the target.
+                if(std::abs(w_inc) >= eps && des_acc == 0.0 && act_acc == 0.0) { // draw the velocity to the target.
                     act_acc = sign(w_inc) * jerk_lim_w;
-                    if(target_vel.angular.z == 0) //if the diff is already small and the command is to stop moving, set vel to zero.
-                        cmd_vel->angular.z = 0;
+                    if(target_vel.angular.z == 0.0) //if the diff is already small and the command is to stop moving, set vel to zero.
+                        cmd_vel->angular.z = 0.0;
                 }
                 //ROS_DEBUG_STREAM("diff_x " << diff_x << " jerk_lim_v " << jerk_inc << " des_acc " << des_acc << " actual " << act_acc);
 
