@@ -247,6 +247,25 @@ class M3Dashboard(Dashboard):
 
         return button
 
+    def init_inspection_test(self):
+
+        button = QPushButton("Robot inspection (beta)")
+            
+        menu = QMenu("Menu")
+        menu.setStyleSheet("QMenu { menu-scrollable: 1; }");
+        submenus = []
+
+        
+        for i in range(5):
+            #a component has fields which are either strings or arrays.
+            s = menu.addMenu(str(i))
+            for j in range(5):
+                s.addAction(str(j), partial(self.subscribe_to_field_test, "blubber", j))
+                
+        button.setMenu(menu)
+
+        return button
+
     def testbaloon(self, name):
         
         name_label = QLabel(name)
@@ -267,6 +286,53 @@ class M3Dashboard(Dashboard):
         self.inspection_layout.addWidget(lineedit, idx, 1);
         self.inspection_layout.addWidget(close_btn, idx, 2);
         
+    def subscribe_to_field_test(self, component, bla):
+        
+        field = str(bla)
+        
+        if (component, field) in self._m3field_values:
+            rospy.logwarn("Already subscribed to field. Exiting.")
+            return
+                
+        
+        dt = Floats
+        topic = str("/meka_ros_pub/"+component+"/"+field)
+        self._dashboard_mekaros_subs[(component, field)] = rospy.Subscriber(topic, dt, self.field_callback, (component, field))
+        self._m3field_values[(component, field)] = []
+        
+        name_label = QLabel(component+"->"+field+":")
+        for val in range(bla):
+            label = QLabel(str(val)[:5])
+            label.setStyleSheet("border: 2px solid grey");
+            self._m3field_values[(component, field)].append(label)
+        
+        idx = self.inspection_layout.rowCount()
+        
+        plot_pixmap = QPixmap(self._path + "/plot.png")
+        plot_icon = QIcon(plot_pixmap);
+        plot_btn = QPushButton()
+        plot_btn.setIcon(plot_icon)
+        plot_btn.setIconSize(plot_pixmap.rect().size())
+        plot_btn.setFixedWidth(30)
+        plot_btn.clicked.connect(partial(self.plot_values, component, field))
+        
+        close_pixmap = QPixmap(self._path + "/close.png")
+        close_icon = QIcon(close_pixmap);
+        close_btn = QPushButton()
+        close_btn.setIcon(close_icon)
+        close_btn.setIconSize(close_pixmap.rect().size())
+        close_btn.setFixedWidth(30)
+        close_btn.clicked.connect(partial(self.remove_row, self.inspection_layout, idx, False, component, field))
+        
+        self.inspection_layout.addWidget(name_label, idx, 0)
+        val_layout = QHBoxLayout()
+        for label in self._m3field_values[(component, field)]:
+            print label
+            val_layout.addWidget(label);
+        self.inspection_layout.addLayout(val_layout, idx, 1)
+        self.inspection_layout.addWidget(plot_btn, idx, 2)
+        self.inspection_layout.addWidget(close_btn, idx, 3)
+
 
     def subscribe_to_field(self, component, field):
         
@@ -519,15 +585,11 @@ class M3Dashboard(Dashboard):
                 (r, c, rs, cs) = layout.getItemPosition(i)
                 if ((r <= row and r + rs - 1 >= row) or (c <= column and c + cs - 1 >= column)):
                     item = layout.takeAt(i);
-                    layout.removeWidget(item.widget())
-                    if (deleteWidgets):
-                        sip.delete(item)
+                    if isinstance(item, QHBoxLayout): #another layout
+                        self.remove_widget(item, -1, -1, False)
                     else:
-                        try:
-                            item.widget().setParent(None)
-                        except: # is a layout in a layout
-                            self.remove_widget(item, -1, -1, False)
-                        #item.deleteLater()
+                        layout.removeWidget(item.widget())     
+                        item.widget().setParent(None)                        
                     #item = None
         else: # delete all
             for i in reversed(range(layout.count())): 
