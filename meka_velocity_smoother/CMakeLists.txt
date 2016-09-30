@@ -22,14 +22,31 @@ else()
         message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
+INCLUDE(FindPkgConfig)
+##libreflexxes
+PKG_CHECK_MODULES(REFLEXXES REQUIRED libReflexxesTypeII>=1.2.3)
+IF (NOT REFLEXXES_FOUND)
+  message(FATAL_ERROR "Error: could not find lib libReflexxesTypeII")
+ENDIF ()
+SET(REFLEXXES_LIBRARY_DIRS "${REFLEXXES_PREFIX}/lib")
+SET(REFLEXXES_INCLUDE_DIRS "${REFLEXXES_PREFIX}/include")
+#resolve to absolute library filename
+#or is there an easier way to get the absolute lib filename from pkg config files?!
+find_library(REFLEXXES_LIBRARY NAMES ${REFLEXXES_LIBRARIES} HINTS ${REFLEXXES_LIBRARY_DIRS})
+MESSAGE("-- using libReflexxesTypeII version ${REFLEXXES_VERSION} from ${REFLEXXES_INCLUDE_DIRS} and ${REFLEXXES_LIBRARY_DIRS}")
+MESSAGE("-- will link against ${REFLEXXES_LIBRARY}")
+
+
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 
 # Nodelet library
 add_library(${PROJECT_NAME}_nodelet src/velocity_smoother_nodelet.cpp)
 
+set_property(TARGET ${PROJECT_NAME}_nodelet PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-target_link_libraries(${PROJECT_NAME}_nodelet ${catkin_LIBRARIES})
+
+target_link_libraries(${PROJECT_NAME}_nodelet ${catkin_LIBRARIES} ${REFLEXXES_LIBRARY})
 add_dependencies(${PROJECT_NAME}_nodelet ${PROJECT_NAME}_gencfg)
 
 

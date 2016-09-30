@@ -21,6 +21,11 @@
 
 #include <thread>
 
+#include <ReflexxesAPI.h>
+#include <RMLPositionInputParameters.h>
+#include <RMLPositionOutputParameters.h>
+
+
 /*****************************************************************************
  ** Preprocessing
  *****************************************************************************/
@@ -152,6 +157,19 @@ void VelocitySmoother::spin() {
         
         //TODO: smooth it
         cmd_vel.reset(new geometry_msgs::Twist(target_vel));
+        
+        int dof=3;
+
+            // create Reflexxes API for <dof> DOF actuator
+            ReflexxesAPI * reflexxes_api = new ReflexxesAPI(dof, period);
+            RMLPositionInputParameters * reflexxes_position_input = new RMLPositionInputParameters(dof);
+            RMLPositionOutputParameters * reflexxes_position_output = new RMLPositionOutputParameters(dof);
+            //reflexxes_position_input->TargetPositionVector->VecData[dof] = target;
+            reflexxes_position_input->SelectionVector->VecData[dof] = true;
+            //reflexxes_position_input->MaxVelocityVector->VecData[dof] = max_speed;
+            //reflexxes_position_input->MaxAccelerationVector->VecData[dof] = max_accel;
+
+
 
         smooth_vel_pub.publish(cmd_vel);
         
