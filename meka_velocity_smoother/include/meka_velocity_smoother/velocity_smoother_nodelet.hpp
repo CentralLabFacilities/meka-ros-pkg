@@ -55,13 +55,9 @@ private:
 
   std::string name;
   bool quiet;        /**< Quieten some warnings that are unavoidable because of velocity multiplexing. **/
-  bool acc_vx_reached;
 
-
-  double x_max_acc;
-
-  double speed_lim_v, accel_lim_v, decel_lim_v, jerk_lim_v, decel_d_lim_v;
-  double speed_lim_w, accel_lim_w, decel_lim_w, jerk_lim_w, decel_d_lim_w;
+  double speed_lim_v, accel_lim_v, jerk_lim_v;
+  double speed_lim_w, accel_lim_w, jerk_lim_w;
   double decel_factor;
 
   double frequency;

@@ -46,7 +46,7 @@ namespace meka_velocity_smoother {
 
 VelocitySmoother::VelocitySmoother(const std::string &name) :
         name(name), quiet(false), shutdown_req(false), input_active(false), pr_next(0), dynamic_reconfigure_server(
-                NULL), last_acc_vx(0.0), last_acc_vy(0.0), last_acc_w(0.0), x_max_acc(0.0), acc_vx_reached(false) {
+                NULL), last_acc_vx(0.0), last_acc_vy(0.0), last_acc_w(0.0) {
 };
 
 void VelocitySmoother::reconfigCB(meka_velocity_smoother::paramsConfig &config, uint32_t level) {
@@ -60,10 +60,6 @@ void VelocitySmoother::reconfigCB(meka_velocity_smoother::paramsConfig &config, 
     accel_lim_w = config.accel_lim_w;
     jerk_lim_v = config.jerk_lim_v;
     jerk_lim_w = config.jerk_lim_w;
-    decel_lim_v = decel_factor * accel_lim_v;
-    decel_lim_w = decel_factor * accel_lim_w;
-    decel_d_lim_v = decel_factor * jerk_lim_v;
-    decel_d_lim_w = decel_factor * jerk_lim_w;
     decel_factor = config.decel_factor;
 }
 
@@ -91,9 +87,10 @@ void VelocitySmoother::velocityCB(const geometry_msgs::Twist::ConstPtr& msg) {
     input_active = true;
 
     // Bound speed with the maximum values
-    // TODO: y
     target_vel.linear.x =
             msg->linear.x > 0.0 ? std::min(msg->linear.x, speed_lim_v) : std::max(msg->linear.x, -speed_lim_v);
+    target_vel.linear.y =
+            msg->linear.y > 0.0 ? std::min(msg->linear.y, speed_lim_v) : std::max(msg->linear.y, -speed_lim_v);
     target_vel.angular.z =
             msg->angular.z > 0.0 ? std::min(msg->angular.z, speed_lim_w) : std::max(msg->angular.z, -speed_lim_w);
 }
@@ -113,67 +110,84 @@ void VelocitySmoother::robotVelCB(const geometry_msgs::Twist::ConstPtr& msg) {
 }
 
 void VelocitySmoother::spin() {
-    double period = 1.0 / frequency;
-    ros::Rate spin_rate(frequency);
-    
-    while (!shutdown_req && ros::ok()) {
-        if ((input_active == true) && (cb_avg_time > 0.0)
-                && ((ros::Time::now() - last_cb_time).toSec() > std::min(3.0 * cb_avg_time, 0.5))) {
-            // Velocity input no active anymore; normally last command is a zero-velocity one, but reassure
-            // this, just in case something went wrong with our input, or he just forgot good manners...
-            // Issue #2, extra check in case cb_avg_time is very big, for example with several atomic commands
-            // The cb_avg_time > 0 check is required to deal with low-rate simulated time, that can make that
-            // several messages arrive with the same time and so lead to a zero median
-            input_active = false;
-            if (IS_ZERO_VEOCITY(target_vel) == false) {
-                ROS_WARN_STREAM(
-                        "Velocity Smoother : input got inactive leaving us a non-zero target velocity (" << target_vel.linear.x << ", " << target_vel.linear.y << ", " << target_vel.angular.z << "), zeroing...[" << name << "]");
-                target_vel = ZERO_VEL_COMMAND;
+        double period = 1.0 / frequency;
+        ros::Rate spin_rate(frequency);
+        int dof = 3;
+
+        // create Reflexxes API for <dof> DOF actuator
+        ReflexxesAPI * reflexxes_api = new ReflexxesAPI(dof, period);
+        RMLPositionInputParameters * reflexxes_position_input = new RMLPositionInputParameters(dof);
+        RMLPositionOutputParameters * reflexxes_position_output = new RMLPositionOutputParameters(dof);
+        RMLPositionFlags reflexxes_motion_flags;
+
+        while (!shutdown_req && ros::ok()) {
+            if ((input_active == true) && (cb_avg_time > 0.0)
+                    && ((ros::Time::now() - last_cb_time).toSec() > std::min(3.0 * cb_avg_time, 0.5))) {
+                // Velocity input no active anymore; normally last command is a zero-velocity one, but reassure
+                // this, just in case something went wrong with our input, or he just forgot good manners...
+                // Issue #2, extra check in case cb_avg_time is very big, for example with several atomic commands
+                // The cb_avg_time > 0 check is required to deal with low-rate simulated time, that can make that
+                // several messages arrive with the same time and so lead to a zero median
+                input_active = false;
+                if (IS_ZERO_VEOCITY(target_vel) == false) {
+                    ROS_WARN_STREAM(
+                            "Velocity Smoother : input got inactive leaving us a non-zero target velocity (" << target_vel.linear.x << ", " << target_vel.linear.y << ", " << target_vel.angular.z << "), zeroing...[" << name << "]");
+                    target_vel = ZERO_VEL_COMMAND;
+                }
             }
-        }
 
-        /*if ((robot_feedback != NONE) && (input_active == true) && (cb_avg_time > 0.0)
-                && (((ros::Time::now() - last_cb_time).toSec() > 5.0 * cb_avg_time)
-                        || // 5 missing msgs
-                        (std::abs(current_vel.linear.x - last_cmd_vel.linear.x) > 0.2)
-                        || (std::abs(current_vel.linear.y - last_cmd_vel.linear.y) > 0.2)
-                        || (std::abs(current_vel.angular.z - last_cmd_vel.angular.z) > 2.0))) {
-            // If the publisher has been inactive for a while, or if our current commanding differs a lot
-            // from robot velocity feedback, we cannot trust the former; relay on robot's feedback instead
-            // TODO: current command/feedback difference thresholds are 진짜 arbitrary; they should somehow
-            // be proportional to max v and w...
-            // The one for angular velocity is very big because is it's less necessary (for example the
-            // reactive controller will never make the robot spin) and because the gyro has a 15 ms delay
-            if (!quiet) {
-                // this condition can be unavoidable due to preemption of current velocity control on
-                // velocity multiplexer so be quiet if we're instructed to do so
-                ROS_WARN_STREAM(
-                        "Velocity Smoother : using robot velocity feedback " << std::string(robot_feedback == ODOMETRY ? "odometry" : "end commands") << " instead of last command: " << (ros::Time::now() - last_cb_time).toSec() << ", " << current_vel.linear.x - last_cmd_vel.linear.x << ", " << current_vel.linear.y - last_cmd_vel.linear.y << ", " << current_vel.angular.z - last_cmd_vel.angular.z << ", [" << name << "]");
+            geometry_msgs::TwistPtr cmd_vel;
+            cmd_vel.reset(new geometry_msgs::Twist(target_vel));
+
+            reflexxes_position_input->TargetPositionVector->VecData[0] = target_vel.linear.x;
+            reflexxes_position_input->SelectionVector->VecData[0] = true;
+            reflexxes_position_input->MaxVelocityVector->VecData[0] = target_vel.linear.x != 0 ? accel_lim_v : accel_lim_v * decel_factor;
+            reflexxes_position_input->MaxAccelerationVector->VecData[0] = target_vel.linear.x != 0 ? jerk_lim_v : jerk_lim_v * decel_factor;
+            reflexxes_position_input->TargetVelocityVector->VecData[0] = 0.0;
+
+            reflexxes_position_input->TargetPositionVector->VecData[1] = target_vel.linear.y;
+            reflexxes_position_input->SelectionVector->VecData[1] = true;
+            reflexxes_position_input->MaxVelocityVector->VecData[1] = target_vel.linear.y != 0 ? accel_lim_v : accel_lim_v * decel_factor;
+            reflexxes_position_input->MaxAccelerationVector->VecData[1] = target_vel.linear.y != 0 ? jerk_lim_v : jerk_lim_v * decel_factor;
+            reflexxes_position_input->TargetVelocityVector->VecData[1] = 0.0;
+
+            reflexxes_position_input->TargetPositionVector->VecData[2] = target_vel.angular.z;
+            reflexxes_position_input->SelectionVector->VecData[2] = true;
+            reflexxes_position_input->MaxVelocityVector->VecData[2] = target_vel.angular.z != 0 ? accel_lim_w : accel_lim_w * decel_factor;
+            reflexxes_position_input->MaxAccelerationVector->VecData[2] = target_vel.angular.z != 0 ? jerk_lim_w : jerk_lim_w * decel_factor;
+            reflexxes_position_input->TargetVelocityVector->VecData[2] = 0.0;
+
+
+            int res = reflexxes_api->RMLPosition(*reflexxes_position_input,
+                    reflexxes_position_output, reflexxes_motion_flags);
+
+            if (res < 0) {
+                if (res == ReflexxesAPI::RML_ERROR_INVALID_INPUT_VALUES) {
+                    printf("> ReflexxesMotionGenerator --> RML_ERROR_INVALID_INPUT_VALUES error\n");
+                } else {
+                    printf("> ReflexxesMotionGenerator --> UNKNOWN_ERROR: reflexxes error %d\n", res);
+                }
             }
-            last_cmd_vel = current_vel;
-        }*/
 
-        geometry_msgs::TwistPtr cmd_vel;
-        
-        //TODO: smooth it
-        cmd_vel.reset(new geometry_msgs::Twist(target_vel));
-        
-        int dof=3;
+            // feed back values
+            for (int i = 0; i < dof; i++) {
+                reflexxes_position_input->CurrentPositionVector->VecData[i] =
+                        reflexxes_position_output->NewPositionVector->VecData[i];
 
-            // create Reflexxes API for <dof> DOF actuator
-            ReflexxesAPI * reflexxes_api = new ReflexxesAPI(dof, period);
-            RMLPositionInputParameters * reflexxes_position_input = new RMLPositionInputParameters(dof);
-            RMLPositionOutputParameters * reflexxes_position_output = new RMLPositionOutputParameters(dof);
-            //reflexxes_position_input->TargetPositionVector->VecData[dof] = target;
-            reflexxes_position_input->SelectionVector->VecData[dof] = true;
-            //reflexxes_position_input->MaxVelocityVector->VecData[dof] = max_speed;
-            //reflexxes_position_input->MaxAccelerationVector->VecData[dof] = max_accel;
+                reflexxes_position_input->CurrentVelocityVector->VecData[i] =
+                        reflexxes_position_output->NewVelocityVector->VecData[i];
 
+                reflexxes_position_input->CurrentAccelerationVector->VecData[i] =
+                        reflexxes_position_output->NewAccelerationVector->VecData[i];
+            }
 
+            cmd_vel->linear.x = reflexxes_position_output->NewPositionVector->VecData[0];
+            cmd_vel->linear.y = reflexxes_position_output->NewPositionVector->VecData[1];
+            cmd_vel->angular.z = reflexxes_position_output->NewPositionVector->VecData[2];
 
-        smooth_vel_pub.publish(cmd_vel);
-        
-        spin_rate.sleep();
+            smooth_vel_pub.publish(cmd_vel);
+
+            spin_rate.sleep();
     }
 }
 
@@ -219,13 +233,6 @@ bool VelocitySmoother::init(ros::NodeHandle& nh) {
         ROS_ERROR("Missing jerk limit parameter(s)");
         return false;
     }
-
-    // Deceleration can be more aggressive, if necessary
-    decel_lim_v = decel_factor * accel_lim_v;
-    decel_lim_w = decel_factor * accel_lim_w;
-
-    decel_d_lim_v = decel_factor * jerk_lim_v;
-    decel_d_lim_w = decel_factor * jerk_lim_w;
 
     // Publishers and subscribers
     odometry_sub = nh.subscribe("odometry", 1, &VelocitySmoother::odometryCB, this);
