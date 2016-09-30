@@ -86,6 +86,7 @@ void VelocitySmoother::velocityCB(const geometry_msgs::Twist::ConstPtr& msg) {
     input_active = true;
 
     // Bound speed with the maximum values
+    // TODO: y
     target_vel.linear.x =
             msg->linear.x > 0.0 ? std::min(msg->linear.x, speed_lim_v) : std::max(msg->linear.x, -speed_lim_v);
     target_vel.angular.z =
@@ -109,7 +110,7 @@ void VelocitySmoother::robotVelCB(const geometry_msgs::Twist::ConstPtr& msg) {
 void VelocitySmoother::spin() {
     double period = 1.0 / frequency;
     ros::Rate spin_rate(frequency);
-
+    
     while (!shutdown_req && ros::ok()) {
         if ((input_active == true) && (cb_avg_time > 0.0)
                 && ((ros::Time::now() - last_cb_time).toSec() > std::min(3.0 * cb_avg_time, 0.5))) {
@@ -126,7 +127,7 @@ void VelocitySmoother::spin() {
             }
         }
 
-        if ((robot_feedback != NONE) && (input_active == true) && (cb_avg_time > 0.0)
+        /*if ((robot_feedback != NONE) && (input_active == true) && (cb_avg_time > 0.0)
                 && (((ros::Time::now() - last_cb_time).toSec() > 5.0 * cb_avg_time)
                         || // 5 missing msgs
                         (std::abs(current_vel.linear.x - last_cmd_vel.linear.x) > 0.2)
@@ -145,119 +146,15 @@ void VelocitySmoother::spin() {
                         "Velocity Smoother : using robot velocity feedback " << std::string(robot_feedback == ODOMETRY ? "odometry" : "end commands") << " instead of last command: " << (ros::Time::now() - last_cb_time).toSec() << ", " << current_vel.linear.x - last_cmd_vel.linear.x << ", " << current_vel.linear.y - last_cmd_vel.linear.y << ", " << current_vel.angular.z - last_cmd_vel.angular.z << ", [" << name << "]");
             }
             last_cmd_vel = current_vel;
-        }
+        }*/
 
         geometry_msgs::TwistPtr cmd_vel;
+        
+        //TODO: smooth it
+        cmd_vel.reset(new geometry_msgs::Twist(target_vel));
 
-        if ((target_vel.linear.x != last_cmd_vel.linear.x) || (target_vel.linear.y != last_cmd_vel.linear.y)
-                || (target_vel.angular.z != last_cmd_vel.angular.z)) {
-
-            // Try to reach target velocity ensuring that we don't exceed the acceleration limits
-            cmd_vel.reset(new geometry_msgs::Twist(target_vel));
-
-            double vx_inc, vy_inc, w_inc, max_vx_inc, max_vy_inc, max_w_inc;
-
-            vx_inc = target_vel.linear.x - last_cmd_vel.linear.x;
-            if ((robot_feedback == ODOMETRY) && (current_vel.linear.x * target_vel.linear.x < 0.0)) {
-                // countermarch (on robots with significant inertia; requires odometry feedback to be detected)
-                max_vx_inc = decel_lim_v * period;
-            } else {
-                max_vx_inc = ((vx_inc * target_vel.linear.x > 0.0) ? accel_lim_v : decel_lim_v) * period;
-            }
-
-            vy_inc = target_vel.linear.y - last_cmd_vel.linear.y;
-            if ((robot_feedback == ODOMETRY) && (current_vel.linear.y * target_vel.linear.y < 0.0)) {
-                // countermarch (on robots with significant inertia; requires odometry feedback to be detected)
-                max_vy_inc = decel_lim_v * period;
-            } else {
-                max_vy_inc = ((vx_inc * target_vel.linear.y > 0.0) ? accel_lim_v : decel_lim_v) * period;
-            }
-
-            w_inc = target_vel.angular.z - last_cmd_vel.angular.z;
-            if ((robot_feedback == ODOMETRY) && (current_vel.angular.z * target_vel.angular.z < 0.0)) {
-                // countermarch (on robots with significant inertia; requires odometry feedback to be detected)
-                max_w_inc = decel_lim_w * period;
-            } else {
-                max_w_inc = ((w_inc * target_vel.angular.z > 0.0) ? accel_lim_w : decel_lim_w) * period;
-            }
-
-            double eps = 0.001;
-            double des_acc, diff_acc, act_acc, jerk_inc, gauss_sum;
-
-            if (vx_inc) {
-                des_acc = (sign(vx_inc) * max_vx_inc);
-                gauss_sum = jerk_lim_v * ((std::pow(des_acc/jerk_lim_v, 2) + des_acc/jerk_lim_v)/2); //based on gaussian sum, modifed by mzb
-                if(std::abs(vx_inc) <= gauss_sum + max_vx_inc || std::abs(vx_inc) <= gauss_sum - max_vx_inc) {
-                    des_acc = 0.0;
-                }
-                diff_acc = des_acc - last_acc_vx; // difference now, last. if diff is zero, the ramp becomes flat.
-                jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
-                act_acc = last_acc_vx + jerk_inc;  // actual acceleration
-                if(std::abs(vx_inc) >= eps && des_acc == 0.0 && act_acc == 0.0) { // draw the velocity to the target.
-                    act_acc = sign(vx_inc) * jerk_lim_v;
-                    if(target_vel.linear.x == 0.0) //if the diff is already small and the command is to stop moving, set vel to zero.
-                        cmd_vel->linear.x = 0.0;
-                }
-                //ROS_DEBUG_STREAM("diff_x " << diff_x << " jerk_lim_v " << jerk_inc << " des_acc " << des_acc << " actual " << act_acc);
-
-                cmd_vel->linear.x = last_cmd_vel.linear.x + act_acc;
-                last_acc_vx = act_acc;
-            }
-
-            if (vy_inc) {
-                des_acc = (sign(vy_inc) * max_vy_inc);
-                gauss_sum = jerk_lim_v * ((std::pow(des_acc/jerk_lim_v, 2) + des_acc/jerk_lim_v)/2); //based on gaussian sum
-                if(std::abs(vy_inc) <= gauss_sum + max_vy_inc || std::abs(vy_inc) <= gauss_sum - max_vy_inc) {
-                    des_acc = 0.0;
-                }
-                diff_acc = des_acc - last_acc_vy; // difference now, last. if diff is zero, the ramp becomes flat.
-                jerk_inc = sign(diff_acc) * std::min(jerk_lim_v, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
-                act_acc = last_acc_vy + jerk_inc;  // actual acceleration
-                if(std::abs(vy_inc) >= eps && des_acc == 0.0 && act_acc == 0.0) { // draw the velocity to the target.
-                    act_acc = sign(vy_inc) * jerk_lim_v;
-                    if(target_vel.linear.y == 0.0) //if the diff is already small and the command is to stop moving, set vel to zero.
-                        cmd_vel->linear.y = 0.0;
-                }
-                //ROS_DEBUG_STREAM("diff_x " << diff_x << " jerk_lim_v " << jerk_inc << " des_acc " << des_acc << " actual " << act_acc);
-
-                cmd_vel->linear.y = last_cmd_vel.linear.y + act_acc;
-                last_acc_vy = act_acc;
-            }
-
-            if (w_inc) {
-                des_acc = (sign(w_inc) * max_w_inc);
-                gauss_sum = jerk_lim_w * ((std::pow(des_acc/jerk_lim_w, 2) + des_acc/jerk_lim_w)/2); //based on gaussian sum
-                if(std::abs(w_inc) <= gauss_sum + max_w_inc || std::abs(w_inc) <= gauss_sum - max_w_inc) {
-                    des_acc = 0.0;
-                }
-                diff_acc = des_acc - last_acc_w; // difference now, last. if diff is zero, the ramp becomes flat.
-                jerk_inc = sign(diff_acc) * std::min(jerk_lim_w, std::abs(diff_acc)); // max. allowed change in acc (i.e. jerk)
-                act_acc = last_acc_w + jerk_inc;  // actual acceleration
-                if(std::abs(w_inc) >= eps && des_acc == 0.0 && act_acc == 0.0) { // draw the velocity to the target.
-                    act_acc = sign(w_inc) * jerk_lim_w;
-                    if(target_vel.angular.z == 0.0) //if the diff is already small and the command is to stop moving, set vel to zero.
-                        cmd_vel->angular.z = 0.0;
-                }
-                //ROS_DEBUG_STREAM("diff_x " << diff_x << " jerk_lim_v " << jerk_inc << " des_acc " << des_acc << " actual " << act_acc);
-
-                cmd_vel->angular.z = last_cmd_vel.angular.z + act_acc;
-                last_acc_w = act_acc;
-            }
-
-            smooth_vel_pub.publish(cmd_vel);
-            last_cmd_vel = *cmd_vel;
-
-        } else if (input_active == true) {
-
-            // We already reached target velocity; just keep resending last command while input is active
-            last_acc_vx = 0.0;
-            last_acc_vy = 0.0;
-            last_acc_w = 0.0;
-
-            cmd_vel.reset(new geometry_msgs::Twist(last_cmd_vel));
-            smooth_vel_pub.publish(cmd_vel);
-        }
-
+        smooth_vel_pub.publish(cmd_vel);
+        
         spin_rate.sleep();
     }
 }
