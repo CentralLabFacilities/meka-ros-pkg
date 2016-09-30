@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(meka_velocity_smoother)
-find_package(catkin REQUIRED COMPONENTS roscpp pluginlib nodelet ecl_threads dynamic_reconfigure geometry_msgs nav_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp pluginlib nodelet dynamic_reconfigure geometry_msgs nav_msgs)
 
 # Dynamic reconfigure support
 generate_dynamic_reconfigure_options(cfg/params.cfg)

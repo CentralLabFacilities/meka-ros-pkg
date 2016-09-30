@@ -17,9 +17,9 @@
 #include <dynamic_reconfigure/server.h>
 #include <meka_velocity_smoother/paramsConfig.h>
 
-#include <ecl/threads/thread.hpp>
-
 #include "meka_velocity_smoother/velocity_smoother_nodelet.hpp"
+
+#include <thread>
 
 /*****************************************************************************
  ** Preprocessing
@@ -348,7 +348,7 @@ public:
         vel_smoother_.reset(new VelocitySmoother(name));
         if (vel_smoother_->init(ph)) {
             NODELET_DEBUG_STREAM("Velocity Smoother : nodelet initialised [" << name << "]");
-            worker_thread_.start(&VelocitySmoother::spin, *vel_smoother_);
+            worker_thread_ = std::thread(&VelocitySmoother::spin, vel_smoother_);
         } else {
             NODELET_ERROR_STREAM("Velocity Smoother : nodelet initialisation failed [" << name << "]");
         }
@@ -356,7 +356,7 @@ public:
 
 private:
     boost::shared_ptr<VelocitySmoother> vel_smoother_;
-    ecl::Thread worker_thread_;
+    std::thread worker_thread_;
 };
 
 } // namespace meka_velocity_smoother
