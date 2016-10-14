@@ -37,7 +37,7 @@ MESSAGE("-- using libReflexxesTypeII version ${REFLEXXES_VERSION} from ${REFLEXX
 MESSAGE("-- will link against ${REFLEXXES_LIBRARY}")
 
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include ${REFLEXXES_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
 
 
 # Nodelet library
