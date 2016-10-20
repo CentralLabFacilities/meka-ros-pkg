@@ -25,8 +25,9 @@ import os
 import rospkg
 from rqt_robot_dashboard.util import IconHelper
 
-from python_qt_binding.QtCore import Signal, QSize
-from python_qt_binding.QtGui import QIcon, QLabel
+from PyQt5.QtCore import Signal, QSize
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QLabel
 
 
 class IconWidget(QLabel):

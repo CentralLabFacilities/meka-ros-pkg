@@ -36,14 +36,14 @@
 # POSSIBILITY OF SUCH DAMAGE.
 import rospy
 
-from python_qt_binding.QtCore import QSize, pyqtSignal
+from PyQt5.QtCore import QSize, pyqtSignal
 
 from m3meka_msgs.msg import M3ControlState, M3ControlStates
 from m3meka_msgs.srv import M3ControlStateChange, M3ControlStateChangeRequest
 
 from rqt_robot_dashboard.widgets import MenuDashWidget
 
-from python_qt_binding.QtGui import QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 
 STATE_CMD_DISABLE = 1
 STATE_CMD_ENABLE = 2

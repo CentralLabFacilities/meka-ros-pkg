@@ -51,12 +51,13 @@ from widgets import EmergencyButton, ControlStateButton, WrappedBattery
 from dialogs import PlotDialog
 
 #qt stuff
-from PyQt4.Qt import QMenu, QGridLayout, QLineEdit, QPixmap, QIcon, QSize
+from PyQt5.Qt import QMenu, QGridLayout, QLineEdit, QPixmap, QIcon, QSize
 
-from QtGui import QPushButton, QVBoxLayout, QHBoxLayout, QWidget, \
-    QCheckBox, QSpinBox, QLabel
+from QtWidgets import QPushButton, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QHBoxLayout, QWidget
     
-from QtCore import SIGNAL, QObject
+from QtCore import QObject
+
+from QtCore import pyqtSignal as SIGNAL
 
 MIN_V = 20
 MAX_V = 26
