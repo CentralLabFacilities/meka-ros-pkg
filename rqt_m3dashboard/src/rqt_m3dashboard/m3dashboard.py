@@ -141,7 +141,7 @@ class M3Dashboard(Dashboard):
             self.btn_stop.setEnabled(False)
             self.btn_freeze.setEnabled(False)
             
-        inspection_button = self.init_inspection()
+        #inspection_button = self.init_inspection()
         self.hz_rate = QSpinBox()
         # infinite number of times is -1
         self.hz_rate.setMinimum(1)
@@ -149,7 +149,7 @@ class M3Dashboard(Dashboard):
         self.hz_rate.setValue(1)
         label_hz = QLabel("hz")
 
-        hlayout2.addWidget(inspection_button)
+        #hlayout2.addWidget(inspection_button)
         hlayout2.addWidget(self.hz_rate)
         hlayout2.addWidget(label_hz)
         
