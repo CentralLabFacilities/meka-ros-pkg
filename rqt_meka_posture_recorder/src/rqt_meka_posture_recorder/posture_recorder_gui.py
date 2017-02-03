@@ -31,10 +31,8 @@ from copy import deepcopy
 from qt_gui.plugin import Plugin
 from python_qt_binding import loadUi
 
-from python_qt_binding.QtCore import QSize
+from PyQt5.QtWidgets import *
 
-from QtCore import Qt, QThread
-from QtGui import QWidget, QDoubleSpinBox, QStandardItemModel, QStandardItem, QTableView, QTreeWidget, QTreeWidgetItem, QCheckBox, QFileDialog, QMessageBox, QPushButton, QFrame, QHBoxLayout, QVBoxLayout
 from functools import partial
 
 from controller_manager_msgs.srv import ListControllersRequest, \
