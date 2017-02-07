@@ -59,9 +59,9 @@ from QtCore import QObject
 
 from QtCore import pyqtSignal as SIGNAL
 
-MIN_V = 20
-MAX_V = 26
-CHARGE_V_THRES = 27
+MIN_V = 22.0
+MAX_V = 25.5
+CHARGE_V_THRES = 26.0
 
 STATE_CMD_DISABLE = 1
 STATE_CMD_ENABLE = 2
@@ -81,7 +81,6 @@ class M3Dashboard(Dashboard):
         self._service_ready = True
         self._last_dashboard_message_time = rospy.Time.now()
         self._path = os.path.join(rospkg.RosPack().get_path('rqt_m3dashboard'), 'images')
-        
         self._battery_icons = {}
         self._state_buttons = {}
         
@@ -92,7 +91,7 @@ class M3Dashboard(Dashboard):
         NAMESPACE = '' 
 
         rospy.loginfo("Starting up...")
-
+        
         # self._state_button = ControlStateButton("default", 9999)
         # TODO read this list on the parameters
         battery_names = ["m3pwr_pwr038", "m3pwr_pwr042"]
@@ -513,15 +512,17 @@ class M3Dashboard(Dashboard):
         :type msg: Floats
         """
         #rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
-
         val = str(msg.data[0])[:5]
+        val_float = float(val)
+    
         for key, value in self._battery_icons.iteritems():
             charging = False
             perc = 100.0
-            if (val > CHARGE_V_THRES):
+            if (val_float >= CHARGE_V_THRES):
                 charging = True
             else:
-                perc = ((float(val) - MIN_V) / (MAX_V-MIN_V)) * 100.0
+                perc = ((float(val_float) - MIN_V) / (MAX_V-MIN_V)) * 100.0
+
             value.set_power_state_perc(float(perc), charging)
 
     def state_callback(self, msg):
