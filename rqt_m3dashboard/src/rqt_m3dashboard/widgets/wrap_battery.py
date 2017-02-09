@@ -47,20 +47,32 @@ class WrappedBattery(BatteryDashWidget):
             charge_icons.append([charge_icon])
             
         self._wrapped_battery_name = name
+        self.motor_enabled = False
+        
         super(WrappedBattery, self).__init__(name=name,
                                              icons=icons, charge_icons=charge_icons,
                                              icon_paths=[['rqt_m3dashboard', 'images']])
 
         self.unset_stale()
         self.update_perc(0)
+        
 
     def set_power_state_perc(self, percentage, charging):
         """
         """
-        print percentage
-        print charging
         self.update_perc(percentage)
         self.update_time(percentage) # + remaining
         self.set_charging(charging)
-
+        
+    def set_motor_enabled(self, enabled):
+        """
+        """ 
+        self.motor_enabled = enabled
+        
+    def update_time(self, value):
+        try:
+            fval = float(value)
+            self.setToolTip("%s: %.2f%% remaining. enabled: %r" % (self._name, fval, self.motor_enabled))
+        except ValueError:
+            self.setToolTip("%s: %s%% remaining. enabled: %r" % (self._name, value, self.motor_enabled))
 
