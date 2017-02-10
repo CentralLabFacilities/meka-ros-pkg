@@ -59,9 +59,9 @@ from QtCore import QObject
 
 from QtCore import pyqtSignal as SIGNAL
 
-MIN_V = 20
-MAX_V = 26
-CHARGE_V_THRES = 27
+MIN_V = 22.0
+MAX_V = 25.5
+CHARGE_V_THRES = 26.0
 
 STATE_CMD_DISABLE = 1
 STATE_CMD_ENABLE = 2
@@ -81,7 +81,6 @@ class M3Dashboard(Dashboard):
         self._service_ready = True
         self._last_dashboard_message_time = rospy.Time.now()
         self._path = os.path.join(rospkg.RosPack().get_path('rqt_m3dashboard'), 'images')
-        
         self._battery_icons = {}
         self._state_buttons = {}
         
@@ -92,7 +91,7 @@ class M3Dashboard(Dashboard):
         NAMESPACE = '' 
 
         rospy.loginfo("Starting up...")
-
+        
         # self._state_button = ControlStateButton("default", 9999)
         # TODO read this list on the parameters
         battery_names = ["m3pwr_pwr038", "m3pwr_pwr042"]
@@ -182,14 +181,15 @@ class M3Dashboard(Dashboard):
         
         widget = QWidget()
         layout = QHBoxLayout(widget)        
-        m3field = "bus_voltage"        
+        fields = ["motor_enabled", "bus_voltage"]        
         dt = Floats
-        
+                 
         for battery_name in battery_names:
             self._battery_icons[battery_name] = WrappedBattery(self.context, battery_name)
             layout.addWidget(self._battery_icons[battery_name])
-            self._dashboard_mekaros_subs[(battery_name, m3field)] = rospy.Subscriber("/meka_ros_pub/"+battery_name+"/"+m3field, 
-                                                                     dt, self.battery_callback)
+            self._dashboard_mekaros_subs[(battery_name, fields[0])] = rospy.Subscriber("/meka_ros_pub/"+battery_name+"/"+fields[0], dt, self.battery_pwrd_cb, battery_name)                            
+            self._dashboard_mekaros_subs[(battery_name, fields[1])] = rospy.Subscriber("/meka_ros_pub/"+battery_name+"/"+fields[1], dt, self.battery_voltage_cb, battery_name)
+            
         layout.addStretch(1)
         widget.setFixedHeight(75)
 
@@ -505,24 +505,39 @@ class M3Dashboard(Dashboard):
 
         if (component, field) in self._m3field_plots:
             self._m3field_plots[(component, field)].get_plot().setData(msg.data)
-        
-    def battery_callback(self, msg):
+    
+    
+    def battery_pwrd_cb(self, msg, battery_name):
         """
-        battery_callback to process meka ros str messages
+        battery_pwrd_cb to process meka ros str messages
         :param msg:
         :type msg: Floats
         """
         #rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
-
+        val_bool = bool(msg.data[0])
+          
+        self._battery_icons[battery_name].set_motor_enabled(val_bool)
+    
+    def battery_voltage_cb(self, msg, battery_name):
+        """
+        battery_voltage_cb to process meka ros str messages
+        :param msg:
+        :type msg: Floats
+        """
+        #rospy.loginfo(rospy.get_caller_id() + "I heard %s", msg.data)
         val = str(msg.data[0])[:5]
-        for key, value in self._battery_icons.iteritems():
-            charging = False
-            perc = 100.0
-            if (val > CHARGE_V_THRES):
-                charging = True
-            else:
-                perc = ((float(val) - MIN_V) / (MAX_V-MIN_V)) * 100.0
-            value.set_power_state_perc(float(perc), charging)
+        val_float = float(val)
+        
+        charging = False
+        perc = 100.0
+        if (val_float >= CHARGE_V_THRES):
+            charging = True
+        else:
+            perc = ((float(val_float) - MIN_V) / (MAX_V-MIN_V)) * 100.0
+
+        self._battery_icons[battery_name].set_power_state_perc(float(perc), charging)
+    
+            
 
     def state_callback(self, msg):
         """
