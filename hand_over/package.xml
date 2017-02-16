@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package>
+  <name>hand_over</name>
+  <version>0.0.1</version>
+  <description>The hand_over package</description>
+
+  <maintainer email="semeyerz@techfak.uni-bielefeld.de">Sebastian Meyer zu Borgsen</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/CentralLabFacilities/meka-ros-pkg.git</url>
+  
+  <author email="gwalck@techfak.uni-bielefeld.de">Guillaume Walck</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>message_generation</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>trajectory_msgs</build_depend>
+  <build_depend>control_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>meka_posture</build_depend>
+  <build_depend>meka_stiffness_control</build_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>actionlib</run_depend>
+  <run_depend>actionlib_msgs</run_depend>
+  <run_depend>trajectory_msgs</run_depend>
+  <run_depend>control_msgs</run_depend>
+  <run_depend>meka_posture</run_depend>
+  <run_depend>meka_stiffness_control</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>
