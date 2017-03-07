@@ -140,7 +140,7 @@ class M3Dashboard(Dashboard):
             self.btn_stop.setEnabled(False)
             self.btn_freeze.setEnabled(False)
             
-        #inspection_button = self.init_inspection()
+        inspection_button = self.init_inspection()
         self.hz_rate = QSpinBox()
         # infinite number of times is -1
         self.hz_rate.setMinimum(1)
@@ -148,7 +148,7 @@ class M3Dashboard(Dashboard):
         self.hz_rate.setValue(1)
         label_hz = QLabel("hz")
 
-        #hlayout2.addWidget(inspection_button)
+        hlayout2.addWidget(inspection_button)
         hlayout2.addWidget(self.hz_rate)
         hlayout2.addWidget(label_hz)
         
@@ -215,14 +215,14 @@ class M3Dashboard(Dashboard):
             rospy.logerr("%s and/or %s did not show up. Giving up", service_list_comps, service_list_fields)
             return button
             
-        list_comps_client = rospy.ServiceProxy(service_list_comps, ListComponents)
-        list_fields_client = rospy.ServiceProxy(service_list_fields, ListFields)
+        self.list_comps_client = rospy.ServiceProxy(service_list_comps, ListComponents)
+        self.list_fields_client = rospy.ServiceProxy(service_list_fields, ListFields)
         self.req_vals_client = rospy.ServiceProxy(service_req_values, RequestValues)
         rospy.loginfo("Found %s, %s and %s", service_list_comps, service_list_fields, service_req_values)
 
         # get all the components
         try:
-            resp = list_comps_client("")
+            resp = self.list_comps_client("")
         except rospy.ServiceException:
             rospy.logerr("Could not call list_components")
             return button
@@ -231,19 +231,13 @@ class M3Dashboard(Dashboard):
         menu.setStyleSheet("QMenu { menu-scrollable: 1; }");
         submenus = []
 
+        self.req_action = {}
         if(resp):
             for component in resp.components:
-                #a component has fields which are either strings or arrays.
-                try:
-                    resp2 = list_fields_client(component)
-                except rospy.ServiceException:
-                    rospy.logerr("Could not call list_fields")
-                    continue
-                if(resp2):
-                    s = menu.addMenu(component)
-                    for field in resp2.fields:
-                        s.addAction(field, partial(self.subscribe_to_field, component, field))
+                s = menu.addMenu(component)
+                self.req_action[component] = s.addAction("request fields", partial(self.request_fields, component, s))
                 
+
         button.setMenu(menu)
 
         return button
@@ -251,64 +245,64 @@ class M3Dashboard(Dashboard):
     def init_inspection_test(self):
 
         button = QPushButton("Robot inspection (beta)")
-            
+
         menu = QMenu("Menu")
         menu.setStyleSheet("QMenu { menu-scrollable: 1; }");
         submenus = []
 
-        
+
         for i in range(5):
-            #a component has fields which are either strings or arrays.
+            # a component has fields which are either strings or arrays.
             s = menu.addMenu(str(i))
             for j in range(5):
                 s.addAction(str(j), partial(self.subscribe_to_field_test, "blubber", j))
-                
+
         button.setMenu(menu)
 
         return button
 
     def testbaloon(self, name):
-        
+
         name_label = QLabel(name)
         lineedit = QLineEdit("random")
         name_label.setBuddy(lineedit);
-                
+
         close_btn = QPushButton()
-                 
+
         pixmap = QPixmap(self._path + "/close.png")
         icon = QIcon(pixmap);
         close_btn.setIcon(icon)
         close_btn.setIconSize(pixmap.rect().size())
 
         idx = self.inspection_layout.rowCount()
-        
+
         close_btn.clicked.connect(partial(self.remove_row, self.inspection_layout, idx, False))
         self.inspection_layout.addWidget(name_label, idx, 0);
         self.inspection_layout.addWidget(lineedit, idx, 1);
         self.inspection_layout.addWidget(close_btn, idx, 2);
-        
+
     def subscribe_to_field_test(self, component, bla):
-        
+
         field = str(bla)
-        
+
         if (component, field) in self._m3field_values:
             rospy.logwarn("Already subscribed to field. Exiting.")
             return
-                
-        
+
+
         dt = Floats
-        topic = str("/meka_ros_pub/"+component+"/"+field)
+        topic = str("/meka_ros_pub/" + component + "/" + field)
         self._dashboard_mekaros_subs[(component, field)] = rospy.Subscriber(topic, dt, self.field_callback, (component, field))
         self._m3field_values[(component, field)] = []
-        
-        name_label = QLabel(component+"->"+field+":")
+
+        name_label = QLabel(component + "->" + field + ":")
         for val in range(bla):
             label = QLabel(str(val)[:5])
             label.setStyleSheet("border: 2px solid grey");
             self._m3field_values[(component, field)].append(label)
-        
+
         idx = self.inspection_layout.rowCount()
-        
+
         plot_pixmap = QPixmap(self._path + "/plot.png")
         plot_icon = QIcon(plot_pixmap);
         plot_btn = QPushButton()
@@ -316,7 +310,7 @@ class M3Dashboard(Dashboard):
         plot_btn.setIconSize(plot_pixmap.rect().size())
         plot_btn.setFixedWidth(30)
         plot_btn.clicked.connect(partial(self.plot_values, component, field))
-        
+
         close_pixmap = QPixmap(self._path + "/close.png")
         close_icon = QIcon(close_pixmap);
         close_btn = QPushButton()
@@ -324,7 +318,7 @@ class M3Dashboard(Dashboard):
         close_btn.setIconSize(close_pixmap.rect().size())
         close_btn.setFixedWidth(30)
         close_btn.clicked.connect(partial(self.remove_row, self.inspection_layout, idx, False, component, field))
-        
+
         self.inspection_layout.addWidget(name_label, idx, 0)
         val_layout = QHBoxLayout()
         for label in self._m3field_values[(component, field)]:
@@ -333,6 +327,21 @@ class M3Dashboard(Dashboard):
         self.inspection_layout.addLayout(val_layout, idx, 1)
         self.inspection_layout.addWidget(plot_btn, idx, 2)
         self.inspection_layout.addWidget(close_btn, idx, 3)
+
+
+    def request_fields(self, component, top_menu):
+        
+        # a component has fields which are either strings or arrays.
+        try:
+            resp2 = self.list_fields_client(component)
+        except rospy.ServiceException:
+            rospy.logerr("Could not call list_fields")
+            return
+        if(resp2):
+            for field in resp2.fields:
+                top_menu.addAction(field, partial(self.subscribe_to_field, component, field))
+                
+        self.req_action[component].setEnabled(False)
 
 
     def subscribe_to_field(self, component, field):
@@ -364,11 +373,11 @@ class M3Dashboard(Dashboard):
         
         plot_pixmap = QPixmap(self._path + "/plot.png")
         plot_icon = QIcon(plot_pixmap);
-        plot_btn = QPushButton()
-        plot_btn.setIcon(plot_icon)
-        plot_btn.setIconSize(plot_pixmap.rect().size())
-        plot_btn.setFixedWidth(30)
-        plot_btn.clicked.connect(partial(self.plot_values, component, field))
+        #plot_btn = QPushButton()
+        #plot_btn.setIcon(plot_icon)
+        #plot_btn.setIconSize(plot_pixmap.rect().size())
+        #plot_btn.setFixedWidth(30)
+        #plot_btn.clicked.connect(partial(self.plot_values, component, field))
         
         close_pixmap = QPixmap(self._path + "/close.png")
         close_icon = QIcon(close_pixmap);
@@ -383,7 +392,7 @@ class M3Dashboard(Dashboard):
         for label in self._m3field_values[(component, field)]:
             val_layout.addWidget(label);
         self.inspection_layout.addLayout(val_layout, idx, 1)
-        self.inspection_layout.addWidget(plot_btn, idx, 2)
+        #self.inspection_layout.addWidget(plot_btn, idx, 2)
         self.inspection_layout.addWidget(close_btn, idx, 3)
         
     def plot_values(self, component, field):

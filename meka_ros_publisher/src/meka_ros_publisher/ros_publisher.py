@@ -5,9 +5,8 @@ import time
 import logging
 import sys
 import argparse
+import signal
 import numpy as np
-
-from optparse import OptionParser
 
 import m3.rt_proxy as m3p
 import m3.toolbox as m3t
@@ -27,7 +26,7 @@ DEFAULT_PUBLISHER_SCOPE = "/meka_ros_pub"
 DEFAULT_HZ = 1
 
 class PublisherThread(threading.Thread): 
-    PublisherLock = threading.Lock() 
+    #PublisherLock = threading.Lock() 
  
     def __init__(self, scope, component, field, dataType, rate): 
         threading.Thread.__init__(self) 
@@ -57,9 +56,9 @@ class PublisherThread(threading.Thread):
             
             self.publisher = rospy.Publisher(str(self.scope) + "/" + str(self.component.name) + "/" + str(self.field), dt, queue_size=1)
             rospy.loginfo("Added publisher for " + str(self.component.name) + "/" + str(self.field) + " with type " + str(self.dataType) + " and rate " + str(self.rate))
-            ros_rate = rospy.Rate(self.rate)
+            self.ros_rate = rospy.Rate(self.rate)
             while self.running and not rospy.is_shutdown():
-                PublisherThread.PublisherLock.acquire()
+                #PublisherThread.PublisherLock.acquire()
                 tmp = m3t.get_msg_field_value(self.component.status, self.field)
                 if dt == Wrench:
                     float_list = map(float, str(tmp).strip('[]').split(','))
@@ -82,31 +81,36 @@ class PublisherThread(threading.Thread):
                 else:
                     rospy.logerr("unknown Data type " + dt)
                 self.publisher.publish(msg)
-                PublisherThread.PublisherLock.release()
-                ros_rate.sleep()
-
+                #PublisherThread.PublisherLock.release()
+                self.ros_rate.sleep()
         except ROSException as e:
             rospy.logerr("ROS exception caught! " + str(e))
         except:
             e = sys.exc_info()[0]
             rospy.logerr("Exception caught! " + str(e))
  
+ 
     def stop(self):
         self.publisher.unregister()
-        PublisherThread.PublisherLock.release()
+        #PublisherThread.PublisherLock.release()
         self.running = False
-        self._is_running = False
+    
+    def set_hz(self, rate):
+        rospy.loginfo("Changing publish frequency for " + str(self.component.name) + "/" + str(self.field) + " with type " + str(self.dataType) + " to rate " + str(rate))
+        self.rate = rate
+        self.ros_rate = rospy.Rate(rate)
         
 
 class MekaRosPublisher(object):
 
-    def __init__(self, scope, components=[], fields=[], dataTypes=[], rate=[]):
+    def __init__(self, scope, components=[], fields=[], dataTypes=[], rate=[], serveronly=True):
             
         self.components_idx = components
         self.fields_idx = fields
         self.dataTypes_idx = dataTypes
         self.rates_idx = []
-
+        self.publishers = {}
+        print "arara"
         self.name = "meka_ros_publisher"
 
         self.lock = threading.Lock()
@@ -115,8 +119,6 @@ class MekaRosPublisher(object):
         self.logger.setLevel(logging.INFO)
         self.initialized = False
         self.scope = scope
-
-        self.publishers = {}
 
         if(len(components) != len(fields)):
             rospy.logerr("Inequal amount of arguments for components and fields! Exiting..")
@@ -134,7 +136,7 @@ class MekaRosPublisher(object):
 
         names = []
         comps = self.rt_proxy.get_available_components()
-        if(components == []):
+        if(components == [] and not serveronly):
             cid = self.get_component()
             names.append(comps[int(cid)])
         else:
@@ -217,27 +219,25 @@ class MekaRosPublisher(object):
         # scopez = m3t.M3Scope(xwidth=100, yrange=yrange)
        
         ros_rate = rospy.Rate(np.amax(self.rates_idx))
-        threads = []
        
         try:
             rospy.loginfo("Starting "+str(len(self.components_idx))+" publish threads!")
             for idx, val in enumerate(self.components_idx):
                 t = PublisherThread(self.scope, self.comps[val], self.fields_idx[idx], self.dataTypes_idx[idx], self.rates_idx[idx]) 
-                threads.append(t)
+                with self.lock: 
+                    self.publishers[(self.components_idx[idx], self.fields_idx[idx], self.dataTypes_idx[idx])] = t                    
                 t.start()
                 
             while True and not rospy.is_shutdown():
+                ros_rate = rospy.Rate(np.amax(self.rates_idx))
                 self.rt_proxy.step()
                 ros_rate.sleep()
             
-        except KeyboardInterrupt:
-            print "KEYBOARD INTERRUPT"
-            raise
         except:
             e = sys.exc_info()[0]
             rospy.logerror("Error e: " + str(e) + ". Stopping threads!")
 
-        for t in threads:
+        for t in self.publishers:
             t.stop()
             t.join()
                 
@@ -296,21 +296,16 @@ class MekaRosPublisher(object):
         Callback for the get_values service request
         """
         
-        rospy.loginfo("Requesting values for " + str(req.component) +" " + str(req.field))
-        
-        request_component = req.component
-        request_field = req.field
-        self.ros_rate = rospy.Rate(req.hz) #adjust rate. careful: for all!
-        rospy.loginfo("Changing HZ of publish loop: " + str(req.hz))
-        
+        rospy.loginfo("Requesting values for " + str(req.component) +" " + str(req.field) + " with " + str(req.hz) + " Hz.")
+                
         values = []
         
-        if request_component not in self.comps.keys():
-            comp = mcf.create_component(str(request_component))
-            self.comps[request_component] = comp 
+        if req.component not in self.comps.keys():
+            comp = mcf.create_component(req.component)
+            self.comps[req.component] = comp 
             self.rt_proxy.subscribe_status(comp)
         
-        rt_field_vals = m3t.get_msg_field_value(self.comps[request_component].status, request_field)
+        rt_field_vals = m3t.get_msg_field_value(self.comps[req.component].status, req.field)
         
         if hasattr(rt_field_vals, '__len__'):
             for val in rt_field_vals:
@@ -321,12 +316,19 @@ class MekaRosPublisher(object):
         resp = RequestValuesResponse()
         resp.values = values
         
-        dt = Floats
-        if (str(req.component), str(req.field)) not in self.publishers.keys():
-            rospy.loginfo("adding publisher for " + str((req.component, req.field)))
-            with self.lock:    
-                self.publishers[(req.component, req.field)] = rospy.Publisher(str(self.scope) + "/" + req.component + "/" + request_field, dt, queue_size=1)
+        dt = "Float"
+        if (req.component, req.field, dt) not in self.publishers.keys():
+            rospy.loginfo("adding publisher thread for " + str((req.component, req.field)))
+            t = PublisherThread(self.scope, req.component, req.field, dt, req.hz) 
+            with self.lock: 
+                self.publishers[req.component, req.field, dt] = t
+            t.start()
             rospy.loginfo("done")
+        else:
+            rospy.loginfo("publisher already exists")
+            if req.hz != self.publishers[req.component, req.field, dt].rate:
+                rospy.loginfo("adjusting rate...")
+                self.publishers[req.component, req.field, dt].set_hz(req.hz)
         return resp
 
     def get_component(self):
@@ -351,10 +353,25 @@ class MekaRosPublisher(object):
 
     def disconnect(self):
         print 'disconnect called'
+        
+        for t in self.publishers.values():
+            t.stop()
+            t.join()
+        
         self.rt_proxy.stop(force_safeop=False)  # allow other clients to continue running
+
+        print 'shutdown complete'
+
+def signal_handler(signal, frame):
+        mekarospub.disconnect()
+        sys.exit(0)
 
 def main():
     try:
+        global mekarospub
+        
+        signal.signal(signal.SIGINT, signal_handler)
+        
         # Set up logging.
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
         # logging.getLogger("rsb").setLevel(logging.WARN)
@@ -364,34 +381,34 @@ def main():
         parser.add_argument("-s", "--scope", help="ROS scope prefix of the publisher", dest="scope", nargs=1, default=DEFAULT_PUBLISHER_SCOPE)
         parser.add_argument("-c", "--components", help="M3Component index", default=[], nargs='+')
         parser.add_argument("-f", "--fields", help="Field of selected m3component to publish", default=[], nargs='+')
-        parser.add_argument("-t", "--types", help="Data Type for each field", default=[], nargs='*')
+        parser.add_argument("-t", "--datatypes", help="Data Type for each field", default=[], nargs='+')
         parser.add_argument("-r", "--rate", help="Rate to publish data at", default=[], nargs='+')
         parser.add_argument("-v", "--verbose", help="Be verbose", action="store_true")
+        parser.add_argument("--server", help="Run in server-only mode", action="store_true")
         # parser.add_option("--yrange", help="Field of selected m3component to publish",
         #                  metavar="FIELD", dest="fields")
         
         args = parser.parse_args()
-        mekarospub = MekaRosPublisher(args.scope, args.components, args.fields, args.types, args.rate)
+        
+        mekarospub = MekaRosPublisher(args.scope, args.components, args.fields, args.datatypes, args.rate, args.server)
+
         if mekarospub.initialized:
             mekarospub.run(args.verbose)
-
+        
         mekarospub.disconnect()
-
+        
     except rospy.ROSInterruptException as e:
         logging.log(logging.ERROR, "Exception caught. " + str(e))
         pass
     except SystemExit as e:
         logging.log(logging.ERROR, "You must specifiy at least one argument for the arguments COMPONENTS, FIELDS, TYPES and RATE.")
         pass
+    except m3t.M3Exception as e:
+        logging.log(logging.ERROR, str(e))
+        pass
     except:
         e = sys.exc_info()[0]
-        print e
-        logging.log(logging.ERROR, "Unknown error " + str(e))
-    
-    try:
-        mekarospub.disconnect()   
-    except:
-        pass
+        logging.log(logging.ERROR, "Unknown error of type " + str(e))
 
 if __name__ == '__main__':
     main()
