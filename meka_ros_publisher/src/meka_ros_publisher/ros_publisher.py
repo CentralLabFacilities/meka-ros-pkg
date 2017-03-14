@@ -38,11 +38,10 @@ class PublisherThread(threading.Thread):
         self.rate = rate
         self.running = False
          
-    def run(self):  
-        self.running = True
+    def run(self):
         try:
             rospy.loginfo("Setting up ROS publishers on parent scope: " + str(self.scope))
-            
+            rospy.loginfo("Publisher details: " + str(self.component.name) + "/" + str(self.field) + " with type " + str(self.dataType) + " and rate " + str(self.rate))
             try:
                 dt = self.dataType
                 if dt == "Wrench":
@@ -53,10 +52,9 @@ class PublisherThread(threading.Thread):
                 dt = Floats
             except IndexError:
                 dt = Floats
-            
             self.publisher = rospy.Publisher(str(self.scope) + "/" + str(self.component.name) + "/" + str(self.field), dt, queue_size=1)
-            rospy.loginfo("Added publisher for " + str(self.component.name) + "/" + str(self.field) + " with type " + str(self.dataType) + " and rate " + str(self.rate))
             self.ros_rate = rospy.Rate(self.rate)
+            self.running = True
             while self.running and not rospy.is_shutdown():
                 #PublisherThread.PublisherLock.acquire()
                 tmp = m3t.get_msg_field_value(self.component.status, self.field)
@@ -110,7 +108,6 @@ class MekaRosPublisher(object):
         self.dataTypes_idx = dataTypes
         self.rates_idx = []
         self.publishers = {}
-        print "arara"
         self.name = "meka_ros_publisher"
 
         self.lock = threading.Lock()
@@ -318,12 +315,19 @@ class MekaRosPublisher(object):
         
         dt = "Float"
         if (req.component, req.field, dt) not in self.publishers.keys():
-            rospy.loginfo("adding publisher thread for " + str((req.component, req.field)))
-            t = PublisherThread(self.scope, req.component, req.field, dt, req.hz) 
-            with self.lock: 
-                self.publishers[req.component, req.field, dt] = t
+            rospy.loginfo("Adding "+ str(req.hz)+ " Hz publisher thread for " + str((req.component, req.field)) + "...")
+            t = PublisherThread(self.scope, self.comps[req.component], req.field, req.type, req.hz) 
             t.start()
-            rospy.loginfo("done")
+            timeout = 0
+            while not t.running and timeout <=5:
+                time.sleep(1) #waiting
+                timeout += 1
+            if t.running:
+                with self.lock: 
+                    self.publishers[req.component, req.field, dt] = t
+                rospy.loginfo("..done!")
+            else:
+                rospy.logerr("Something went wrong, publisher not created")
         else:
             rospy.loginfo("publisher already exists")
             if req.hz != self.publishers[req.component, req.field, dt].rate:
@@ -412,4 +416,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
