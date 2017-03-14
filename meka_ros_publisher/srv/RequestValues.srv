@@ -1,6 +1,6 @@
 string component
 string field
-string type
+string datatype
 int8 hz
 ---
 string[] values

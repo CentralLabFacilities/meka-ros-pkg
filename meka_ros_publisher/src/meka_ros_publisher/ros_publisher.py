@@ -316,7 +316,7 @@ class MekaRosPublisher(object):
         dt = "Float"
         if (req.component, req.field, dt) not in self.publishers.keys():
             rospy.loginfo("Adding "+ str(req.hz)+ " Hz publisher thread for " + str((req.component, req.field)) + "...")
-            t = PublisherThread(self.scope, self.comps[req.component], req.field, req.type, req.hz) 
+            t = PublisherThread(self.scope, self.comps[req.component], req.field, req.datatype, req.hz) 
             t.start()
             timeout = 0
             while not t.running and timeout <=5:
