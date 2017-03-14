@@ -351,7 +351,7 @@ class M3Dashboard(Dashboard):
             return
                 
         try:
-            resp = self.req_vals_client(component, field, self.hz_rate.value())
+            resp = self.req_vals_client(component, field, "", self.hz_rate.value())
         except rospy.ServiceException:
             rospy.logerr("Could not call request_values")
             return

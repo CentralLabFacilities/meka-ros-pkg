@@ -302,6 +302,9 @@ class MekaRosPublisher(object):
             self.comps[req.component] = comp 
             self.rt_proxy.subscribe_status(comp)
         
+        while self.comps[req.component].status.base.timestamp == 0: #wait for status to be ready
+            time.sleep(0.2)
+        
         rt_field_vals = m3t.get_msg_field_value(self.comps[req.component].status, req.field)
         
         if hasattr(rt_field_vals, '__len__'):
@@ -416,5 +419,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
