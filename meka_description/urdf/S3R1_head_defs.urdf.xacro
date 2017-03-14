@@ -13,6 +13,7 @@
       <insert_block name="origin" /> <!-- transform from parent link to this joint frame -->
       <parent link="${parent}"/>
       <child link="neck_pan"/>
+      <child link="xtion"/>
     </joint>
     
     <link name="neck_pan">
@@ -72,11 +73,11 @@
         <mass value="0.409" />
 	<origin xyz="0.0 0.0 0.0"/>
 	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+        iyy="0.0"
+        izz="0.0"
+        ixy="0.0"
+        ixz="0.0"
+        iyz="0.0" />
       </inertial>
 
       <visual>
@@ -107,13 +108,57 @@
           <box size="0.222 0.2 0.09" />
         </geometry>
       </collision>
-    </link>    
+    </link>
+	
+     <joint name="head_xtion_dummy" type="revolute">
+	<limit effort="100" velocity="${75*M_PI/180}" lower="${-56.0*M_PI/180}" upper="${56.0*M_PI/180}" />
+	<origin xyz="0.0865 0.0095 0.0542" rpy="-1.49304175558102 0.0465121191942754 -1.5830006092006217"/>
+      <axis xyz="0 0 1"/>
+      <parent link="shell"/>
+      <child link="_xtion_link"/>
+    </joint>
     
-    <joint name="head_j2" type="revolute">
+    <link name="_xtion_link">
+	<parent link="shell"/> 
+	<inertial>
+        <mass value="0.1" />
+	<origin xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0.0"
+          iyy="0.0"
+          izz="0.0"
+          ixy="0.0"
+          ixz="0.0"
+          iyz="0.0" />
+      </inertial>
+    </link>  
+
+     <joint name="head_xtion_dummy2" type="revolute">
+	<limit effort="100" velocity="${75*M_PI/180}" lower="${-56.0*M_PI/180}" upper="${56.0*M_PI/180}" />
+	<origin xyz="-0.04 0 0" rpy="0 -1.5708 1.5708"/>
+      <axis xyz="0 0 1"/>
+      <parent link="_xtion_link"/>
+      <child link="xtion_link"/>
+    </joint>
+
+    <link name="xtion_link">
+	<parent link="_xtion_link"/>      
+	<inertial>
+        <mass value="0.1" />
+	<origin xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0.0"
+          iyy="0.0"
+          izz="0.0"
+          ixy="0.0"
+          ixz="0.0"
+          iyz="0.0" />
+      </inertial>
+    </link>
+    
+    <!--joint name="head_j2" type="revolute">
       <axis xyz="0 -1 0" /> 
       <origin xyz="0.07975 0 0.123536" rpy="0 0 0" />
       <parent link="shell"/>
-      <child link="BB2"/>
+	<child link="BB2"/>
       <limit effort="100" velocity="${20.0*M_PI/180}" lower="${-40.0*M_PI/180}" upper="${2.0*M_PI/180}" />
     </joint>
     
@@ -143,7 +188,7 @@
 		      <box size="0.0474 0.157 0.037" />
 	      </geometry>
       </collision>
-    </link>    
+    </link> -->
     
 </macro>
 
@@ -156,3 +201,4 @@
 
 
 </robot>
+
