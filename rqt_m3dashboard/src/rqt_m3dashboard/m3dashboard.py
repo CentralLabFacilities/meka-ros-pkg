@@ -39,7 +39,9 @@ from rqt_robot_dashboard.dashboard import Dashboard
 from m3meka_msgs.msg import M3ControlState, M3ControlStates, \
     M3StateChangeGoal, M3StateChangeAction
 from rospy_tutorials.msg import Floats
-from std_msgs.msg import Bool, String
+from std_msgs.msg import Bool, String, Float64MultiArray
+
+from collections import OrderedDict
 
 #services
 from m3meka_msgs.srv import M3ControlStateChange, M3ControlStateChangeResponse, \
@@ -51,7 +53,8 @@ from widgets import EmergencyButton, ControlStateButton, WrappedBattery
 from dialogs import PlotDialog
 
 #qt stuff
-from PyQt5.Qt import QMenu, QGridLayout, QLineEdit, QPixmap, QIcon, QSize
+from PyQt5.Qt import QMenu, QGridLayout, QLineEdit, QPixmap, QIcon, QSize, QSlider,QSizePolicy
+from PyQt5.QtCore import Qt
 
 from QtWidgets import QPushButton, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QHBoxLayout, QWidget
     
@@ -59,9 +62,10 @@ from QtCore import QObject
 
 from QtCore import pyqtSignal as SIGNAL
 
+
 MIN_V = 22.0
 MAX_V = 25.5
-CHARGE_V_THRES = 26.0
+CHARGE_V_THRES = 27.0
 
 STATE_CMD_DISABLE = 1
 STATE_CMD_ENABLE = 2
@@ -157,13 +161,16 @@ class M3Dashboard(Dashboard):
         hlayout.addWidget(self.spin_retries)
 
         self.inspection_layout = QGridLayout()
-
+        self.stiffness_layout = self.init_stiffness_ctrl()
+        
         #vlayout.addWidget()
         vlayout.addWidget(battery_widget)
         vlayout.addLayout(hlayout)
         vlayout.addWidget(self.btn_start)
         vlayout.addWidget(self.btn_freeze)
         vlayout.addWidget(self.btn_stop)
+        
+        vlayout.addLayout(self.stiffness_layout)
         vlayout.addLayout(hlayout2)
         vlayout.addLayout(self.inspection_layout)
 
@@ -198,6 +205,93 @@ class M3Dashboard(Dashboard):
         #self.bat_txt.setText("0.0")
 
         return widget
+    
+    
+    def init_stiffness_ctrl(self):
+        
+        slayout = QVBoxLayout()
+        
+        prefix = "meka_roscontrol"
+        suffix = "stiffness_controller/command"
+        
+        button = QPushButton("Stiffness controller (beta)")
+
+        self.stiffness_pub = rospy.Publisher("/" + prefix + "/" + suffix, Float64MultiArray, queue_size=1)
+        group_names = ["right_arm", "left_arm", "right_hand", "left_hand", "head", "torso", "zlift"]
+        # slider for each group
+        joint_names = [ "right_arm_j0",
+                        "right_arm_j1",
+                        "right_arm_j2",
+                        "right_arm_j3",
+                        "right_arm_j4",
+                        "right_arm_j5",
+                        "right_arm_j6",
+                        "left_arm_j0",
+                        "left_arm_j1",
+                        "left_arm_j2",
+                        "left_arm_j3",
+                        "left_arm_j4",
+                        "left_arm_j5",
+                        "left_arm_j6",
+                        "right_hand_j0",
+                        "right_hand_j1",
+                        "right_hand_j2",
+                        "right_hand_j3",
+                        "right_hand_j4",
+                        "left_hand_j0",
+                        "left_hand_j1",
+                        "left_hand_j2",
+                        "left_hand_j3",
+                        "left_hand_j4",
+                        "head_j0",
+                        "head_j1",
+                        "torso_j0",
+                        "torso_j1",
+                        "zlift_j0"]
+        
+        self._stiffness_dict = OrderedDict((name, 1.0) for name in joint_names)
+        
+        menu = QMenu("Menu")
+        menu.setStyleSheet("QMenu { menu-scrollable: 1; }");
+        self.stiffnessvals = {}
+        for group in group_names:
+            glayout = QHBoxLayout()
+            glayout.addWidget(QLabel(group))
+            slider = QSlider(Qt.Horizontal)
+            slider.setRange(0,100)
+            slider.setValue(100)
+            slider.setTickPosition(QSlider.TicksBelow)
+            slider.setTickInterval(10)
+            slider.setFixedSize(200,15)
+            slider.setSingleStep(10)
+            slider.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed))
+            
+            val = QLabel("1.0")
+            btn = QPushButton("apply")
+            self.stiffnessvals[group] = val
+            btn.clicked.connect(partial(self.on_stiffness_apply, group))
+            
+            glayout.addWidget(slider)
+            glayout.addWidget(val)
+            glayout.addWidget(btn)
+            
+            slider.valueChanged.connect(partial(self.on_stiffness_change, slider, val, group))
+            
+            slayout.addLayout(glayout)
+            
+            
+            groupm = menu.addMenu(group)
+            #for joint in joint_names:
+                #groupm.addAction("set stiffness", partial(self.set_stiffness, groupm))
+                #if group in joint:
+                #    groupm.addAction(self._stiffness_dict[joint])
+                #    s.addAction(joint, partial(self.request_fields, component, s))
+        
+        
+
+        button.setMenu(menu)
+
+        return slayout
 
     def init_inspection(self):
 
@@ -441,6 +535,26 @@ class M3Dashboard(Dashboard):
                 self._actionclient.send_goal(goal)
         except rospy.ROSException:
             rospy.logerr("Failed to call change state")
+
+    def on_stiffness_apply(self, group):
+        print "change stiffness"
+        msg = Float64MultiArray()
+        for name in self._stiffness_dict:
+            msg.data.append(self._stiffness_dict[name])
+        rospy.logdebug(msg)
+        self.stiffness_pub.publish(msg)
+        
+
+    def on_stiffness_change(self, slider, val, group):
+        
+        newval = float(slider.value())/100.0
+        
+        for key, value in self._stiffness_dict.iteritems():
+            if group in key:
+                self._stiffness_dict[key] = newval
+        
+        val.setText(str(newval))
+        
 
     def on_enable_all_clicked(self):
         """
