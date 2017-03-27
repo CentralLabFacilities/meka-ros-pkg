@@ -352,7 +352,7 @@ class MekaRosPublisher(object):
         resp.success = False
         
         if (req.component, req.field, req.datatype) in self.publishers.keys():
-            rospy.loginfo("Removing "+ str(req.hz)+ " Hz publisher thread for " + str((req.component, req.field)) + "...")
+            rospy.loginfo("Removing publisher thread for " + str((req.component, req.field)) + "...")
             t = self.publishers[(req.component, req.field, req.datatype)]
             if t.running:
                 t.stop()
