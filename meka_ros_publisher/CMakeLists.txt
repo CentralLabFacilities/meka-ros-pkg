@@ -57,6 +57,7 @@ add_service_files(
   ListComponents.srv
   ListFields.srv
   RequestValues.srv
+  UnsubscribeValues.srv
 )
 
 ## Generate actions in the 'action' folder

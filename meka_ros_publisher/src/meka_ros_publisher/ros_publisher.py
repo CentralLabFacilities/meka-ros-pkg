@@ -15,7 +15,7 @@ import m3.component_factory as mcf
 import rospy
 from rospy_tutorials.msg import Floats
 from geometry_msgs.msg import Wrench
-from meka_ros_publisher.srv import ListComponents, ListComponentsResponse, ListFields, ListFieldsResponse, RequestValues, RequestValuesResponse
+from meka_ros_publisher.srv import ListComponents, ListComponentsResponse, ListFields, ListFieldsResponse, RequestValues, RequestValuesResponse, UnsubscribeValues, UnsubscribeValuesResponse
 
 import threading
 
@@ -209,6 +209,10 @@ class MekaRosPublisher(object):
                                                 'request_values',
                                                 RequestValues,
                                                 self.get_values)
+        self._unsubscribe_values_serv = rospy.Service(service_prefix +
+                                                'unsubscribe_values',
+                                                UnsubscribeValues,
+                                                self.unsubscribe_values)
 
 
     def run(self, verbose):
@@ -316,8 +320,7 @@ class MekaRosPublisher(object):
         resp = RequestValuesResponse()
         resp.values = values
         
-        dt = "Float"
-        if (req.component, req.field, dt) not in self.publishers.keys():
+        if (req.component, req.field, req.datatype) not in self.publishers.keys():
             rospy.loginfo("Adding "+ str(req.hz)+ " Hz publisher thread for " + str((req.component, req.field)) + "...")
             t = PublisherThread(self.scope, self.comps[req.component], req.field, req.datatype, req.hz) 
             t.start()
@@ -327,15 +330,47 @@ class MekaRosPublisher(object):
                 timeout += 1
             if t.running:
                 with self.lock: 
-                    self.publishers[req.component, req.field, dt] = t
+                    self.publishers[req.component, req.field, req.datatype] = t
                 rospy.loginfo("..done!")
             else:
                 rospy.logerr("Something went wrong, publisher not created")
         else:
             rospy.loginfo("publisher already exists")
-            if req.hz != self.publishers[req.component, req.field, dt].rate:
+            if req.hz != self.publishers[req.component, req.field, req.datatype].rate:
                 rospy.loginfo("adjusting rate...")
-                self.publishers[req.component, req.field, dt].set_hz(req.hz)
+                self.publishers[req.component, req.field, req.datatype].set_hz(req.hz)
+        return resp
+    
+    def unsubscribe_values(self, req):
+        """
+        Callback for the unsubscribe_values service request
+        """
+        
+        rospy.loginfo("Unsubscribing values for " + str(req.component) +" " + str(req.field))
+                
+        resp = UnsubscribeValuesResponse()
+        resp.success = False
+        
+        if (req.component, req.field, req.datatype) in self.publishers.keys():
+            rospy.loginfo("Removing "+ str(req.hz)+ " Hz publisher thread for " + str((req.component, req.field)) + "...")
+            t = self.publishers[(req.component, req.field, req.datatype)]
+            if t.running:
+                t.stop()
+            
+            timeout = 0
+            while t.running and timeout <=5:
+                time.sleep(1) #waiting
+                timeout += 1
+            if not t.running:
+                t.join()
+                with self.lock: 
+                    del self.publishers[req.component, req.field, req.datatype]
+                resp.success = True
+                rospy.loginfo("..done!")
+            else:
+                rospy.logerr("Something went wrong, publisher not removed")
+        else:
+            rospy.loginfo("publisher does not exist, nothing to delete...")
         return resp
 
     def get_component(self):
