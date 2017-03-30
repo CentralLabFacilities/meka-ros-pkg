@@ -17,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 
-add_action_files(FILES ShakeHand.action)
+add_action_files(FILES HandOver.action)
 
 generate_messages(   
   DEPENDENCIES
