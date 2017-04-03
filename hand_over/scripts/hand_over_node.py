@@ -11,12 +11,14 @@ import time
 
 import actionlib
 from actionlib import SimpleActionClient
-from hand_over.msg import ShakeHandAction, ShakeHandGoal, ShakeHandFeedback, ShakeHandResult
+from hand_over.msg import HandOverAction, HandOverGoal, HandOverFeedback, HandOverResult
 
 from meka_posture.meka_posture import MekaPosture
 from meka_stiffness_control.stiffness_control import MekaStiffnessControl
 
-from geometry_msgs.msg import Wrench
+from geometry_msgs.msg import Wrench, Point
+
+from people_msgs.msg import PositionMeasurementArray
 
 from control_msgs.msg import FollowJointTrajectoryAction, \
     FollowJointTrajectoryGoal
@@ -25,17 +27,17 @@ from trajectory_msgs.msg import JointTrajectoryPoint
 JNT_TRAJ_SRV_SUFFIX = "_position_trajectory_controller/follow_joint_trajectory"
 
 
-class HandShaker(object):
+class HandOver(object):
     # create messages that are used to publish feedback/result
-    _feedback = ShakeHandFeedback()
-    _result = ShakeHandResult()
+    _feedback = HandOverFeedback()
+    _result = HandOverResult()
     _carrying = {'left_arm': False, 'right_arm' : False}
 
     def __init__(self, name):
         self._action_name = name
         self._prefix = "meka_roscontrol"
 
-        self._as = actionlib.SimpleActionServer(self._action_name, ShakeHandAction,
+        self._as = actionlib.SimpleActionServer(self._action_name, HandOverAction,
                                                 execute_cb=self.execute_cb, auto_start=False)
         self._meka_posture = MekaPosture("posture_exec")
         self._stiffness_control = MekaStiffnessControl("stiffness_control")
@@ -53,7 +55,14 @@ class HandShaker(object):
 
         self.sub_left = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma30_l0/wrench", Wrench, self.handle_left)
         self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", Wrench, self.handle_right)
+
+        self.sub_face = rospy.Subscriber("/face_detector/people_tracker_measurements_array", PositionMeasurementArray, self.face_callback)
+
         self._as.start()
+
+    def face_callback(self, data):
+        rospy.loginfo(rospy.get_caller_id() + "I received %s", data.people[0].name)
+        rospy.loginfo(rospy.get_caller_id() + "Frame: %s", data.people[0].header.frame_id)
 
     def load_postures(self, path):
         self._meka_posture.load_postures(path)
@@ -152,7 +161,7 @@ class HandShaker(object):
     def approach(self, group_name):
         success = True
         if self.start_motion(group_name, "shake_approach"):
-            self._feedback.phase = ShakeHandFeedback.PHASE_APPROACH
+            self._feedback.phase = HandOverFeedback.PHASE_APPROACH
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
         else:
@@ -173,7 +182,7 @@ class HandShaker(object):
         self._stiffness_control.change_stiffness([joint_name], [1.0])
 
         if self.start_motion(group_name, "shake_retreat"):
-            self._feedback.phase = ShakeHandFeedback.PHASE_RETREAT
+            self._feedback.phase = HandOverFeedback.PHASE_RETREAT
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
         else:
@@ -191,7 +200,7 @@ class HandShaker(object):
 
         success = True
         if self.start_motion(group_name, "shake_movement"):
-            self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
+            self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
         else:
@@ -220,7 +229,7 @@ class HandShaker(object):
         self._stiffness_control.change_stiffness([j0, j1, j2, j3, j4], [0.35, 0.35, 0.35, 0.35, 0.35])
 
         if self.start_motion(hand_name, "close"):
-            self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
+            self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
             success = self.wait_for_motion(hand_name)
@@ -247,7 +256,7 @@ class HandShaker(object):
             j4 = "right_hand_j4"
 
         if self.start_motion(hand_name, "shake_open"): #open
-            self._feedback.phase = ShakeHandFeedback.PHASE_EXECUTING
+            self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
             success = self.wait_for_motion(hand_name)
@@ -272,7 +281,7 @@ class HandShaker(object):
             # approach
             if self.approach(group_name):
                 # wait for touch
-                self._feedback.phase = ShakeHandFeedback.PHASE_WAITING_FOR_CONTACT
+                self._feedback.phase = HandOverFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
                 if self.wait_for_force(threshold=1000.0, group_name=group_name, timeout=20.0):
 
@@ -318,7 +327,7 @@ if __name__ == '__main__':
     (opts, args_) = parser.parse_args()
 
     rospy.init_node('hand_over')
-    hs = HandShaker(rospy.get_name())
+    hs = HandOver(rospy.get_name())
 
     rospy.loginfo('Loading postures from: %s' % opts.posture_path)
 
