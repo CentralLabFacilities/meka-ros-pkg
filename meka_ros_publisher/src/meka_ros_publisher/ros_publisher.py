@@ -26,7 +26,7 @@ DEFAULT_PUBLISHER_SCOPE = "/meka_ros_pub"
 DEFAULT_HZ = 1
 
 class PublisherThread(threading.Thread): 
-    #PublisherLock = threading.Lock() 
+    PublisherLock = threading.Lock() 
  
     def __init__(self, scope, component, field, dataType, rate): 
         threading.Thread.__init__(self) 
@@ -56,31 +56,36 @@ class PublisherThread(threading.Thread):
             self.ros_rate = rospy.Rate(self.rate)
             self.running = True
             while self.running and not rospy.is_shutdown():
-                #PublisherThread.PublisherLock.acquire()
-                tmp = m3t.get_msg_field_value(self.component.status, self.field)
-                if dt == Wrench:
-                    float_list = map(float, str(tmp).strip('[]').split(','))
-                    msg = Wrench()
-                    msg.force.x = float_list[0]
-                    msg.force.y = float_list[1]
-                    msg.force.z = float_list[2]
+                try:
+                    PublisherThread.PublisherLock.acquire()
+                    tmp = m3t.get_msg_field_value(self.component.status, self.field)
+                    PublisherThread.PublisherLock.release()
+                    if dt == Wrench:
+                        float_list = map(float, str(tmp).strip('[]').split(','))
+                        msg = Wrench()
+                        msg.force.x = float_list[0]
+                        msg.force.y = float_list[1]
+                        msg.force.z = float_list[2]
 
-                    msg.torque.x = float_list[3]
-                    msg.torque.y = float_list[4]
-                    msg.torque.z = float_list[5]
-                elif dt == Floats:
-                    msg = Floats()
-                    if hasattr(tmp, '__len__'):
-                        for val in tmp:
-                            msg.data.append(val)
+                        msg.torque.x = float_list[3]
+                        msg.torque.y = float_list[4]
+                        msg.torque.z = float_list[5]
+                    elif dt == Floats:
+                        msg = Floats()
+                        if hasattr(tmp, '__len__'):
+                            for val in tmp:
+                                msg.data.append(val)
+                        else:
+                            msg.data.append(tmp)
                     else:
-                        msg.data.append(tmp)
-
-                else:
-                    rospy.logerr("unknown Data type " + dt)
-                self.publisher.publish(msg)
-                #PublisherThread.PublisherLock.release()
-                self.ros_rate.sleep()
+                        rospy.logerr("unknown Data type " + dt)
+                    self.publisher.publish(msg)
+                    self.ros_rate.sleep()
+                except IndexError:
+                    rospy.logerr("IndexError caught! Skipping publishing...")
+                except ValueError:
+                    rospy.logerr("ValueError caught! Skipping publishing...")
+                
         except ROSException as e:
             rospy.logerr("ROS exception caught! " + str(e))
         except:
@@ -129,8 +134,6 @@ class MekaRosPublisher(object):
         rospy.init_node(self.name, anonymous=False, log_level=rospy.INFO)
         rospy.loginfo("ROS node started..")
 
-        self.init_services()
-
         names = []
         comps = self.rt_proxy.get_available_components()
         if(components == [] and not serveronly):
@@ -169,6 +172,8 @@ class MekaRosPublisher(object):
             
         for r in rate:
             self.rates_idx.append(int(r))
+            
+        self.max_rate = np.amax(self.rates_idx)
         
         if(dataTypes == []):
             self.dataTypes_idx.append(str("Float"))
@@ -185,6 +190,9 @@ class MekaRosPublisher(object):
 #           yrange.append(m3t.get_int())
 #           print 'Max?'
 #           yrange.append(m3t.get_int())
+
+        rospy.loginfo("Everything set up, advertising ROS services... ")
+        self.init_services()
 
         self.initialized = True
 
@@ -230,9 +238,8 @@ class MekaRosPublisher(object):
                 t.start()
                 
             while True and not rospy.is_shutdown():
-                ros_rate = rospy.Rate(np.amax(self.rates_idx))
                 self.rt_proxy.step()
-                ros_rate.sleep()
+                rospy.Rate(self.max_rate).sleep()
             
         except:
             e = sys.exc_info()[0]
@@ -331,6 +338,7 @@ class MekaRosPublisher(object):
             if t.running:
                 with self.lock: 
                     self.publishers[req.component, req.field, req.datatype] = t
+                self.set_max_rate() 
                 rospy.loginfo("..done!")
             else:
                 rospy.logerr("Something went wrong, publisher not created")
@@ -339,6 +347,8 @@ class MekaRosPublisher(object):
             if req.hz != self.publishers[req.component, req.field, req.datatype].rate:
                 rospy.loginfo("adjusting rate...")
                 self.publishers[req.component, req.field, req.datatype].set_hz(req.hz)
+                self.set_max_rate()
+                    
         return resp
     
     def unsubscribe_values(self, req):
@@ -366,12 +376,24 @@ class MekaRosPublisher(object):
                 with self.lock: 
                     del self.publishers[req.component, req.field, req.datatype]
                 resp.success = True
+                self.set_max_rate()
                 rospy.loginfo("..done!")
             else:
                 rospy.logerr("Something went wrong, publisher not removed")
         else:
             rospy.loginfo("publisher does not exist, nothing to delete...")
         return resp
+
+    def set_max_rate(self):
+        rates = []
+        for pub in self.publishers.values():
+            rates.append(pub.rate)
+        if len(rates) > 0:
+            self.max_rate = np.amax(rates)
+        else:
+            self.max_rate = 1 #we need a minimum, otherwise the rt server stops working.
+        rospy.loginfo("RT proxy step rate is now " + str(self.max_rate) + " Hz.")
+        
 
     def get_component(self):
         comps = self.rt_proxy.get_available_components()
