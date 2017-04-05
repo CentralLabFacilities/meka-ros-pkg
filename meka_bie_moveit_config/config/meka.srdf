@@ -220,7 +220,8 @@
     <end_effector name="right_hand" parent_link="hand_tool_frame_right" group="right_hand" parent_group="right_arm" />
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="torso_j2" />
-    <passive_joint name="head_j2" />
+    <passive_joint name="head_xtion_dummy" />
+    <passive_joint name="head_xtion_dummy2" />
     <passive_joint name="left_hand_j1a" />
     <passive_joint name="left_hand_j1b" />
     <passive_joint name="left_hand_j2a" />
@@ -244,20 +245,6 @@
     <passive_joint name="right_hand_j4b" />
     <passive_joint name="right_hand_j4c" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
-    <disable_collisions link1="BB2" link2="dummy_1" reason="Never" />
-    <disable_collisions link1="BB2" link2="dummy_2" reason="Never" />
-    <disable_collisions link1="BB2" link2="dummy_3" reason="Never" />
-    <disable_collisions link1="BB2" link2="mid" reason="Never" />
-    <disable_collisions link1="BB2" link2="neck_pan" reason="Never" />
-    <disable_collisions link1="BB2" link2="panplate" reason="Never" />
-    <disable_collisions link1="BB2" link2="shell" reason="Adjacent" />
-    <disable_collisions link1="BB2" link2="shoulderpitch_LEFT" reason="Never" />
-    <disable_collisions link1="BB2" link2="shoulderpitch_RIGHT" reason="Never" />
-    <disable_collisions link1="BB2" link2="shoulderupper_LEFT" reason="Never" />
-    <disable_collisions link1="BB2" link2="shoulderupper_RIGHT" reason="Never" />
-    <disable_collisions link1="BB2" link2="torso" reason="Never" />
-    <disable_collisions link1="BB2" link2="upper" reason="Never" />
-    <disable_collisions link1="BB2" link2="zlift_link" reason="Never" />
     <disable_collisions link1="bicep_LEFT" link2="bicep_RIGHT" reason="Never" />
     <disable_collisions link1="bicep_LEFT" link2="dummy_1" reason="Never" />
     <disable_collisions link1="bicep_LEFT" link2="dummy_2" reason="Never" />
