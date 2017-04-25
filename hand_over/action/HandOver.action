@@ -1,5 +1,6 @@
 # Goal specifies a group name
 string group_name
+bool use_nonverbal
 ---
 # Result
 bool success
