@@ -158,9 +158,13 @@ class HandOver(object):
             self._r.sleep()
         return success
 
-    def approach(self, group_name):
+    def approach(self, group_name, use_all = false):
         success = True
-        if self.start_motion(group_name, "shake_approach"):
+        if use_all:
+            group = "all"
+        else:
+            group = group_name
+        if self.start_motion(group, group_name + "hand_over_approach"):
             self._feedback.phase = HandOverFeedback.PHASE_APPROACH
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -181,7 +185,7 @@ class HandOver(object):
         time.sleep(0.5)
         self._stiffness_control.change_stiffness([joint_name], [1.0])
 
-        if self.start_motion(group_name, "shake_retreat"):
+        if self.start_motion(group_name, "hand_over_retreat"):
             self._feedback.phase = HandOverFeedback.PHASE_RETREAT
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -189,26 +193,7 @@ class HandOver(object):
             success = False
         return success
 
-    def shake(self, group_name):
-        if "left" in group_name:
-            joint_name = "left_arm_j3"
-        else:
-            joint_name = "right_arm_j3"
-
-        # reduce stiffness
-        self._stiffness_control.change_stiffness([joint_name], [0.35])
-
-        success = True
-        if self.start_motion(group_name, "shake_movement"):
-            self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
-            self._as.publish_feedback(self._feedback)
-            success = self.wait_for_motion(group_name)
-        else:
-            success = False
-
-        return success
-
-    def close_for_shaking(self, group_name):
+    def close_hand(self, group_name):
         success = True
         if "left" in group_name:
             hand_name = "left_hand"
@@ -255,7 +240,7 @@ class HandOver(object):
             j3 = "right_hand_j3"
             j4 = "right_hand_j4"
 
-        if self.start_motion(hand_name, "shake_open"): #open
+        if self.start_motion(hand_name, "open"): #open
             self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
@@ -275,11 +260,12 @@ class HandOver(object):
         self._feedback.phase = 0
 
         group_name = goal.group_name
+        use_nonverbal = goal.use_nonverbal
         # check goal validity
         if group_name == "right_arm" or group_name == "left_arm":
 
             # approach
-            if self.approach(group_name):
+            if self.approach(group_name, use_nonverbal):
                 # wait for touch
                 self._feedback.phase = HandOverFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
@@ -288,7 +274,7 @@ class HandOver(object):
                     #check if something in hand
                     if self._carrying[group_name] == False:
                     # close hand
-                        if self.close_for_shaking(group_name):
+                        if self.close_hand(group_name):
                             self._carrying[group_name] = True
                     else:
                         # open hand
