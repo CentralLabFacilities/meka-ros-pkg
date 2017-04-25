@@ -33,8 +33,9 @@ from python_qt_binding import loadUi
 
 from python_qt_binding.QtCore import QSize
 
-from QtCore import Qt, QThread, SIGNAL, QObject
-from QtGui import QWidget, QDoubleSpinBox, QStandardItemModel, QStandardItem, QTableView, QTreeWidget, QTreeWidgetItem, QCheckBox, QFileDialog, QMessageBox, QPushButton, QFrame, QHBoxLayout, QVBoxLayout
+from QtCore import Qt, QThread, pyqtSignal, QObject
+from QtGui import QStandardItemModel, QStandardItem
+from QtWidgets import QWidget, QDoubleSpinBox, QTableView, QTreeWidget, QTreeWidgetItem, QCheckBox, QFileDialog, QMessageBox, QPushButton, QFrame, QHBoxLayout, QVBoxLayout
 from functools import partial
 
 from actionlib import SimpleActionClient
@@ -104,16 +105,16 @@ class MekaPostureEditorGUI(Plugin):
             self._filemodel[group_name] = QStandardItemModel(0, 1)
             self._filemodel[group_name].setHorizontalHeaderLabels([group_name])
             self._table_view[group_name] = QTableView()
-            self._table_view[group_name].setModel(self._filemodel[group_name])
+	    self._table_view[group_name].setModel(self._filemodel[group_name])
             self._table_view[group_name].resizeColumnsToContents()
             self._vh[group_name] = self._table_view[group_name].verticalHeader()
-            self._table_view[group_name].connect(self._vh[group_name], SIGNAL("sectionResized(int,int,int)"), partial(self.on_row_resized, group_name))
+	    self._vh[group_name].sectionResized.connect(partial(self.on_row_resized, group_name))
             all_group_layout.addWidget(self._table_view[group_name])
                 
         self._widget.scrollarea.setLayout(all_group_layout)
         
         #temporary set a value there
-        self._widget.edit_file_path.setText("/home/meka/workspace/mekabot/meka-ros-pkg/meka_posture_execution/cfg/postures.yml")
+        self._widget.edit_file_path.setText("/vol/meka/stable/share/meka_posture_execution/cfg/postures.yml")
         
         self._widget.btn_load_postures.clicked.connect(self.on_load_postures_clicked)
         self._widget.btn_save_postures.clicked.connect(self.on_save_postures_clicked)
@@ -226,7 +227,7 @@ class MekaPostureEditorGUI(Plugin):
         posture_items.setFont(0,font)
 
     def on_row_resized(self, group_name, *args):
-        if self._table_initialized[group_name]:
+	if self._table_initialized[group_name]:
             self.update_table(group_name, args[0], self.time_from_row_height(args[2]))
     
     def on_posture_clicked(self, item):
@@ -346,7 +347,7 @@ class MekaPostureEditorGUI(Plugin):
         elif self._widget.edit_file_path.text(): 
             path_to_config = self._widget.edit_file_path.text()
         else:
-            path_to_config = "/home/meka/workspace/mekabot/meka-ros-pkg/meka_posture_execution/cfg/postures.yml"
+            path_to_config = "/vol/meka/stable/share/meka_posture_execution/cfg/postures.yml"
         
         filter_files = "YAML (*.yaml *.yml)"
 
