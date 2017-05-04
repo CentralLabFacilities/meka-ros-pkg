@@ -1,6 +1,10 @@
 # Goal specifies a group name
 string group_name
-bool use_nonverbal
+uint8 TYPE_UNKNOWN=0
+uint8 TYPE_SINGLE_HANDED=1
+uint8 TYPE_NONVERBAL_LOW=2
+uint8 TYPE_NONVERBAL_HIGH=3
+uint8 type
 ---
 # Result
 bool success

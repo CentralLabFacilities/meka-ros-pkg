@@ -158,7 +158,7 @@ class HandOver(object):
             self._r.sleep()
         return success
 
-    def approach(self, group_name, use_all = false):
+    def approach(self, group_name, shake_type):
         success = True
         if use_all:
             group = "all"
@@ -260,16 +260,15 @@ class HandOver(object):
         self._feedback.phase = 0
 
         group_name = goal.group_name
-        use_nonverbal = goal.use_nonverbal
         # check goal validity
         if group_name == "right_arm" or group_name == "left_arm":
 
             # approach
-            if self.approach(group_name, use_nonverbal):
+            if self.approach(group_name, goal.type):
                 # wait for touch
                 self._feedback.phase = HandOverFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
-                if self.wait_for_force(threshold=1000.0, group_name=group_name, timeout=20.0):
+                if self.wait_for_force(threshold=300.0, group_name=group_name, timeout=20.0):
 
                     #check if something in hand
                     if self._carrying[group_name] == False:
