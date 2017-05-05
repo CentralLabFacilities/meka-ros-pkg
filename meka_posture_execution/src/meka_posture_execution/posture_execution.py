@@ -23,24 +23,25 @@ from meka_posture.meka_posture import MekaPosture
 
 from functools import partial
 
-from meka_posture_execution.interfaces import rsbServer
-
 JNT_TRAJ_SRV_SUFFIX = "_position_trajectory_controller/follow_joint_trajectory"
 
 
 class MekaPostureExecution(object):
     
     def __init__(self, name):        
+        try:
+            rospy.init_node('meka_posture_execution', anonymous=True, log_level=rospy.DEBUG)
+        except rospy.exceptions.ROSException:
+            print("rospy.init_node() has already been called with different arguments:")
 
-        rospy.init_node('meka_posture_execution', anonymous=True, log_level=rospy.DEBUG)
-        
         self._name = name
         self._prefix = "meka_roscontrol"
         self._client = {}
         self._movement_finished = {}
         self._meka_posture = MekaPosture("mypostures")
         self.all_done = True;
-        
+        self._posture_when_done = "waiting"
+
         threading.Thread(None, rospy.spin)
 
     def _set_up_action_client(self,group_name):
@@ -72,20 +73,18 @@ class MekaPostureExecution(object):
         all_finished = True
         for name in self._movement_finished:
             if not self._movement_finished[name]:
-                all_finished = False 
+                all_finished = False
                 break
         if all_finished:
             self.all_done_callback()
-            
-        
+
     def all_done_callback(self):
         """
         triggers when all the movement finished
         """
-        self._posture_when_done = "waiting"
         self._movement_finished = {}
         rospy.loginfo("All movement finished")
-        if self._previous_posture != self._posture_when_done:
+        if self._previous_posture != self._posture_when_done and self._posture_when_done != "":
             self.execute("all", self._posture_when_done)
         else:
             self.all_done = True
@@ -118,12 +117,13 @@ class MekaPostureExecution(object):
                     except:
                         rospy.logerr("Could not set up action client for %s.", group_name)
                         return
-                
+
                 self._movement_finished[group_name] = False
                 self._client[group_name].send_goal(goal, done_cb=partial(self.on_done, group_name))
                 self.all_done = False;
             else:
                 rospy.logerr("No goal found for posture %s in group  %s.", posture_name, group_name)
+        return True
 
     def load_postures(self, path):
         self._meka_posture.load_postures(path)
@@ -163,7 +163,7 @@ class MekaPostureExecution(object):
         
     def get_postures(self, ev):
         print "called get postures"
-        d = self._meka_posture.list_postures()    
+        d = self._meka_posture.list_postures()
         return json.dumps(d)
         
         
@@ -190,16 +190,7 @@ def main():
     time.sleep(1)
     #meka_posture_exec.execute("head", "nodding_twice");
     
-    try:
-        rsbif = rsbServer.RSBInterface(scope=opts.scope,
-                                        serverscope=opts.serverscope,
-                                        handler=meka_posture_exec.handle, 
-                                        assumePoseRPC=meka_posture_exec.execute_rpc,
-                                        getPosesRPC=meka_posture_exec.get_postures
-                                        )
-    except Exception, e:
-        logging.error("Interface not brought up! Error was: \"%s\"", e)
-        
+
     print "Postures:"
     print meka_posture_exec.get_postures("bla")
     

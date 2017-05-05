@@ -13,7 +13,8 @@ import actionlib
 from actionlib import SimpleActionClient
 from hand_over.msg import HandOverAction, HandOverGoal, HandOverFeedback, HandOverResult
 
-from meka_posture.meka_posture import MekaPosture
+from meka_posture_execution.posture_execution import MekaPostureExecution
+
 from meka_stiffness_control.stiffness_control import MekaStiffnessControl
 
 from geometry_msgs.msg import Wrench, Point
@@ -39,7 +40,8 @@ class HandOver(object):
 
         self._as = actionlib.SimpleActionServer(self._action_name, HandOverAction,
                                                 execute_cb=self.execute_cb, auto_start=False)
-        self._meka_posture = MekaPosture("posture_exec")
+        self._meka_posture = MekaPostureExecution("posture_exec")
+        self._meka_posture._posture_when_done=""
         self._stiffness_control = MekaStiffnessControl("stiffness_control")
 
         self._client = {}
@@ -115,7 +117,7 @@ class HandOver(object):
             if timeout is not None:
                 if rospy.Time.now() > timeout_time:
                     rospy.loginfo("timeout waiting for force")
-                    print numpy.linalg.norm(self.force_variation[group_name]), "not larger than ", threshold
+                    rospy.logwarn("%d not larger than %d", numpy.linalg.norm(self.force_variation[group_name]),threshold)
                     success = False
                     break
 
@@ -124,29 +126,10 @@ class HandOver(object):
 
         return success
 
-    def start_motion(self, group_name, posture):
-        if posture in self._meka_posture.list_postures(group_name):
-            goal = self._meka_posture.get_trajectory_goal(group_name, posture)
-            print goal
-            if group_name not in self._client:
-                rospy.logwarn("Action client for %s not initialized. Trying to initialize it...", group_name)
-                try:
-                    self._set_up_action_client(group_name)
-                except:
-                    rospy.logerr("Could not set up action client for %s.", group_name)
-                    return False
-
-            self._client[group_name].send_goal(goal, done_cb=partial(self.on_motion_done, group_name))
-            self._movement_finished[group_name] = False
-            return True
-        else:
-            rospy.logerr("No goal found for posture %s in group  %s.", posture, group_name)
-            return False
-
     def wait_for_motion(self, group_name):
         success = True
         # wait for result of the motion here
-        while self._movement_finished[group_name] is False:
+        while self._meka_posture.all_done is False:
             # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
@@ -160,11 +143,13 @@ class HandOver(object):
 
     def approach(self, group_name, shake_type):
         success = True
-        if use_all:
-            group = "all"
-        else:
+        if shake_type == HandOverGoal.TYPE_SINGLE_HANDED:
             group = group_name
-        if self.start_motion(group, group_name + "hand_over_approach"):
+        else:
+            group = "all"
+        posture=group_name + "_hand_over_approach"
+        rospy.loginfo('Starting posture %s, for group name %s', posture, group)
+        if self._meka_posture.execute(group_name, posture):
             self._feedback.phase = HandOverFeedback.PHASE_APPROACH
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -185,7 +170,7 @@ class HandOver(object):
         time.sleep(0.5)
         self._stiffness_control.change_stiffness([joint_name], [1.0])
 
-        if self.start_motion(group_name, "hand_over_retreat"):
+        if self._meka_posture.execute(group_name, "hand_over_retreat"):
             self._feedback.phase = HandOverFeedback.PHASE_RETREAT
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -213,7 +198,7 @@ class HandOver(object):
         # reduce stiffness
         self._stiffness_control.change_stiffness([j0, j1, j2, j3, j4], [0.35, 0.35, 0.35, 0.35, 0.35])
 
-        if self.start_motion(hand_name, "close"):
+        if self._meka_posture.execute(hand_name, "close"):
             self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
@@ -240,7 +225,7 @@ class HandOver(object):
             j3 = "right_hand_j3"
             j4 = "right_hand_j4"
 
-        if self.start_motion(hand_name, "open"): #open
+        if self._meka_posture.execute(hand_name, "open"): #open
             self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
@@ -264,8 +249,10 @@ class HandOver(object):
         if group_name == "right_arm" or group_name == "left_arm":
 
             # approach
+            rospy.loginfo('approaching')
             if self.approach(group_name, goal.type):
                 # wait for touch
+                rospy.loginfo('waiting for contact')
                 self._feedback.phase = HandOverFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
                 if self.wait_for_force(threshold=300.0, group_name=group_name, timeout=20.0):
@@ -280,11 +267,14 @@ class HandOver(object):
                         if self.open_hand(group_name):
                             self._carrying[group_name] = False
                     # retreat
+                    rospy.loginfo('retreating')
                     if not self.retreat(group_name):
                             success = False
                     else:
                         success = False
                 else:
+                    rospy.loginfo('retreating after timeout')
+                    self.retreat(group_name)
                     success = False
             else:
                 success = False
@@ -295,9 +285,11 @@ class HandOver(object):
 
         if not success:
             #check if it was pre-empted
-            if not self._as.is_preempt_requested():
+            if self._as.is_preempt_requested():
                 rospy.loginfo('%s: preempted' % self._action_name)
-                self._as.set_aborted(self._result)
+
+            #in casde os no success abort the goal
+            self._as.set_aborted(self._result)
 
         if success:
             rospy.loginfo('%s: Succeeded' % self._action_name)
