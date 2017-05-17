@@ -126,7 +126,7 @@ class MekaPostureExecution(object):
         return True
 
     def load_postures(self, path):
-        self._meka_posture.load_postures(path)
+        self._meka_posture.load_postures(path,1)
         
     def handle(self, event):
         rospy.logdebug("Received event: %s" % event)
