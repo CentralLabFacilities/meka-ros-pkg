@@ -47,11 +47,14 @@ class HandOver(object):
         self._client = {}
         self._movement_finished = {}
         self.force_variation = {}
+        self.force_bias = {}
         self.previous_force = {}
-        self._r = rospy.Rate(10)
+        self._r = rospy.Rate(100)
 
         self.force_variation['left_arm'] = numpy.array([0, 0, 0])
         self.force_variation['right_arm'] = numpy.array([0, 0, 0])
+        self.force_bias['left_arm'] = numpy.array([0, 0, 0])
+        self.force_bias['right_arm'] = numpy.array([0, 0, 0])
         self.previous_force['left_arm'] = numpy.array([0, 0, 0])
         self.previous_force['right_arm'] = numpy.array([0, 0, 0])
 
@@ -105,7 +108,16 @@ class HandOver(object):
         # wait for condition
         if timeout is not None:
             timeout_time = rospy.Time.now() + rospy.Duration(timeout)
-        while numpy.linalg.norm(self.force_variation[group_name]) < threshold:
+
+        current_val = 0.0
+
+        self.force_bias[group_name] = self.previous_force[group_name];
+        rospy.loginfo('waiting for force with bias %d %d %d', self.force_bias[group_name][0],self.force_bias[group_name][1],self.force_bias[group_name][2])
+        N = 7
+        while current_val < threshold:
+
+            current_val=((N-1)*current_val+numpy.linalg.norm(self.previous_force[group_name]-self.force_bias[group_name]))/N
+            rospy.logdebug('current_val: %d',current_val)
             # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
@@ -117,13 +129,13 @@ class HandOver(object):
             if timeout is not None:
                 if rospy.Time.now() > timeout_time:
                     rospy.loginfo("timeout waiting for force")
-                    rospy.logwarn("%d not larger than %d", numpy.linalg.norm(self.force_variation[group_name]),threshold)
                     success = False
                     break
 
             self._as.publish_feedback(self._feedback)
             self._r.sleep()
 
+        rospy.loginfo("wait_for_force ended with: current_val: %d threshold: %d", current_val,threshold)
         return success
 
     def wait_for_motion(self, group_name):
@@ -147,9 +159,13 @@ class HandOver(object):
             group = group_name
         else:
             group = "all"
-        posture=group_name + "_hand_over_approach"
+
+        modifier = 'low'
+        if shake_type == HandOverGoal.TYPE_NONVERBAL_HIGH:
+            modifier = 'high'
+        posture=group_name + "_hand_over_approach_" + modifier
         rospy.loginfo('Starting posture %s, for group name %s', posture, group)
-        if self._meka_posture.execute(group_name, posture):
+        if self._meka_posture.execute(group, posture):
             self._feedback.phase = HandOverFeedback.PHASE_APPROACH
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -170,7 +186,7 @@ class HandOver(object):
         time.sleep(0.5)
         self._stiffness_control.change_stiffness([joint_name], [1.0])
 
-        if self._meka_posture.execute(group_name, "hand_over_retreat"):
+        if self._meka_posture.execute("all", group_name+"_hand_over_retreat"):
             self._feedback.phase = HandOverFeedback.PHASE_RETREAT
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -246,7 +262,10 @@ class HandOver(object):
 
         group_name = goal.group_name
         # check goal validity
-        if group_name == "right_arm" or group_name == "left_arm":
+        if (group_name == "right_arm" or group_name == "left_arm") and \
+                (goal.type == HandOverGoal.TYPE_SINGLE_HANDED or
+                         goal.type == HandOverGoal.TYPE_NONVERBAL_LOW or
+                         goal.type == HandOverGoal.TYPE_NONVERBAL_HIGH):
 
             # approach
             rospy.loginfo('approaching')
@@ -255,7 +274,7 @@ class HandOver(object):
                 rospy.loginfo('waiting for contact')
                 self._feedback.phase = HandOverFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
-                if self.wait_for_force(threshold=300.0, group_name=group_name, timeout=20.0):
+                if self.wait_for_force(threshold=1300.0, group_name=group_name, timeout=20.0):
 
                     #check if something in hand
                     if self._carrying[group_name] == False:
@@ -279,6 +298,7 @@ class HandOver(object):
             else:
                 success = False
         else:
+            rospy.logwarn('received invalid goal')
             success = False
 
         self._result.success = success
