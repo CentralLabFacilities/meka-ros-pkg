@@ -14,7 +14,7 @@ import m3.component_factory as mcf
 
 import rospy
 from rospy_tutorials.msg import Floats
-from geometry_msgs.msg import Wrench
+from geometry_msgs.msg import WrenchStamped
 from meka_ros_publisher.srv import ListComponents, ListComponentsResponse, ListFields, ListFieldsResponse, RequestValues, RequestValuesResponse, UnsubscribeValues, UnsubscribeValuesResponse
 
 import threading
@@ -44,8 +44,8 @@ class PublisherThread(threading.Thread):
             rospy.loginfo("Publisher details: " + str(self.component.name) + "/" + str(self.field) + " with type " + str(self.dataType) + " and rate " + str(self.rate))
             try:
                 dt = self.dataType
-                if dt == "Wrench":
-                    dt = Wrench
+                if dt == "WrenchStamped":
+                    dt = WrenchStamped
                 else:
                     dt = Floats
             except AttributeError:
@@ -60,16 +60,19 @@ class PublisherThread(threading.Thread):
                     PublisherThread.PublisherLock.acquire()
                     tmp = m3t.get_msg_field_value(self.component.status, self.field)
                     PublisherThread.PublisherLock.release()
-                    if dt == Wrench:
+                    if dt == WrenchStamped:
                         float_list = map(float, str(tmp).strip('[]').split(','))
-                        msg = Wrench()
-                        msg.force.x = float_list[0]
-                        msg.force.y = float_list[1]
-                        msg.force.z = float_list[2]
+                        msg = WrenchStamped()
+                        msg.header.stamp = rospy.Time.now()
 
-                        msg.torque.x = float_list[3]
-                        msg.torque.y = float_list[4]
-                        msg.torque.z = float_list[5]
+                        msg.header.frame_id = str(self.component.name)
+                        msg.wrench.force.x = float_list[0]/1000
+                        msg.wrench.force.y = float_list[1]/1000
+                        msg.wrench.force.z = float_list[2]/1000
+
+                        msg.wrench.torque.x = float_list[3]/1000
+                        msg.wrench.torque.y = float_list[4]/1000
+                        msg.wrench.torque.z = float_list[5]/1000
                     elif dt == Floats:
                         msg = Floats()
                         if hasattr(tmp, '__len__'):

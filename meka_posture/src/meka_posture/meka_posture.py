@@ -3,6 +3,7 @@
 import yaml
 
 import genpy
+import copy
 import rospy
 import os.path
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -86,15 +87,15 @@ class MekaPosture(object):
                 rospy.logwarn("Group %s does not exist in the postures list", group_name)
                 return list()
 
-    def load_postures(self, filepath):
+    def load_postures(self, filepath, with_mirrored=0):
         """
         Load the postures from a file (erases current postures)
         """
         # erase current postures
         self._postures = {}
-        self.append_postures(filepath)
+        self.append_postures(filepath, "keep", with_mirrored)
     
-    def append_postures(self, filepath, strategy="keep"):
+    def append_postures(self, filepath, strategy="keep", with_mirrored=0):
         """
         Append the postures from a file to the current list
         strategy keep means postures in memory are not erased
@@ -114,6 +115,26 @@ class MekaPosture(object):
                     genpy.message.fill_message_args(traj, yamldoc[group_name][posture_name])
                     # store the message
                     self.add_posture(group_name, posture_name, traj, strategy)
+                    if(with_mirrored):
+                        if (group_name == 'left_arm'):
+                            group_name_mirrored = 'right_arm'
+                        elif (group_name == 'right_arm'):
+                            group_name_mirrored = 'left_arm'
+                        elif (group_name == 'left_hand'):
+                            group_name_mirrored = 'right_hand'
+                        elif (group_name == 'right_hand'):
+                            group_name_mirrored = 'left_hand'
+
+                        else:
+                            group_name_mirrored = group_name
+
+
+                        posture_name_mirrored = posture_name.replace('right_arm','left_arm',1)
+                        if(posture_name_mirrored == posture_name): #if name did not change by replacing right -> left, try replacing left -> right
+                            posture_name_mirrored = posture_name.replace('left_arm','right_arm',1)
+
+                        traj_mirrored = self.mirror_posture(group_name,traj)
+                        self.add_posture(group_name_mirrored,posture_name_mirrored, traj_mirrored, strategy)
     
     def save_postures(self, filepath, strategy="append"):
         """
@@ -151,12 +172,39 @@ class MekaPosture(object):
 
     def clear_postures(self):
         self._postures = {}
+
+    def mirror_posture(self, group_name, trajectory):
+        traj_mirrored = copy.deepcopy(trajectory)
+        if group_name == 'right_arm' or group_name == 'left_arm' :
+            for point in traj_mirrored.points:
+                point.positions[1] = -point.positions[1]
+                point.positions[2] = -point.positions[2]
+                point.positions[4] = -point.positions[4]
+                point.positions[6] = -point.positions[6]
+
+        if group_name == 'head':
+            for point in traj_mirrored.points:
+                point.positions[1] = -point.positions[1]
+
+        for i in xrange(0,len(traj_mirrored.joint_names)):
+            if(traj_mirrored.joint_names[i].startswith("right")):
+                traj_mirrored.joint_names[i] = traj_mirrored.joint_names[i].replace('right', 'left',1)
+            else:
+                traj_mirrored.joint_names[i] = traj_mirrored.joint_names[i].replace('left', 'right', 1)
+
+        return traj_mirrored
+
   
 def main():
-
     meka_posture = MekaPosture("whatever")
-    
-    goal = FollowJointTrajectoryGoal()
+    trajectory = JointTrajectory()
+    test_point1 = JointTrajectoryPoint()
+    test_point1.positions = [0,1,2,3,4,5]
+    trajectory.points.append(test_point1)
+    posture_name='right_arm_test'
+    meka_posture.mirror_posture('right_arm', trajectory)
+    print(trajectory.points[0].positions[0] ,trajectory.points[0].positions[1] ,trajectory.points[0].positions[2] , posture_name)
+
     goal = FollowJointTrajectoryGoal()
     goal.trajectory.joint_names = ["test1","test2"]
     point = JointTrajectoryPoint()

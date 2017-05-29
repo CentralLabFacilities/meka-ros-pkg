@@ -13,10 +13,11 @@ import actionlib
 from actionlib import SimpleActionClient
 from hand_over.msg import HandOverAction, HandOverGoal, HandOverFeedback, HandOverResult
 
-from meka_posture.meka_posture import MekaPosture
+from meka_posture_execution.posture_execution import MekaPostureExecution
+
 from meka_stiffness_control.stiffness_control import MekaStiffnessControl
 
-from geometry_msgs.msg import Wrench, Point
+from geometry_msgs.msg import WrenchStamped, Point
 
 from people_msgs.msg import PositionMeasurementArray
 
@@ -39,22 +40,26 @@ class HandOver(object):
 
         self._as = actionlib.SimpleActionServer(self._action_name, HandOverAction,
                                                 execute_cb=self.execute_cb, auto_start=False)
-        self._meka_posture = MekaPosture("posture_exec")
+        self._meka_posture = MekaPostureExecution("posture_exec")
+        self._meka_posture._posture_when_done=""
         self._stiffness_control = MekaStiffnessControl("stiffness_control")
 
         self._client = {}
         self._movement_finished = {}
         self.force_variation = {}
+        self.force_bias = {}
         self.previous_force = {}
-        self._r = rospy.Rate(10)
+        self._r = rospy.Rate(100)
 
-        self.force_variation['left_arm'] = numpy.array([0, 0, 0])
-        self.force_variation['right_arm'] = numpy.array([0, 0, 0])
-        self.previous_force['left_arm'] = numpy.array([0, 0, 0])
-        self.previous_force['right_arm'] = numpy.array([0, 0, 0])
+        self.force_variation['left_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.force_variation['right_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.force_bias['left_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.force_bias['right_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.previous_force['left_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.previous_force['right_arm'] = numpy.array([0.0, 0.0, 0.0])
 
-        self.sub_left = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma30_l0/wrench", Wrench, self.handle_left)
-        self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", Wrench, self.handle_right)
+        self.sub_left = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma30_l0/wrench", WrenchStamped, self.handle_left)
+        self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", WrenchStamped, self.handle_right)
 
         self.sub_face = rospy.Subscriber("/face_detector/people_tracker_measurements_array", PositionMeasurementArray, self.face_callback)
 
@@ -84,12 +89,12 @@ class HandOver(object):
             self._movement_finished[group_name] = True
 
     def handle_left(self, msg):
-        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
+        current_force = numpy.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
         self.force_variation['left_arm'] = (current_force - self.previous_force['left_arm'])
         self.previous_force['left_arm'] = current_force
 
     def handle_right(self, msg):
-        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
+        current_force = numpy.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
         self.force_variation['right_arm'] = (current_force - self.previous_force['right_arm'])
         self.previous_force['right_arm'] = current_force
 
@@ -103,7 +108,16 @@ class HandOver(object):
         # wait for condition
         if timeout is not None:
             timeout_time = rospy.Time.now() + rospy.Duration(timeout)
-        while numpy.linalg.norm(self.force_variation[group_name]) < threshold:
+
+        current_val = 0.0
+
+        self.force_bias[group_name] = self.previous_force[group_name];
+        rospy.loginfo('waiting for force with bias %d %d %d', self.force_bias[group_name][0],self.force_bias[group_name][1],self.force_bias[group_name][2])
+        N = 7
+        while current_val < threshold:
+
+            current_val=((N-1)*current_val+numpy.linalg.norm(self.previous_force[group_name]-self.force_bias[group_name]))/N
+            rospy.logdebug('current_val: %d',current_val)
             # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
@@ -115,38 +129,19 @@ class HandOver(object):
             if timeout is not None:
                 if rospy.Time.now() > timeout_time:
                     rospy.loginfo("timeout waiting for force")
-                    print numpy.linalg.norm(self.force_variation[group_name]), "not larger than ", threshold
                     success = False
                     break
 
             self._as.publish_feedback(self._feedback)
             self._r.sleep()
 
+        rospy.loginfo("wait_for_force ended with: current_val: %d threshold: %d", current_val,threshold)
         return success
-
-    def start_motion(self, group_name, posture):
-        if posture in self._meka_posture.list_postures(group_name):
-            goal = self._meka_posture.get_trajectory_goal(group_name, posture)
-            print goal
-            if group_name not in self._client:
-                rospy.logwarn("Action client for %s not initialized. Trying to initialize it...", group_name)
-                try:
-                    self._set_up_action_client(group_name)
-                except:
-                    rospy.logerr("Could not set up action client for %s.", group_name)
-                    return False
-
-            self._client[group_name].send_goal(goal, done_cb=partial(self.on_motion_done, group_name))
-            self._movement_finished[group_name] = False
-            return True
-        else:
-            rospy.logerr("No goal found for posture %s in group  %s.", posture, group_name)
-            return False
 
     def wait_for_motion(self, group_name):
         success = True
         # wait for result of the motion here
-        while self._movement_finished[group_name] is False:
+        while self._meka_posture.all_done is False:
             # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
@@ -158,9 +153,19 @@ class HandOver(object):
             self._r.sleep()
         return success
 
-    def approach(self, group_name):
+    def approach(self, group_name, shake_type):
         success = True
-        if self.start_motion(group_name, "shake_approach"):
+        if shake_type == HandOverGoal.TYPE_SINGLE_HANDED:
+            group = [group_name, "head"]
+        else:
+            group = "all"
+
+        modifier = 'low'
+        if shake_type == HandOverGoal.TYPE_NONVERBAL_HIGH:
+            modifier = 'high'
+        posture=group_name + "_hand_over_approach_" + modifier
+        rospy.loginfo('Starting posture %s, for group name %s', posture, group)
+        if self._meka_posture.execute(group, posture):
             self._feedback.phase = HandOverFeedback.PHASE_APPROACH
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -181,7 +186,7 @@ class HandOver(object):
         time.sleep(0.5)
         self._stiffness_control.change_stiffness([joint_name], [1.0])
 
-        if self.start_motion(group_name, "shake_retreat"):
+        if self._meka_posture.execute("all", group_name+"_hand_over_retreat"):
             self._feedback.phase = HandOverFeedback.PHASE_RETREAT
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -189,26 +194,7 @@ class HandOver(object):
             success = False
         return success
 
-    def shake(self, group_name):
-        if "left" in group_name:
-            joint_name = "left_arm_j3"
-        else:
-            joint_name = "right_arm_j3"
-
-        # reduce stiffness
-        self._stiffness_control.change_stiffness([joint_name], [0.35])
-
-        success = True
-        if self.start_motion(group_name, "shake_movement"):
-            self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
-            self._as.publish_feedback(self._feedback)
-            success = self.wait_for_motion(group_name)
-        else:
-            success = False
-
-        return success
-
-    def close_for_shaking(self, group_name):
+    def close_hand(self, group_name):
         success = True
         if "left" in group_name:
             hand_name = "left_hand"
@@ -228,7 +214,7 @@ class HandOver(object):
         # reduce stiffness
         self._stiffness_control.change_stiffness([j0, j1, j2, j3, j4], [0.35, 0.35, 0.35, 0.35, 0.35])
 
-        if self.start_motion(hand_name, "close"):
+        if self._meka_posture.execute(hand_name, "close"):
             self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
@@ -255,7 +241,7 @@ class HandOver(object):
             j3 = "right_hand_j3"
             j4 = "right_hand_j4"
 
-        if self.start_motion(hand_name, "shake_open"): #open
+        if self._meka_posture.execute(hand_name, "open"): #open
             self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
             self._as.publish_feedback(self._feedback)
             # wait for result of the motion here
@@ -276,43 +262,54 @@ class HandOver(object):
 
         group_name = goal.group_name
         # check goal validity
-        if group_name == "right_arm" or group_name == "left_arm":
+        if (group_name == "right_arm" or group_name == "left_arm") and \
+                (goal.type == HandOverGoal.TYPE_SINGLE_HANDED or
+                         goal.type == HandOverGoal.TYPE_NONVERBAL_LOW or
+                         goal.type == HandOverGoal.TYPE_NONVERBAL_HIGH):
 
             # approach
-            if self.approach(group_name):
+            rospy.loginfo('approaching')
+            if self.approach(group_name, goal.type):
                 # wait for touch
+                rospy.loginfo('waiting for contact')
                 self._feedback.phase = HandOverFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
-                if self.wait_for_force(threshold=1000.0, group_name=group_name, timeout=20.0):
+                if self.wait_for_force(threshold=1.5, group_name=group_name, timeout=20.0):
 
                     #check if something in hand
                     if self._carrying[group_name] == False:
                     # close hand
-                        if self.close_for_shaking(group_name):
+                        if self.close_hand(group_name):
                             self._carrying[group_name] = True
                     else:
                         # open hand
                         if self.open_hand(group_name):
                             self._carrying[group_name] = False
                     # retreat
+                    rospy.loginfo('retreating')
                     if not self.retreat(group_name):
                             success = False
                     else:
                         success = False
                 else:
+                    rospy.loginfo('retreating after timeout')
+                    self.retreat(group_name)
                     success = False
             else:
                 success = False
         else:
+            rospy.logwarn('received invalid goal')
             success = False
 
         self._result.success = success
 
         if not success:
             #check if it was pre-empted
-            if not self._as.is_preempt_requested():
+            if self._as.is_preempt_requested():
                 rospy.loginfo('%s: preempted' % self._action_name)
-                self._as.set_aborted(self._result)
+
+            #in casde os no success abort the goal
+            self._as.set_aborted(self._result)
 
         if success:
             rospy.loginfo('%s: Succeeded' % self._action_name)

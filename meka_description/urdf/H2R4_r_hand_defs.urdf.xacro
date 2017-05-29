@@ -98,6 +98,15 @@
       
     </link>
 
+    <joint name="fts_frame_joint_right" type="fixed">
+      <parent link="${parent}"/>
+      <child link="m3loadx6_ma29_l0" />
+      <origin xyz="0.0 0.0 -0.055" rpy="0.0 ${M_PI} 0.0"/>
+    </joint>
+
+    <link name="m3loadx6_ma29_l0"/>
+
+
       <!-- this defines TCP Tool Center Point as described in: https://groups.google.com/forum/m/#!topic/moveit-users/VB7VWsgV9-g -->
     <joint name="hand_right_tool_frame_joint" type="fixed">
       <parent link="${parent}"/>
