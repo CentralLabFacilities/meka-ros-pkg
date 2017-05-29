@@ -17,7 +17,7 @@ from meka_posture_execution.posture_execution import MekaPostureExecution
 
 from meka_stiffness_control.stiffness_control import MekaStiffnessControl
 
-from geometry_msgs.msg import Wrench, Point
+from geometry_msgs.msg import WrenchStamped, Point
 
 from people_msgs.msg import PositionMeasurementArray
 
@@ -51,15 +51,15 @@ class HandOver(object):
         self.previous_force = {}
         self._r = rospy.Rate(100)
 
-        self.force_variation['left_arm'] = numpy.array([0, 0, 0])
-        self.force_variation['right_arm'] = numpy.array([0, 0, 0])
-        self.force_bias['left_arm'] = numpy.array([0, 0, 0])
-        self.force_bias['right_arm'] = numpy.array([0, 0, 0])
-        self.previous_force['left_arm'] = numpy.array([0, 0, 0])
-        self.previous_force['right_arm'] = numpy.array([0, 0, 0])
+        self.force_variation['left_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.force_variation['right_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.force_bias['left_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.force_bias['right_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.previous_force['left_arm'] = numpy.array([0.0, 0.0, 0.0])
+        self.previous_force['right_arm'] = numpy.array([0.0, 0.0, 0.0])
 
-        self.sub_left = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma30_l0/wrench", Wrench, self.handle_left)
-        self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", Wrench, self.handle_right)
+        self.sub_left = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma30_l0/wrench", WrenchStamped, self.handle_left)
+        self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", WrenchStamped, self.handle_right)
 
         self.sub_face = rospy.Subscriber("/face_detector/people_tracker_measurements_array", PositionMeasurementArray, self.face_callback)
 
@@ -89,12 +89,12 @@ class HandOver(object):
             self._movement_finished[group_name] = True
 
     def handle_left(self, msg):
-        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
+        current_force = numpy.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
         self.force_variation['left_arm'] = (current_force - self.previous_force['left_arm'])
         self.previous_force['left_arm'] = current_force
 
     def handle_right(self, msg):
-        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
+        current_force = numpy.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
         self.force_variation['right_arm'] = (current_force - self.previous_force['right_arm'])
         self.previous_force['right_arm'] = current_force
 
@@ -274,7 +274,7 @@ class HandOver(object):
                 rospy.loginfo('waiting for contact')
                 self._feedback.phase = HandOverFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
-                if self.wait_for_force(threshold=1300.0, group_name=group_name, timeout=20.0):
+                if self.wait_for_force(threshold=1.5, group_name=group_name, timeout=20.0):
 
                     #check if something in hand
                     if self._carrying[group_name] == False:
