@@ -16,7 +16,7 @@ from hand_shaker.msg import ShakeHandAction, ShakeHandGoal, ShakeHandFeedback, S
 from meka_posture.meka_posture import MekaPosture
 from meka_stiffness_control.stiffness_control import MekaStiffnessControl
 
-from geometry_msgs.msg import Wrench
+from geometry_msgs.msg import WrenchStamped
 
 from control_msgs.msg import FollowJointTrajectoryAction, \
     FollowJointTrajectoryGoal
@@ -50,8 +50,8 @@ class HandShaker(object):
         self.previous_force['left_arm'] = numpy.array([0, 0, 0])
         self.previous_force['right_arm'] = numpy.array([0, 0, 0])
 
-        self.sub_left = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma30_l0/wrench", Wrench, self.handle_left)
-        self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", Wrench, self.handle_right)
+        self.sub_left = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma30_l0/wrench", WrenchStamped, self.handle_left)
+        self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", WrenchStamped, self.handle_right)
         self._as.start()
 
     def load_postures(self, path):
@@ -273,7 +273,7 @@ class HandShaker(object):
                 # wait for touch
                 self._feedback.phase = ShakeHandFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
-                if self.wait_for_force(threshold=2000.0, group_name=group_name, timeout=20.0):
+                if self.wait_for_force(threshold=1.7, group_name=group_name, timeout=20.0):
                     # close hand
                     if self.close_for_shaking(group_name):
                         # shake
