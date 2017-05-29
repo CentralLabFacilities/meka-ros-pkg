@@ -156,7 +156,7 @@ class HandOver(object):
     def approach(self, group_name, shake_type):
         success = True
         if shake_type == HandOverGoal.TYPE_SINGLE_HANDED:
-            group = group_name
+            group = [group_name, "head"]
         else:
             group = "all"
 

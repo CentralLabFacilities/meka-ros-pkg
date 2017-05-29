@@ -101,8 +101,12 @@ class MekaPostureExecution(object):
             self._movement_finished = {}
             rospy.loginfo("Calling all the groups")
             groups = ["right_arm", "right_hand", "left_arm","left_hand","torso", "head"]
-            for names in groups:
+            self.execute(groups, posture_name)
+
+        elif not isinstance(group_name, basestring):
+            for names in group_name:
                 self.execute(names, posture_name)
+
         else:
             goal = self._meka_posture.get_trajectory_goal(group_name, posture_name)
             if goal is not None:
