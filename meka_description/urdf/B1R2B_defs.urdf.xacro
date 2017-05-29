@@ -108,7 +108,15 @@
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
 		  <geometry name="b1r1_3_geom">
-			  <mesh filename="package://${MESH}/B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.dae" />
+			  <mesh filename="package://${MESH}/B1R1/meka_mobile_base+backpack.dae" /> <!-- B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.dae -->
+		  </geometry>
+	  </visual>
+
+	  <visual>
+		  <material name="GreyC" />
+		  <origin xyz="0.16 0 0.32141" rpy="0 0 0" />
+		  <geometry name="b1r1_3_geom">
+			  <mesh filename="package://${MESH}/B1R1/meka_zlift.dae" /> <!-- B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.dae -->
 		  </geometry>
 	  </visual>
 	  <!--<collision>
@@ -143,32 +151,32 @@
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="-0.23 0.12 0.24" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="-0.23 0.12 0.275" rpy="0.0 0.0 0.0 " />
 		  <geometry>
-			  <cylinder length="0.48" radius="0.11" />
+			  <cylinder length="0.55" radius="0.11" /> <!-- l 0.48 -->
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="-0.23 -0.12 0.24" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="-0.23 -0.12 0.275" rpy="0.0 0.0 0.0 " />
 		  <geometry>
-			  <cylinder length="0.48" radius="0.11" />
+			  <cylinder length="0.55" radius="0.11" />  <!-- l 0.48 -->
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="-0.13 0 0.4" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="-0.13 0 0.4375" rpy="0.0 0.0 0.0 " />
 		  <geometry>
-			  <box size="0.20 0.46 0.15" />
+			  <box size="0.20 0.46 0.225" />
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="-0.23 0 0.4" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="-0.23 0 0.4375" rpy="0.0 0.0 0.0 " />
 		  <geometry>
-			  <box size="0.22 0.27 0.15" />
+			  <box size="0.22 0.27 0.225" />
 		  </geometry>
 	  </collision>
      <!-- zlift -->
     <collision>
-		  <origin xyz="0.17 0 0.95" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="0.06 0 0.95" rpy="0.0 0.0 0.0 " />
 		  <geometry>
 			  <box size="0.22 0.1 1.2" />
 		  </geometry>
