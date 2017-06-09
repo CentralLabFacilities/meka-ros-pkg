@@ -97,12 +97,12 @@
   </meka_base>
 
   <meka_zlift  side="r" reflect="1" parent="dummy_3">
-    <origin xyz="0.295 0.0 0.5219" rpy="0 0 0" /> <!-- 0.33 0.0 0.45 rpy="0 0.0236 0" -->
+    <origin xyz="0.17513 0.0 0.5219" rpy="0 0 0" /> <!-- 0.33 0.0 0.45 rpy="0 0.0236 0" -->
   </meka_zlift>
 
   <!-- Solid Base -->
   <joint name="chest_joint" type="fixed">
-	  <origin xyz="0.1 0.0 0.0" rpy="0 0 0" />
+	  <origin xyz="0.263 0.0 0.006" rpy="0 0 0" />
     <parent link="zlift_link" />
     <child link="panplate" />
   </joint>
@@ -144,7 +144,7 @@
   </link>
   <joint name="torso_j0" type="revolute">
     <axis xyz="0 0 1"/>
-    <origin xyz="0 0 0.1678" rpy="0 0 0" />
+    <origin xyz="0 0 0.1658" rpy="0 0 0" />
     <parent link="panplate" />
     <child link="torso" />
     <limit effort="25" velocity="${25.0*M_PI/180}" lower="${-120*M_PI/180.0}" upper="${120*M_PI/180}" />

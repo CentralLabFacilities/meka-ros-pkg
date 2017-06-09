@@ -37,7 +37,7 @@
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
 	      <geometry name="z_lift_geom">
-		      <mesh filename="package://${MESH}/B1R1/MB1_00_011_festo-chest_mount_assy+spacer.dae" />
+		      <mesh filename="package://${MESH}/B1R1/meka_festo-chest_mount_assy.dae" />
 	      </geometry>  
       </visual>
       <!-- meshes 
