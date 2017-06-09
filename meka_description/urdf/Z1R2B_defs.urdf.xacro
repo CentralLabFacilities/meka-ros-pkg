@@ -49,15 +49,15 @@
       </collision>-->
       <!-- primitive meshes only -->
     <collision>
-		  <origin xyz="0 0 0.035" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="0.108 0 0.035" rpy="0.0 0.0 0.0 " />
 		  <geometry>
 			  <box size="0.2 0.21 0.07" />
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="-0.105 0 0.09" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="0.004 0 0.09" rpy="0.0 0.0 0.0 " />
 		  <geometry>
-			  <box size="0.03 0.08 0.18" />
+			  <box size="0.008 0.08 0.18" />
 		  </geometry>
 	  </collision>
     
