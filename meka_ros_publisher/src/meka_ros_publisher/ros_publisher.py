@@ -314,12 +314,12 @@ class MekaRosPublisher(object):
         retries = 3
         
         while retries > 0:
-            try:     
+            try:
                 if req.component not in self.comps.keys():
                     comp = mcf.create_component(req.component)
                     self.rt_proxy.subscribe_status(comp)
                     self.comps[req.component] = comp 
-                    break
+                break
             except (CannotSendRequest,ResponseNotReady):
                 print "Response not ready, retrying.."
                 retries -= 1
