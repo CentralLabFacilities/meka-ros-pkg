@@ -167,7 +167,7 @@
       </inertial>        
       <visual>
 	      <material name="GreyC" />
-	      <origin xyz="0 0 0" rpy="0 0 0 " />
+	      <origin xyz="0.00502 0 0" rpy="0 0 0 " />
 	      <geometry name="bicep_LEFT_geom">
 		      <mesh filename="package://${MESH}/A2R3/A2R3_LT3_bicep.dae" />
 	      </geometry>  
