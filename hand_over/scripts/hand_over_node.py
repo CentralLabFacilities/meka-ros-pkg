@@ -112,12 +112,12 @@ class HandOver(object):
         current_val = 0.0
 
         self.force_bias[group_name] = self.previous_force[group_name];
-        rospy.loginfo('waiting for force with bias %d %d %d', self.force_bias[group_name][0],self.force_bias[group_name][1],self.force_bias[group_name][2])
+        rospy.loginfo('waiting for force with bias %f %f %f', self.force_bias[group_name][0],self.force_bias[group_name][1],self.force_bias[group_name][2])
         N = 7
         while current_val < threshold:
 
             current_val=((N-1)*current_val+numpy.linalg.norm(self.previous_force[group_name]-self.force_bias[group_name]))/N
-            rospy.logdebug('current_val: %d',current_val)
+            rospy.logdebug('current_val: %f',current_val)
             # check that preempt has not been requested by the client
             if self._as.is_preempt_requested():
                 rospy.loginfo('%s: Preempted' % self._action_name)
@@ -135,7 +135,7 @@ class HandOver(object):
             self._as.publish_feedback(self._feedback)
             self._r.sleep()
 
-        rospy.loginfo("wait_for_force ended with: current_val: %d threshold: %d", current_val,threshold)
+        rospy.loginfo("wait_for_force ended with: current_val: %f threshold: %f", current_val,threshold)
         return success
 
     def wait_for_motion(self, group_name):
@@ -169,24 +169,47 @@ class HandOver(object):
             self._feedback.phase = HandOverFeedback.PHASE_APPROACH
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
+            self.reduce_stiffness(group_name)
         else:
             success = False
         return success
 
     def retreat(self, group_name):
         success = True
+
+        if self._meka_posture.execute("all", group_name+"_hand_over_retreat"):
+            self._feedback.phase = HandOverFeedback.PHASE_RETREAT
+            self._as.publish_feedback(self._feedback)
+            success = self.wait_for_motion(group_name)
+        else:
+            success = False
+        return success
+
+    def recover_stiffness(self, group_name):
         if "left" in group_name:
             joint_name = "left_arm_j3"
         else:
             joint_name = "right_arm_j3"
         # recover stiffness slowly
-        self._stiffness_control.change_stiffness([joint_name], [0.1])
+        self._stiffness_control.change_stiffness([joint_name], [0.8])
         time.sleep(1)
-        self._stiffness_control.change_stiffness([joint_name], [0.5])
+        self._stiffness_control.change_stiffness([joint_name], [0.9])
         time.sleep(0.5)
         self._stiffness_control.change_stiffness([joint_name], [1.0])
 
-        if self._meka_posture.execute("all", group_name+"_hand_over_retreat"):
+    def reduce_stiffness(self, group_name):
+        if "left" in group_name:
+            joint_name = "left_arm_j3"
+        else:
+            joint_name = "right_arm_j3"
+        # recover stiffness slowly
+        self._stiffness_control.change_stiffness([joint_name], [0.75])
+
+
+    def look_at(self, group_name):
+        self.recover_stiffness(group_name)
+
+        if self._meka_posture.execute("all", group_name+"_look_at"):
             self._feedback.phase = HandOverFeedback.PHASE_RETREAT
             self._as.publish_feedback(self._feedback)
             success = self.wait_for_motion(group_name)
@@ -212,7 +235,7 @@ class HandOver(object):
             j4 = "right_hand_j4"
 
         # reduce stiffness
-        self._stiffness_control.change_stiffness([j0, j1, j2, j3, j4], [0.35, 0.35, 0.35, 0.35, 0.35])
+        self._stiffness_control.change_stiffness([j0, j1, j2, j3, j4], [0.6, 0.6, 0.6, 0.6, 0.6])
 
         if self._meka_posture.execute(hand_name, "close"):
             self._feedback.phase = HandOverFeedback.PHASE_EXECUTING
@@ -249,7 +272,7 @@ class HandOver(object):
         else:
             success = False
 
-        # recovert stiffness
+        # recover stiffness
         self._stiffness_control.change_stiffness([j0, j1, j2, j3, j4], [1, 1, 1, 1, 1])
 
         return success
@@ -274,13 +297,18 @@ class HandOver(object):
                 rospy.loginfo('waiting for contact')
                 self._feedback.phase = HandOverFeedback.PHASE_WAITING_FOR_CONTACT
                 self._as.publish_feedback(self._feedback)
-                if self.wait_for_force(threshold=1.5, group_name=group_name, timeout=20.0):
+                if self.wait_for_force(threshold=1.5, group_name=group_name, timeout=120.0):
 
                     #check if something in hand
                     if self._carrying[group_name] == False:
                     # close hand
                         if self.close_hand(group_name):
                             self._carrying[group_name] = True
+                            #TODO: look_at as parameter
+                            if not self.look_at(group_name):
+                                success = False
+                        else:
+                            success = False
                     else:
                         # open hand
                         if self.open_hand(group_name):

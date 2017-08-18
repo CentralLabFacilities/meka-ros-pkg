@@ -24,8 +24,8 @@ class Conditions(Enum):
 class DoldButtonController(object):
 
     def __init__(self):
-        self.CONDITION = Conditions.LOW
-        self.PARTICIPANT = 555555
+        self.CONDITION = Conditions.SINGLE
+        self.PARTICIPANT = 40
 
 
         self.MAX = 9

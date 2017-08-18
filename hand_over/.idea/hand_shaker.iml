@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="meka_posture_execution" />
     <orderEntry type="module" module-name="meka_posture" />
+    <orderEntry type="module" module-name="dold_button_controller" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Nosetests" />

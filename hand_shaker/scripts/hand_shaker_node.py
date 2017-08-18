@@ -74,12 +74,12 @@ class HandShaker(object):
             self._movement_finished[group_name] = True
 
     def handle_left(self, msg):
-        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
+        current_force = numpy.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
         self.force_variation['left_arm'] = (current_force - self.previous_force['left_arm'])
         self.previous_force['left_arm'] = current_force
 
     def handle_right(self, msg):
-        current_force = numpy.array([msg.force.x, msg.force.y, msg.force.z])
+        current_force = numpy.array([msg.wrench.force.x, msg.wrench.force.y, msg.wrench.force.z])
         self.force_variation['right_arm'] = (current_force - self.previous_force['right_arm'])
         self.previous_force['right_arm'] = current_force
 

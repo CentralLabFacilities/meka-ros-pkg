@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../dold_button_controller/.idea/dold_button_controller.iml" filepath="$PROJECT_DIR$/../dold_button_controller/.idea/dold_button_controller.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/hand_shaker.iml" filepath="$PROJECT_DIR$/.idea/hand_shaker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../meka_posture/.idea/meka_posture.iml" filepath="$PROJECT_DIR$/../meka_posture/.idea/meka_posture.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../meka_posture_execution/.idea/meka_posture_execution.iml" filepath="$PROJECT_DIR$/../meka_posture_execution/.idea/meka_posture_execution.iml" />
     </modules>
   </component>
 </project>
