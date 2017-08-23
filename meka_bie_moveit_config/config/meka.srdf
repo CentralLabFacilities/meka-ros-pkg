@@ -17,7 +17,7 @@
         <joint name="right_arm_j4" />
         <joint name="right_arm_j5" />
         <joint name="right_arm_j6" />
-        <chain base_link="upper" tip_link="hand_tool_frame_right" />
+        <chain base_link="upper" tip_link="handmount_RIGHT" />
     </group>
     <group name="left_arm">
         <joint name="left_arm_j0" />
@@ -27,7 +27,7 @@
         <joint name="left_arm_j4" />
         <joint name="left_arm_j5" />
         <joint name="left_arm_j6" />
-        <chain base_link="upper" tip_link="hand_tool_frame_left" />
+        <chain base_link="upper" tip_link="handmount_LEFT" />
     </group>
     <group name="both_arms">
         <group name="right_arm" />
@@ -216,8 +216,8 @@
         <joint name="left_arm_j6" value="0.1138" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="left_hand" parent_link="hand_tool_frame_left" group="left_hand" parent_group="left_arm" />
-    <end_effector name="right_hand" parent_link="hand_tool_frame_right" group="right_hand" parent_group="right_arm" />
+    <end_effector name="left_hand" parent_link="handmount_LEFT" group="left_hand" parent_group="left_arm" />
+    <end_effector name="right_hand" parent_link="handmount_RIGHT" group="right_hand" parent_group="right_arm" />
     <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
     <passive_joint name="torso_j2" />
     <passive_joint name="head_xtion_dummy" />
