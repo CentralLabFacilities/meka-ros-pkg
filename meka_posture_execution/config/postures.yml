@@ -1,4 +1,24 @@
 head:
+  init:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - head_j0
+    - head_j1
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+      - -0.0
+      - 0.0
+      time_from_start:
+        nsecs: 0
+        secs: 2
+      velocities: []
   nodding:
     header:
       frame_id: ''
@@ -275,6 +295,36 @@ head:
         secs: 7
       velocities: []
 left_arm:
+  init:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - left_arm_j0
+    - left_arm_j1
+    - left_arm_j2
+    - left_arm_j3
+    - left_arm_j4
+    - left_arm_j5
+    - left_arm_j6
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+     - -0.08445079634042177
+     - -0.041274322024641506
+     - 0.13192985745095606
+     - 0.02694191037884896
+     - -1.7971351159319875
+     - 0.07670366881551804
+     - 0.021350567314584904
+      time_from_start:
+        nsecs: 0
+        secs: 2
+      velocities: []
   shake_approach:
     header:
       frame_id: ''
@@ -986,6 +1036,32 @@ left_arm:
         secs: 7
       velocities: []
 left_hand:
+  init:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - left_hand_j0
+    - left_hand_j1
+    - left_hand_j2
+    - left_hand_j3
+    - left_hand_j4
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+      - 0.00
+      - 0.00
+      - 0.00
+      - 0.00
+      - 0.00
+      time_from_start:
+        nsecs: 0
+        secs: 2
+      velocities: []
   shake_open:
     header:
       frame_id: ''
@@ -1301,6 +1377,32 @@ left_hand:
         secs: 5
       velocities: []
 right_hand:
+  init:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - right_hand_j0
+    - right_hand_j1
+    - right_hand_j2
+    - right_hand_j3
+    - right_hand_j4
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+      - 0.00
+      - 0.00
+      - 0.00
+      - 0.00
+      - 0.00
+      time_from_start:
+        nsecs: 0
+        secs: 2
+      velocities: []
   shake_open:
     header:
       frame_id: ''
@@ -1760,6 +1862,36 @@ torso:
         secs: 6
       velocities: []
 right_arm:
+  init:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - right_arm_j0
+    - right_arm_j1
+    - right_arm_j2
+    - right_arm_j3
+    - right_arm_j4
+    - right_arm_j5
+    - right_arm_j6
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+      - -0.07191939299634911
+      - 0.01482709804938435
+      - -0.02634731937114267
+      - 0.008211211785613699
+      - 1.55092064990972
+      - -0.002362598437062308
+      - -0.04754205651943645
+      time_from_start:
+        nsecs: 0
+        secs: 2
+      velocities: []
   guiding_convenient:
     header:
       frame_id: ''
@@ -2386,4 +2518,3 @@ right_arm:
         nsecs: 99999999
         secs: 5
       velocities: []
-      
