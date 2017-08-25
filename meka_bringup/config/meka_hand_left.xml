@@ -1,0 +1,46 @@
+<Postures robot="left_hand" xmlns:dbxml="http://www.sleepycat.com/2002/dbxml">
+  <group name="AllFingerPrecision">
+    <joint_names>left_hand_j0,left_hand_j1,left_hand_j2,left_hand_j3,left_hand_j4</joint_names>
+    <group name="final">
+      <posture time_from_start="3.0" units="rad">1.31, 2.0944, 3.14159, 3.14159, 3.14159</posture> 
+    </group>
+    <group  name="pre">
+      <posture time_from_start="3.0" units="rad">1.31, 0.0, 0.0, 0.0, 0.0</posture>
+    </group>
+    <center name="pos" units="cm">0, 0, 5</center>
+    <center name="euler" units="deg">-10, 0, 0</center>
+  </group>
+  <group name="PowerGrasp">
+    <joint_names>left_hand_j0,left_hand_j1,left_hand_j2,left_hand_j3,left_hand_j4</joint_names>
+    <group name="final">
+      <posture time_from_start="3.0" units="rad">1.31, 2.0944, 3.14159, 3.14159, 3.14159</posture> 
+    </group>
+    <group  name="pre">
+      <posture time_from_start="3.0" units="rad">1.31, 0.0, 0.0, 0.0, 0.0</posture>
+    </group>
+    <center name="pos" units="cm">0, 0, 3.0</center>
+    <center name="euler" units="deg">-10, 0, 0</center>
+  </group>
+  <group name="ThreeFingerPrecision">
+    <joint_names>left_hand_j0,left_hand_j1,left_hand_j2,left_hand_j3,left_hand_j4</joint_names>
+    <group name="final">
+      <posture time_from_start="3.0" units="rad">1.31, 2.0944, 3.14159, 3.14159, 0.0</posture> 
+    </group>
+    <group  name="pre">
+      <posture time_from_start="3.0" units="rad">1.31, 0.0, 0.0, 0.0, 0.0</posture>
+    </group>
+    <center name="pos" units="cm">-1.8, 0, 5</center>
+    <center name="euler" units="deg">-10, 0, 0</center>
+  </group>
+  <group name="TwoFingerPrecision">
+    <joint_names>left_hand_j0,left_hand_j1,left_hand_j2,left_hand_j3,left_hand_j4</joint_names>
+    <group name="final">
+      <posture time_from_start="3.0" units="rad">1.31, 2.0944, 3.14159, 0.0, 0.0</posture> 
+    </group>
+    <group  name="pre">
+      <posture time_from_start="3.0" units="rad">1.31, 0.0, 0.0, 0.0, 0.0</posture>
+    </group>
+    <center name="pos" units="cm">-3.6, 0, 5</center>
+    <center name="euler" units="deg">-10, 0, 0</center>
+  </group> 
+</Postures>

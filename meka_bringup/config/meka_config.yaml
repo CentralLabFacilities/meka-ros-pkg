@@ -1,0 +1,77 @@
+grasp_gen_config:
+  left_hand:
+    verbose_level: 2
+    eef_name: left_hand
+    hand_properties:
+      num_fingers: 5
+      elbow_frame: "base_link"
+      grasp_frame_transform:
+        rotation: {x: 0.5, y: 0.5, z: -0.5, w: -0.5}
+        translation: {x: 0.0, y: 0.0, z: -0.12}
+      handedness: -1.0
+      controlled_joints: ['left_hand_j0', 'left_hand_j1', 'left_hand_j2', 'left_hand_j3', 'left_hand_j4']
+      max_grasp_opening: 0.1
+      hand_width: 0.1
+      top_clearance: 0.1
+      side_clearance: 0.05
+      palm_clearance: 0.03
+      elbow_to_grip_angle: 0
+    preferences: 
+      allow_flipped: true
+      lying_cyl_as_box: false
+      allow_floating_object: true
+      revolution_angle_step: 22.5
+      revolution_variation_max: 90
+      roll_angle_step: 10.0
+      roll_variation_max: 10.0
+      translation_step: 0.05
+      translation_variation_max: 1.0  #in percent of half-height
+      allowed_posture_types: ['AllFingerPrecision', 'ThreeFingerPrecision', 'TwoFingerPrecision', 'PowerGrasp']
+      allowed_grasp_types: ['SideCylinderGrasp', 'EndCylinderGrasp', 'BoxGrasp', 'SphereGrasp']
+      approach_direction: {x: 0.0, y: 0.0, z: 1.0}
+      approach_min_distance: 0.03
+      approach_desired_distance: 0.1
+      lift_min_distance: 0.03
+      lift_desired_distance: 0.1
+
+  right_hand:
+    verbose_level: 1
+    eef_name: right_hand
+    hand_properties:
+      num_fingers: 5
+      elbow_frame: "base_link"
+      grasp_frame_transform:
+        rotation: {x: 0.5, y: 0.5, z: -0.5, w: -0.5}
+        translation: {x: 0.0, y: 0.0, z: -0.12}
+      handedness: 1.0
+      controlled_joints: ['right_hand_j0', 'right_hand_j1', 'right_hand_j2', 'right_hand_j3', 'right_hand_j4']
+      max_grasp_opening: 0.1
+      hand_width: 0.1
+      top_clearance: 0.1
+      side_clearance: 0.05
+      palm_clearance: 0.03
+      elbow_to_grip_angle: 0
+    preferences: 
+      allow_flipped: true
+      lying_cyl_as_box: false
+      allow_floating_object: true
+      revolution_angle_step: 22.5
+      revolution_variation_max: 90
+      roll_angle_step: 0.0
+      roll_variation_max: 0.0
+      translation_step: 0.05
+      translation_variation_max: 1.0  #in percent of half-height
+      allowed_posture_types: ['AllFingerPrecision', 'ThreeFingerPrecision', 'TwoFingerPrecision', 'PowerGrasp']
+      allowed_grasp_types: ['SideCylinderGrasp', 'EndCylinderGrasp', 'BoxGrasp', 'SphereGrasp']
+      approach_direction: {x: 0.0, y: 0.0, z: 1.0}
+      approach_min_distance: 0.03
+      approach_desired_distance: 0.1
+      lift_min_distance: 0.03
+      lift_desired_distance: 0.1
+
+# lists all the posture names in one of the 4 supported posture types (currently only the first posture will be used)
+postures_type:
+  AllFingerPrecision: ['AllFingerPrecision']
+  ThreeFingerPrecision: ['ThreeFingerPrecision']
+  TwoFingerPrecision: ['TwoFingerPrecision']
+  PowerGrasp: ['PowerGrasp']

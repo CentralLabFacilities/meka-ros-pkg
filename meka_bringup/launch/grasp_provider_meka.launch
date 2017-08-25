@@ -1,0 +1,38 @@
+<launch>
+  <!-- hand properties -->
+  <arg name="load_robot_description" default="true" />
+  <arg name="robot_description_semantic" default="$(find meka_bie_moveit_config)/config/meka.srdf" />
+  <arg name="robot_description" default="$(find meka_description)/robots/bie.urdf.xacro" />
+  <arg name="base_link_name" default="base_link" />
+  <arg name="grasp_frame" default="some_dummy" />
+  <arg name="left_hand_ee" default="left_hand" />
+  <arg name="right_hand_ee" default="right_hand" />
+  <arg name="grasp_configs" default="$(find meka_bringup)/config/meka_config.yaml" />
+  <arg name="hand_grasp_postures_l" default="$(find meka_bringup)/config/meka_hand_left.xml" />
+  <arg name="hand_grasp_postures_r" default="$(find meka_bringup)/config/meka_hand_right.xml" />
+  <param name="hand_grasp_postures/left_hand" type="str" textfile="$(arg hand_grasp_postures_l)" />
+  <param name="hand_grasp_postures/right_hand" type="str" textfile="$(arg hand_grasp_postures_r)" />
+  <rosparam command="load" file="$(arg grasp_configs)" />
+
+  <group if="$(arg load_robot_description)">
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(arg robot_description)'" />
+    <param name="robot_description_semantic" type="str" textfile="$(arg robot_description_semantic)" />
+  </group>
+
+  <!-- fitting service -->
+  <node pkg="sq_fitting_ros" type="fitting_service.py" name="sq_fitting_ros" args="" output="screen" />
+
+  <!-- sq drawing node -->
+  <node pkg="sq_fitting_ros" type="display_node.py" name="sq_display" args="--lifetime 30.0 --frame $(arg base_link_name)" output="screen" />
+
+  <!-- grasp drawing service -->
+  <node pkg="grasp_viewer" type="grasp_viewer_service" name="grasp_viewer" args=""  output="screen" >
+    <param name="grasp_frame" type="str" value="$(arg grasp_frame)" />
+    <param name="left_hand_ee" type="str" value="$(arg left_hand_ee)" />
+    <param name="right_hand_ee" type="str" value="$(arg right_hand_ee)" />
+  </node>
+
+  <!-- grasp manager -->
+  <node pkg="agni_grasp_manager" type="grasp_provider.py" name="grasp_provider" args="" output="screen" >
+  </node>
+</launch>
