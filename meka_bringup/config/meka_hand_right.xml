@@ -5,7 +5,7 @@
       <posture time_from_start="3.0" units="rad">1.97, 2.5, 3.14159, 3.14159, 3.14159</posture>  
     </group>
     <group  name="pre">
-      <posture time_from_start="3.0" units="rad">1.31, 0.0, 0.0, 0.0, 0.0</posture>
+      <posture time_from_start="3.0" units="rad">1.97, 0.0, 0.0, 0.0, 0.0</posture>
     </group>
     <center name="pos" units="cm">0, 0, 5</center>
     <center name="euler" units="deg">-10, 0, 0</center>
@@ -16,7 +16,7 @@
       <posture time_from_start="3.0" units="rad">1.97, 2.5, 3.14159, 3.14159, 3.14159</posture>  
     </group>
     <group  name="pre">
-      <posture time_from_start="3.0" units="rad">1.31, 0.0, 0.0, 0.0, 0.0</posture>
+      <posture time_from_start="3.0" units="rad">1.97, 0.0, 0.0, 0.0, 0.0</posture>
     </group>
     <center name="pos" units="cm">0, 0, 3.0</center>
     <center name="euler" units="deg">-10, 0, 0</center>
@@ -27,7 +27,7 @@
      <posture time_from_start="3.0" units="rad">1.8, 2.5, 3.14159, 3.14159, 0.0</posture> 
     </group>
     <group  name="pre">
-      <posture time_from_start="3.0" units="rad">1.31, 0.0, 0.0, 0.0, 0.0</posture>
+      <posture time_from_start="3.0" units="rad">1.8, 0.0, 0.0, 0.0, 0.0</posture>
     </group>
     <center name="pos" units="cm">1.8, 0, 5</center>
     <center name="euler" units="deg">-10, 0, 0</center>
@@ -38,7 +38,7 @@
       <posture time_from_start="3.0" units="rad">1.5, 2.5, 3.14159, 0.0, 0.0</posture> 
     </group>
     <group  name="pre">
-      <posture time_from_start="3.0" units="rad">1.31, 0.0, 0.0, 0.0, 0.0</posture>
+      <posture time_from_start="3.0" units="rad">1.5, 0.0, 0.0, 0.0, 0.0</posture>
     </group>
     <center name="pos" units="cm">3.6, 0, 5</center>
     <center name="euler" units="deg">-10, 0, 0</center>
