@@ -161,7 +161,7 @@
         <joint name="right_hand_j4b" value="0" />
         <joint name="right_hand_j4c" value="0" />
     </group_state>
-    <group_state name="left_arm_pre_grasp" group="left_arm">
+    <group_state name="pre_grasp" group="left_arm">
         <joint name="left_arm_j0" value="-0.8009" />
         <joint name="left_arm_j1" value="-0.0282" />
         <joint name="left_arm_j2" value="-0.128" />
