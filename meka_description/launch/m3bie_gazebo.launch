@@ -1,10 +1,10 @@
 <launch>
 
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find meka_description)/robots/bie.urdf.xacro'" />
+  <param name="robot_description" textfile="$(find meka_description)/robots/bie.xml"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">=
     <arg name="paused" value="true" />
-    <arg name="debug" value="true" />
+    <arg name="debug" value="false" />
     <arg name="gui" value="true" />
     <arg name="use_sim_time" value="true" />
   </include>
@@ -18,7 +18,7 @@
     > xmlstarlet ed -d '//comment()' bie.urdf > bie.xml
 
   -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model meka -file $(find meka_description)/robots/bie.xml"/> 
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model meka -param robot_description"/> 
 
 
   <rosparam command="load" file="$(find meka_description)/config/gazebo_controllers.yaml"/>
