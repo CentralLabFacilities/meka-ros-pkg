@@ -27,22 +27,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-## Declare a cpp library
-# add_library(meka_posture
-#   src/${PROJECT_NAME}/meka_posture.cpp
-# )
-
-## Declare a cpp executable
-# add_executable(meka_posture_node src/meka_posture_node.cpp)
-
-## Add cmake target dependencies of the executable/library
-## as an example, message headers may need to be generated before nodes
-# add_dependencies(meka_posture_node meka_posture_generate_messages_cpp)
-
-## Specify libraries to link a library or executable target against
-# target_link_libraries(meka_posture_node
-#   ${catkin_LIBRARIES}
-# )
+## Generate xml
+add_custom_target(
+  genSimMeka ALL
+  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/generate_commentless_bie.sh
+)
 
 #############
 ## Install ##
