@@ -1,0 +1,35 @@
+<launch>
+
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find meka_description)/robots/bie.urdf.xacro'" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">=
+    <arg name="paused" value="true" />
+    <arg name="debug" value="true" />
+    <arg name="gui" value="true" />
+    <arg name="use_sim_time" value="true" />
+  </include>
+
+
+  <!-- <node name="meka_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model meka" /> -->
+  <!-- spawner tries to resolve all package urls in comments while xacro is not replacing xacro params in comments.
+    so we have to generate the urdf and remove all comments to be useable with the spawner
+    
+    > rosrun xacro xacro bie.urdf.xacro > bie.urdf      
+    > xmlstarlet ed -d '//comment()' bie.urdf > bie.xml
+
+  -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model meka -file $(find meka_description)/robots/bie.xml"/> 
+
+
+  <rosparam command="load" file="$(find meka_description)/config/gazebo_controllers.yaml"/>
+
+  <!-- Controllers that come up loaded -->
+  <node name="default_loaded_controllers_spawner" pkg="controller_manager" type="spawner" output="screen" args="joint_state_controller head_controller zlift_controller body_controller arm_r_controller hand_r_controller arm_l_controller hand_l_controller"></node>
+
+  <!-- Robot state publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+    <param name="tf_prefix" type="string" value="" />
+  </node>
+
+</launch>

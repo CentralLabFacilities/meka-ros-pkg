@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       name="meka" >
+
+  <xacro:include filename="$(find meka_description)/robots/bie.urdf.xacro"/>
+
+  <!-- Import asus -->
+  <xacro:include filename="$(find tobi_description)/urdf/asus_camera.urdf.xacro" />   
+
+  <xacro:asus_camera name="xtion_sim" parent="shell">
+    <origin xyz="0.12 0 0.06" rpy="0 0 0"/>
+  </xacro:asus_camera> 
+
+
+  <!-- Extra Wheels -->
+  <!-- <xacro:include filename="$(find meka_description)/urdf/wheel_defs.urdf.xacro" />
+
+  <wheel fb="front" lr="right" parent="base_link" translateX="1" translateY="-1" flipY="-1"/>
+  <wheel fb="front" lr="left" parent="base_link" translateX="1" translateY="1" flipY="-1"/>
+  <wheel fb="back" lr="right" parent="base_link" translateX="-1" translateY="-1" flipY="-1"/>
+  <wheel fb="back" lr="left" parent="base_link" translateX="-1" translateY="1" flipY="-1"/> -->
+
+</robot>
+  
