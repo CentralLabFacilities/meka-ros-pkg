@@ -30,7 +30,7 @@ include_directories(
 ## Generate xml
 add_custom_target(
   genSimMeka ALL
-  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/generate_commentless_bie.sh
+  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/generate_commentless_bie.sh ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 #############
