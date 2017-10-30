@@ -17,4 +17,17 @@
   <run_depend>urdf</run_depend>
   <run_depend>xacro</run_depend>
 
+<!-- build
+
+-->
+
+<!-- run
+  tobi_description
+  gazebo_ros_planar_move
+  roboticsgroup_gazebo_mimic_joint_plugin
+  gazebo_ros_control
+-->
+  
+  
+
 </package>

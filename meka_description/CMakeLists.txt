@@ -9,6 +9,11 @@ find_package(catkin REQUIRED COMPONENTS
   xacro
 )
 
+find_program (xmlstarlet NAMES xmlstarlet)
+if (NOT xmlstarlet)
+  message(FATAL_ERROR "xmlstarlet not found, can not generate mekaSim urdf")
+endif()
+
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES meka_posture
