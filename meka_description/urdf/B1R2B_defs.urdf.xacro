@@ -1,109 +1,34 @@
 <?xml version="1.0"?>
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
   
 
   <property name="M_PI" value="3.1415926535897931" />
+
+  <xacro:macro name="inertial_cuboid_with_pose" params="mass x_length y_length z_length *origin">
+    <inertial>
+      <xacro:insert_block name="origin"/>
+      <mass value="${mass}" />
+      <inertia ixx="${(1/12) * mass * (y_length*y_length + z_length*z_length)}" ixy="0.0" ixz="0.0"
+               iyy="${(1/12) * mass * (x_length*x_length + z_length*z_length)}" iyz="0.0"
+               izz="${(1/12) * mass * (x_length*x_length + y_length*y_length)}" />
+    </inertial>
+  </xacro:macro>
  
   <macro name="meka_base" params="side parent reflect *origin">
 
-    
-    <joint name="X" type="fixed">  <!-- was prismatic -->
-      <axis xyz="1 0 0" />
+     <joint name="fixed_base_joint" type="fixed">
       <insert_block name="origin" /> 
+      <child link="fixed_base"/>
       <parent link="${parent}"/>
-      <child link="dummy_1"/>
-      <!--limit lower="${reflect*M_PI/4-1.5}"  upper="${reflect*M_PI/4+1.5}"
-             effort="30" velocity="${3.48}" />
-
-      <dynamics damping="10.0" />
-
-      <safety_controller k_position="100" k_velocity="10"
-                         soft_lower_limit="${reflect*M_PI/4-1.5+0.15}"
-                         soft_upper_limit="${reflect*M_PI/4+1.5-0.15}" /-->     
-    </joint>
-    
-    <link name="dummy_1">
-      <inertial>
-        <mass value="25.799322" />
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-        <inertia ixx="0.866179142480"  ixy="-0.06086507933"  ixz="-0.12118061183"
-                 iyy="0.87421714893"  iyz="-0.05886609911"
-                 izz="0.27353821674" />
-      </inertial>
-
-      <visual>
-	      <material name="GreyA" />
-	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="b1r1_1_geom">
-		      <box size="0.01 0.01 0.01" />
-	      </geometry>  
-      </visual>
-
-      <collision>
-	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="b1r1_1_collision_geom">
-		      <box size="0.01 0.01 0.01" />
-	      </geometry>
-      </collision>
-    </link>
-
-    <joint name="Y" type="fixed"> <!-- was prismatic -->
-      <axis xyz="0 1 0"/>
-    
-      <!-- limit lower="-0.5236" upper="1.3963"
-             effort="30" velocity="${3.47}" />
-             
-      <safety_controller k_position="100" k_velocity="10"
-                         soft_lower_limit="${-0.5236+0.17}" soft_upper_limit="${1.3963-0.05}" />      
-      <dynamics damping="10.0" / -->
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <parent link="dummy_1"/>
-      <child link="dummy_2"/>
-    </joint>
-    
-    <link name="dummy_2">
-      <inertial>
-        <mass value="2.74988" />
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-        <inertia ixx="0.02105584615" ixy="0.00496704022"  ixz="-0.00194808955"
-                 iyy="0.02127223737" iyz="0.00110425490"
-                 izz="0.01975753814" />
-      </inertial>
-
-      <visual>
-	      <material name="GreyB" />
-	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="b1r1_2_geom">
-		      <box size="0.01 0.01 0.01" />
-	      </geometry>  
-      </visual>
-      
-      <collision>
-	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="b1r1_2_collision_geom">
-		      <box size="0.01 0.01 0.01" />
-	      </geometry>
-      </collision>
-    </link>
-
-    <joint name="yaw" type="fixed">  <!-- was revolute -->
-      <axis xyz="0 0 1" />
-      <origin xyz="0 0.0 0.0" rpy="0 -0.017856194 0" />
-      <parent link="dummy_2" />
-      <child link="dummy_3"/>
-      <!-- limit lower="${reflect*1.55-2.35}" upper="${reflect*1.55+2.35}" effort="30" velocity="${5.45}" />
-      <safety_controller k_position="100" k_velocity="2" soft_lower_limit="${reflect*1.55-2.35+0.15}" soft_upper_limit="${reflect*1.55+2.35-0.15}" />
-      <dynamics damping="0.1" / -->
     </joint>
 
-  <link name="dummy_3">
-	  <inertial>
-		  <mass value="1000" />
-		  <origin xyz="0 0 0" />
-		  <inertia ixx="1000"  ixy="0"  ixz="0" iyy="1000" iyz="0" izz="1000" />
-	  </inertial>
+  <link name="fixed_base">
+	  <xacro:inertial_cuboid_with_pose mass="100.0" x_length="0.6" y_length="0.4" z_length="0.5">
+      <origin xyz="0 0 0.25" rpy="0 0 0" />
+    </xacro:inertial_cuboid_with_pose> 
 	  <visual>
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
@@ -111,7 +36,6 @@
 			  <mesh filename="package://${MESH}/B1R1/meka_mobile_base+backpack.dae" /> <!-- B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.dae -->
 		  </geometry>
 	  </visual>
-
 	  <visual>
 		  <material name="GreyC" />
 		  <origin xyz="0.17654 0 0.32141" rpy="0 0 0" />
@@ -119,14 +43,7 @@
 			  <mesh filename="package://${MESH}/B1R1/meka_zlift.dae" /> <!-- B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.dae -->
 		  </geometry>
 	  </visual>
-	  <!--<collision>
-		  <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-		  <geometry name="b1r1_3_geom">
-			  <mesh filename="package://${MESH_COLL}/B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.stl" />
-		  </geometry>
-	  </collision>-->
-    <!-- primitive meshes only -->
-    <collision>
+	  <collision>
 		  <origin xyz="0 0 0.2" rpy="0.0 0.0 0.0 " />
 		  <geometry>
 			  <box size="0.46 0.46 0.25" />

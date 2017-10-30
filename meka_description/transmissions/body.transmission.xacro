@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot>
+
+  <transmission name="torso_j0_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="torso_j0">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="torso_j0_motor">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="torso_j1_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="torso_j1">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="torso_j1_motor">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="torso_j2_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="torso_j2">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="torso_j2_motor">
+      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+  
+</robot>

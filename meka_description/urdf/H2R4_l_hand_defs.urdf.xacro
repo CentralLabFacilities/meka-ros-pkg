@@ -215,7 +215,12 @@
       <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${170.0*M_PI/180.0}" />    
     </joint>
       
-    <link name="thumb_motor_left"/>
+    <link name="thumb_motor_left"> 
+      <inertial>
+        <mass value="2e-06"/>
+        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		  </inertial>
+    </link>
         
     <joint name="left_hand_j1a" type="revolute">
       <axis xyz="0 -1 0"/>
@@ -347,7 +352,12 @@
         <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${300.0*M_PI/180.0}" />    
       </joint>
       
-      <link name="index_motor_left"/>
+      <link name="index_motor_left"> 
+        <inertial>
+          <mass value="2e-06"/>
+          <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+        </inertial>
+      </link>
         
       <joint name="left_hand_j2a" type="revolute">
         <axis xyz="0 1 0" />
@@ -543,7 +553,12 @@
         <child link="ring_motor_left"/>
         <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${300.0*M_PI/180}" />    
       </joint>
-    <link name="ring_motor_left"/>
+    <link name="ring_motor_left"> 
+        <inertial>
+          <mass value="2e-06"/>
+          <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+        </inertial>
+      </link>
     <joint name="left_hand_j3a" type="revolute">
       <axis xyz="0 1 0" />
       <origin xyz="0 0 -0.101" rpy="0 0 0" />
@@ -737,7 +752,12 @@
         <child link="pinky_motor_left"/>
         <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${300.0*M_PI/180}" />    
       </joint>
-    <link name="pinky_motor_left"/>
+    <link name="pinky_motor_left"> 
+        <inertial>
+          <mass value="2e-06"/>
+          <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+        </inertial>
+      </link>
     <joint name="left_hand_j4a" type="revolute">
       <axis xyz="0 1 0" />
       <origin xyz="0 0.028 -0.101" rpy="0 0 0" />

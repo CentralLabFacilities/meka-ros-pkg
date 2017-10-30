@@ -10,42 +10,44 @@
  <property name="MESH_COLL" value="meka_description/meshes/low_res" />
 
  <xacro:arg name="hand_mimic" default="true"/> 
- <xacro:arg name="torso_mimic" default="true"/> 
-<!-- synergy vector -->
- <xacro:property name="torso_coupling" value="1.0" />
+ <xacro:arg name="torso_mimic" default="true"/>
+
+  <!-- synergy vector -->
+  <xacro:property name="torso_coupling" value="1.0" />
  
 
-<!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
+  <!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
   <xacro:include filename="$(find meka_description)/gazebo/gazebo.urdf.xacro" />
-  <!--<xacro:include filename="$(find meka_description)/transmissions/uta.transmission.xacro" />-->
+  <xacro:include filename="$(find meka_description)/transmissions/body.transmission.xacro" /> 
 
-<!-- Meka Base -->
+  <!-- Meka Base -->
   <xacro:include filename="$(find meka_description)/urdf/B1R2B_defs.urdf.xacro" />
 
-<!-- Meka Zlift -->
+  <!-- Meka Zlift -->
   <xacro:include filename="$(find meka_description)/urdf/Z1R2B_defs.urdf.xacro" />
+  <xacro:include filename="$(find meka_description)/transmissions/Z1R2B_zlift.transmission.xacro" />
 
-<!-- Meka Arm -->
-  <xacro:include filename="$(find meka_description)/urdf/A2R4_r_arm_defs.urdf.xacro" />
-
-  <xacro:include filename="$(find meka_description)/urdf/A2R4_l_arm_defs.urdf.xacro" />
+  <!-- Meka Arm -->
+  <xacro:include filename="$(find meka_description)/urdf/A2R4_r_arm_defs.urdf.xacro" /> 
+  <!-- <xacro:include filename="$(find meka_description)/urdf/A2R4_l_arm_defs.urdf.xacro" />  -->
+  <xacro:include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" /> 
+  <!-- <xacro:include filename="$(find meka_description)/transmissions/A2R4_l_arm_defs.transmission.xacro" />  -->
   
 
   <!-- Meka Hand -->
-  <xacro:include filename="$(find meka_description)/urdf/H2R4_r_hand_defs.urdf.xacro" />
+  <xacro:include filename="$(find meka_description)/urdf/H2R4_r_hand_defs.urdf.xacro" /> 
+  <!-- <xacro:include filename="$(find meka_description)/urdf/H2R4_l_hand_defs.urdf.xacro" />  -->
+  <xacro:include filename="$(find meka_description)/transmissions/H2R4_r_hand.transmission.xacro" />
+  <!-- <xacro:include filename="$(find meka_description)/transmissions/H2R4_l_hand.transmission.xacro" />  -->
 
-  <xacro:include filename="$(find meka_description)/urdf/H2R4_l_hand_defs.urdf.xacro" />
 
   
-<!-- Meka Head -->
+  <!-- Meka Head -->
   <xacro:include filename="$(find meka_description)/urdf/S3R1_head_defs.urdf.xacro" />
+  <xacro:include filename="$(find meka_description)/transmissions/S3R1_head.transmission.xacro" />
 
-
-
-  <!-- john added transmissions -->
-  <!-- <xacro:include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" /> -->
-  <!--<xacro:include filename="$(find meka_description)/transmissions/H2R2_r_hand_defs.transmission.xacro" />-->
-  <!--<xacro:include filename="$(find meka_description)/transmissions/S2R1_head_defs.transmission.xacro" />-->
+  <!-- Import asus -->
+  <xacro:include filename="$(find tobi_description)/urdf/asus_camera.urdf.xacro" />   
 
 
    <property name="M_PI" value="3.1415926535897931" />
@@ -65,7 +67,7 @@
 
   <!-- john added transmissions -->
   <m3_r_arm_transmission side="r" reflect="1" parent="upper"/>
-  <m3_r_hand_transmission/>
+  <m3_l_arm_transmission side="l" reflect="1" parent="upper"/>
   
   <m3_r_hand side="r" reflect="1" parent="handmount_RIGHT" use_mimic="$(arg hand_mimic)">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
@@ -96,7 +98,7 @@
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </meka_base>
 
-  <meka_zlift  side="r" reflect="1" parent="dummy_3">
+  <meka_zlift  side="r" reflect="1" parent="base_link">
     <origin xyz="0.17513 0.0 0.43" rpy="0 0 0" /> <!-- 0.33 0.0 0.45 rpy="0 0.0236 0" -->
   </meka_zlift>
 
@@ -110,9 +112,9 @@
   
   <link name="panplate">
     <inertial>
-      <mass value="1000" />
+      <mass value="30" />
       <origin xyz="0 0 0" />
-      <inertia ixx="100"  ixy="0"  ixz="0" iyy="100" iyz="0" izz="100" />
+      <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
     </inertial>
     <visual>
       <material name="GreyA" />
