@@ -38,7 +38,7 @@
       <odometryRate>60.0</odometryRate>
       <robotNamespace>/</robotNamespace>
       <commandTopic>cmd_vel</commandTopic>
-      <robotBaseFrame>base_footprint</robotBaseFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
     </plugin>
 
     <plugin name="mimic_right_j1a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">

@@ -40,17 +40,12 @@
   <xacro:include filename="$(find meka_description)/transmissions/H2R4_r_hand.transmission.xacro" />
   <!-- <xacro:include filename="$(find meka_description)/transmissions/H2R4_l_hand.transmission.xacro" />  -->
 
-
-  
   <!-- Meka Head -->
   <xacro:include filename="$(find meka_description)/urdf/S3R1_head_defs.urdf.xacro" />
   <xacro:include filename="$(find meka_description)/transmissions/S3R1_head.transmission.xacro" />
 
-  <!-- Import asus -->
-  <xacro:include filename="$(find tobi_description)/urdf/asus_camera.urdf.xacro" />   
+  <property name="M_PI" value="3.1415926535897931" />
 
-
-   <property name="M_PI" value="3.1415926535897931" />
   <material name="GreyA"> <!-- darkest -->
     <color rgba="0.3 0.3 0.3 1.0"/>
   </material>
