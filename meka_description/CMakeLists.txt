@@ -66,7 +66,9 @@ install(DIRECTORY urdf
 
 install(DIRECTORY robots
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-  FILES_MATCHING PATTERN "*.xacro"
+  FILES_MATCHING
+	PATTERN "*.xacro"
+	PATTERN "*.xml"
 )
 
 install(DIRECTORY transmissions
@@ -84,10 +86,10 @@ install(DIRECTORY meshes
 
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)  
+)
 install(DIRECTORY config
-DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)  
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
 
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
