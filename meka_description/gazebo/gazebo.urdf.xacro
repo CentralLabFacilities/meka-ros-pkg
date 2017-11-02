@@ -34,14 +34,15 @@
       <covariance_yaw>0.0001</covariance_yaw>
     </plugin> -->
 
-    <plugin name="drive_controller" filename="libgazebo_ros_planar_move.so">
-      <odometryRate>60.0</odometryRate>
-      <robotNamespace>/</robotNamespace>
+    <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
       <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometryRate>20.0</odometryRate>
       <robotBaseFrame>base_link</robotBaseFrame>
     </plugin>
   
-    <plugin name="mimic_right_j1a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+    <!--plugin name="mimic_right_j1a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
       <joint>right_hand_j1</joint>
       <mimicJoint>right_hand_j1a</mimicJoint>
       <multiplier>${th_palmprox_coupling}</multiplier>
@@ -55,7 +56,6 @@
       <sensitiveness>0.0</sensitiveness>
     </plugin>
 
-    <!-- j2 -->
     <plugin name="mimic_right_j2a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
       <joint>right_hand_j2</joint>
       <mimicJoint>right_hand_j2a</mimicJoint>
@@ -77,7 +77,6 @@
       <sensitiveness>0.0</sensitiveness>
     </plugin>
 
-    <!-- j3 -->
    <plugin name="mimic_right_j3a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
       <joint>right_hand_j3</joint>
       <mimicJoint>right_hand_j3a</mimicJoint>
@@ -99,7 +98,6 @@
       <sensitiveness>0.0</sensitiveness>
     </plugin>
 
-    <!-- j4 -->
     <plugin name="mimic_right_j4a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
       <joint>right_hand_j4</joint>
       <mimicJoint>right_hand_j4a</mimicJoint>
@@ -119,7 +117,7 @@
       <mimicJoint>right_hand_j4c</mimicJoint>
       <multiplier>${middist_coupling}</multiplier>
       <sensitiveness>0.0</sensitiveness>
-    </plugin>
+    </plugin-->
 
   </gazebo>
 

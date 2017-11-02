@@ -28,16 +28,16 @@
   <xacro:include filename="$(find meka_description)/transmissions/Z1R2B_zlift.transmission.xacro" />
 
   <!-- Meka Arm -->
-  <xacro:include filename="$(find meka_description)/urdf/A2R4_r_arm_defs.urdf.xacro" /> 
+  <!--xacro:include filename="$(find meka_description)/urdf/A2R4_r_arm_defs.urdf.xacro" /--> 
   <!-- <xacro:include filename="$(find meka_description)/urdf/A2R4_l_arm_defs.urdf.xacro" />  -->
-  <xacro:include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" /> 
+  <!--xacro:include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" /--> 
   <!-- <xacro:include filename="$(find meka_description)/transmissions/A2R4_l_arm_defs.transmission.xacro" />  -->
   
 
   <!-- Meka Hand -->
-  <xacro:include filename="$(find meka_description)/urdf/H2R4_r_hand_defs.urdf.xacro" /> 
+  <!--xacro:include filename="$(find meka_description)/urdf/H2R4_r_hand_defs.urdf.xacro" /--> 
   <!-- <xacro:include filename="$(find meka_description)/urdf/H2R4_l_hand_defs.urdf.xacro" />  -->
-  <xacro:include filename="$(find meka_description)/transmissions/H2R4_r_hand.transmission.xacro" />
+  <!--xacro:include filename="$(find meka_description)/transmissions/H2R4_r_hand.transmission.xacro" /-->
   <!-- <xacro:include filename="$(find meka_description)/transmissions/H2R4_l_hand.transmission.xacro" />  -->
 
   <!-- Meka Head -->
@@ -58,7 +58,15 @@
     <color rgba="0.7 0.7 0.7 1.0"/>
   </material>
   
-
+  <xacro:macro name="inertial_cuboid_with_pose" params="mass x_length y_length z_length *origin">
+    <inertial>
+      <xacro:insert_block name="origin"/>
+      <mass value="${mass}" />
+      <inertia ixx="${(1/12) * mass * (y_length*y_length + z_length*z_length)}" ixy="0.0" ixz="0.0"
+               iyy="${(1/12) * mass * (x_length*x_length + z_length*z_length)}" iyz="0.0"
+               izz="${(1/12) * mass * (x_length*x_length + y_length*y_length)}" />
+    </inertial>
+  </xacro:macro>
 
   <!-- john added transmissions -->
   <m3_r_arm_transmission side="r" reflect="1" parent="upper"/>
@@ -87,8 +95,14 @@
 
 
 
-  <link name="base_link" />
-
+  <link name="base_link" >
+       <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="1.035 1.185 0.025"/>
+          </geometry>
+        </collision>
+        </link>
   <meka_base  side="r" reflect="1" parent="base_link">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
   </meka_base>
@@ -106,11 +120,9 @@
   
   
   <link name="panplate">
-    <inertial>
-      <mass value="30" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
-    </inertial>
+<xacro:inertial_cuboid_with_pose mass="20.0" x_length="0.6" y_length="0.4" z_length="0.5">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:inertial_cuboid_with_pose> 
     <visual>
       <material name="GreyA" />
       <origin xyz="0 0 0" rpy="0 0 0 " />
