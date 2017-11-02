@@ -5,7 +5,35 @@
        xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        name="meka" >
 
-  <xacro:include filename="$(find meka_description)/robots/bie.urdf.xacro"/>
+  <!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
+  <xacro:include filename="$(find meka_description)/gazebo/gazebo.urdf.xacro" />
+  <xacro:include filename="$(find meka_description)/transmissions/body.transmission.xacro" /> 
+
+  <!-- MEKA BASICS -->
+  <xacro:include filename="$(find meka_description)/urdf/MEKA_BASIC.urdf.xacro" />
+
+  <!-- Meka Base -->
+  <xacro:include filename="$(find meka_description)/urdf/B1R2B_defs.urdf.xacro" />
+
+  <!-- Meka Zlift -->
+  <xacro:include filename="$(find meka_description)/urdf/Z1R2B_defs.urdf.xacro" />
+  <xacro:include filename="$(find meka_description)/transmissions/Z1R2B_zlift.transmission.xacro" />
+
+  <!-- Meka Arm -->
+  <!-- <xacro:include filename="$(find meka_description)/urdf/A2R4_r_arm_defs.urdf.xacro" />  -->
+  <!-- <xacro:include filename="$(find meka_description)/urdf/A2R4_l_arm_defs.urdf.xacro" />  -->
+  <!-- <xacro:include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" /> -->
+  <!-- <xacro:include filename="$(find meka_description)/transmissions/A2R4_l_arm_defs.transmission.xacro" /> --> 
+
+  <!-- Meka Hand -->
+  <!-- <xacro:include filename="$(find meka_description)/urdf/H2R4_r_hand_defs.urdf.xacro" />  -->
+  <!-- <xacro:include filename="$(find meka_description)/urdf/H2R4_l_hand_defs.urdf.xacro" />  -->
+  <!-- <xacro:include filename="$(find meka_description)/transmissions/H2R4_r_hand.transmission.xacro" /> -->
+  <!-- <xacro:include filename="$(find meka_description)/transmissions/H2R4_l_hand.transmission.xacro" /> -->
+
+  <!-- Meka Head -->
+  <xacro:include filename="$(find meka_description)/urdf/S3R1_head_defs.urdf.xacro" />
+  <xacro:include filename="$(find meka_description)/transmissions/S3R1_head.transmission.xacro" />
 
   <!-- Import asus -->
   <xacro:include filename="$(find meka_description)/urdf/asus_camera.urdf.xacro" />   
