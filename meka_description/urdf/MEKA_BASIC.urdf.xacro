@@ -16,7 +16,6 @@
   	<xacro:property name="torso_coupling" value="1.0" />
 
 	<material name="GreyA">
-		<!-- darkest -->
 		<color rgba="0.3 0.3 0.3 1.0"/>
 	</material>
 	<material name="GreyB">
@@ -56,6 +55,12 @@
 	</m3_l_arm>
 
 	<link name="base_link">
+	    <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <box size="0.8 0.6 0.025"/>
+          </geometry>
+        </collision>
 	</link>
 
 	<joint name="laser_front_joint" type="fixed"> 
@@ -66,7 +71,7 @@
 
 	<link name="laser_front"> 
 	</link>
-
+	
 	<joint name="laser_rear_joint" type="fixed"> 
 	  <origin xyz="-0.306 0.0 0.4" rpy="0 ${M_PI} 0" />
       <child link="laser_rear"/>
@@ -85,7 +90,6 @@
 		<!-- 0.33 0.0 0.45 rpy="0 0.0236 0" -->
 	</meka_zlift>
 
-	<!-- Solid Base -->
 	<joint name="chest_joint" type="fixed">
 		<origin xyz="0.263 0.0 0.006" rpy="0 0 0" />
 		<parent link="zlift_link" />
@@ -93,7 +97,7 @@
 	</joint>
 
 	<link name="panplate">
-		<xacro:inertial_cuboid_with_pose mass="20.0" x_length="0.6" y_length="0.4" z_length="0.5">
+		<xacro:inertial_cuboid_with_pose mass="4.0" x_length="0.6" y_length="0.4" z_length="0.5">
 			<origin xyz="0 0 0" rpy="0 0 0" />
 		</xacro:inertial_cuboid_with_pose>
 		<visual>

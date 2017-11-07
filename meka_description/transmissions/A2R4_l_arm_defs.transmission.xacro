@@ -41,19 +41,17 @@
     <transmission name="left_arm_t3" type="pr2_mechanism_model/SimpleTransmission">
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="left_arm_a3">
-        <hardwareInterface>PositionJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="left_arm_j3">
         <hardwareInterface>PositionJointInterface</hardwareInterface>
       </joint>
-      <mechanicalReduction>1</mechanicalReduction>
     </transmission>
 
     <!-- Elbow flex -->
     <transmission name="left_arm_t4" type="pr2_mechanism_model/SimpleTransmission">
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="left_arm_a4">
-        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="left_arm_j4">
@@ -69,7 +67,6 @@
     <transmission name="left_arm_t5" type="pr2_mechanism_model/SimpleTransmission">
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="left_arm_a5">
-        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="left_arm_j5">
@@ -81,7 +78,6 @@
     <transmission name="left_arm_t6" type="pr2_mechanism_model/SimpleTransmission">
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="left_arm_a6">
-        <hardwareInterface>PositionJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="left_arm_j6">

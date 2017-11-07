@@ -9,7 +9,6 @@
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="right_hand_j0_motor">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -20,7 +19,6 @@
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="right_hand_j1_motor">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -31,7 +29,6 @@
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="right_hand_j2_motor">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -42,7 +39,6 @@
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="right_hand_j3_motor">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -53,10 +49,8 @@
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="right_hand_j4_motor">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-
-
+  
 </robot>

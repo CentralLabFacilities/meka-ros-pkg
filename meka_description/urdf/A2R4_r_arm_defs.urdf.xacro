@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+       xmlns:interface="http://ros.org/wiki/xacro">
 
   <property name="M_PI" value="3.1415926535897931" />
  
-
   <macro name="m3_r_shoulder" params="side parent reflect *origin">
 
     <!-- Shoulder pan -->
@@ -20,13 +19,10 @@
     <link name="shoulderupper_RIGHT">
       <inertial>
         <mass value="2.0310" />
-	<origin xyz="-0.010946 0.025127 0.000022"/>                
-	<inertia ixx="0.003461"
-	iyy="0.003097"
-	izz="0.005416"
-	ixy="0.000428"
-	ixz="0.000002"
-	iyz="0.000000" />
+	    <origin xyz="-0.010946 0.025127 0.000022"/>                
+	    <inertia ixx="0.003461" ixy="0.000428" ixz="0.000002"
+	             iyy="0.003097" iyz="0.000000" 
+	             zz="0.005416" />
       </inertial>
 
       <visual>

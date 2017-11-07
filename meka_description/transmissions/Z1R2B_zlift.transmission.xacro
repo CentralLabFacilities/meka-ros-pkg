@@ -7,10 +7,10 @@
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="zlift_j0_motor">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
+  
 </robot>
 
 

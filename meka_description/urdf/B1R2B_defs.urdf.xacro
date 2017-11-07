@@ -3,9 +3,8 @@
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
-  
 
-  <property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="M_PI" value="3.1415926535897931" />
 
   <xacro:macro name="inertial_cuboid_with_pose" params="mass x_length y_length z_length *origin">
     <inertial>
@@ -17,17 +16,17 @@
     </inertial>
   </xacro:macro>
  
-  <macro name="meka_base" params="side parent reflect *origin">
+  <xacro:macro name="meka_base" params="side parent reflect *origin">
 
      <joint name="fixed_base_joint" type="fixed">
-      <insert_block name="origin" /> 
+      <xacro:insert_block name="origin" /> 
       <child link="fixed_base"/>
       <parent link="${parent}"/>
     </joint>
 
   <link name="fixed_base">
-	  <xacro:inertial_cuboid_with_pose mass="100.0" x_length="0.6" y_length="0.4" z_length="0.5">
-      <origin xyz="0 0 0.25" rpy="0 0 0" />
+	  <xacro:inertial_cuboid_with_pose mass="120.0" x_length="0.6" y_length="0.4" z_length="0.5">
+      <origin xyz="-0.10 0 0.2" rpy="0 0 0" />
     </xacro:inertial_cuboid_with_pose> 
 	  <visual>
 		  <material name="GreyC" />
@@ -100,7 +99,7 @@
 	  </collision>
   </link>
 
-  </macro>
+  </xacro:macro>
 
 
 </robot>

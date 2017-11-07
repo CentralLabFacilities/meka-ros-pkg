@@ -7,7 +7,6 @@
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="head_j0_motor">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
@@ -18,8 +17,8 @@
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="head_j1_motor">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
+  
 </robot>

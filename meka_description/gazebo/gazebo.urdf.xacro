@@ -11,6 +11,14 @@
       <alwaysOn>true</alwaysOn>
       <updateRate>30.0</updateRate>
     </plugin>
+    
+    <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="mimic_torso">
+        <joint>torso_j1</joint>
+        <mimicJoint>torso_j2</mimicJoint>
+        <multiplier>1.0</multiplier>
+        <!--offset>0.0</offset-->
+    </plugin>
+    
 <!--   
     <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
       <alwaysOn>1</alwaysOn>

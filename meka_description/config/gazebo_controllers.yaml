@@ -18,7 +18,6 @@ body_controller:
     joints: 
       - torso_j0
       - torso_j1
-      - torso_j2
 
 arm_r_controller:
     type: position_controllers/JointTrajectoryController

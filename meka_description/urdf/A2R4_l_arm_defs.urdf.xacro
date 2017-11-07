@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+       xmlns:interface="http://ros.org/wiki/xacro">
 
   <property name="M_PI" value="3.1415926535897931" />
   <property name="VELOCITY_LIMIT_SCALE" value="0.6" />
@@ -44,11 +44,11 @@
     </joint>
     <link name="shoulderupper_LEFT">
       <inertial>
-        <mass value="2.5799322" />
+        <mass value="2.0310" />
         <origin xyz="-0.001201 0.024513 -0.098231" rpy="0 0 0"/>
-        <inertia ixx="0.866179142480"  ixy="-0.06086507933"  ixz="-0.12118061183"
-                 iyy="0.87421714893"  iyz="-0.05886609911"
-                 izz="0.27353821674" />
+        <inertia xx="0.003461" ixy="0.000428" ixz="0.000002"
+	             iyy="0.003097" iyz="0.000000" 
+	             zz="0.005416" />
       </inertial>
 
       <visual>
