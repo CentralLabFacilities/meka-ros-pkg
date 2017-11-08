@@ -12,6 +12,8 @@ zlift_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
       - zlift_j0
+    gains:
+      zlift_j0: {p: 1000.0, i: 10.0, d: 0.0}
 
 body_controller:
     type: position_controllers/JointTrajectoryController
