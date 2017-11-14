@@ -1,17 +1,14 @@
 <?xml version="1.0"?>
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
-       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
-  
-
-  <property name="M_PI" value="3.1415926535897931" />
-
-
-  <macro name="meka_zlift" params="side parent reflect *origin">
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+ 
+  <xacro:macro name="meka_zlift" params="parent *origin">
 
     <joint name="zlift_j0" type="prismatic">
+      <insert_block name="origin" /> 
       <axis xyz="0 0 1" />
-      <insert_block name="origin" /> <!-- transform from parent link to this joint frame -->
       <parent link="${parent}"/>
       <child link="zlift_link"/>
       <limit lower="${0*M_PI/180}"  upper="${40.107*M_PI/180}"
@@ -25,14 +22,9 @@
     </joint>
     
     <link name="zlift_link">
-      <inertial>
-        <mass value="25.799322" />
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-        <inertia ixx="0.866179142480"  ixy="-0.06086507933"  ixz="-0.12118061183"
-                 iyy="0.87421714893"  iyz="-0.05886609911"
-                 izz="0.27353821674" />
-      </inertial>
-
+       <xacro:inertial_cuboid_with_pose mass="10.0" x_length="0.07" y_length="0.1" z_length="0.166">
+          <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      </xacro:inertial_cuboid_with_pose> 
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
@@ -60,43 +52,8 @@
 			  <box size="0.008 0.08 0.18" />
 		  </geometry>
 	  </collision>
-    
     </link>
     
-    
-  <!--link name="upper">
-	  <inertial>
-		  <mass value="1000" />
-		  <origin xyz="0 0 0" />
-		  <inertia ixx="1000"  ixy="0"  ixz="0" iyy="1000" iyz="0" izz="1000" />
-	  </inertial>
-	  <visual>
-		  <material name="GreyC" />
-		  <origin xyz="0 0 0" rpy="0 0 0" />
-		  <geometry name="upper_geom">
-			  <mesh filename="package://${MESH}/A2R3/A2R3_T4_Chest_Neck.dae" />
-		  </geometry>
-		  <material name="Blue" />
-	  </visual>
-	  <collision>
-		  <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-		  <geometry name="upper_collision_geom">
-			  <mesh filename="package://${MESH_COLL}/A2R3/A2R3_T4_Chest_Neck.stl" />
-		  </geometry>
-	  </collision>
-  </link -->
-    <!--joint name="chest_joint" type="fixed">
-	<origin xyz="0 0 -0.03" rpy="0 0 0" />
-	<parent link="zlift_link" />
-	<child link="upper" />
-    </joint-->
-    <!--joint name="origin_joint" type="fixed">
-	<origin xyz="0 0 0.2337" rpy="0 0 0" />
-	<parent link="upper" />
-	<child link="T0" />
-    </joint-->
-    <!--link name="T0"/-->
-  </macro>
-
+  </xacro:macro>
 
 </robot>

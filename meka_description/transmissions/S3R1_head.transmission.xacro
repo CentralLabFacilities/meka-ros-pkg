@@ -4,7 +4,7 @@
   <transmission name="head_j0_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="head_j0">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="head_j0_motor">
       <mechanicalReduction>1</mechanicalReduction>
@@ -14,7 +14,7 @@
    <transmission name="head_j1_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="head_j1">
-      <hardwareInterface>PositionJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="head_j1_motor">
       <mechanicalReduction>1</mechanicalReduction>

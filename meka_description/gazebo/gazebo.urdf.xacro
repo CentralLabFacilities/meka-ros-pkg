@@ -11,26 +11,18 @@
       <alwaysOn>true</alwaysOn>
       <updateRate>30.0</updateRate>
     </plugin>
-    
-    <plugin filename="libroboticsgroup_gazebo_mimic_joint_plugin.so" name="mimic_torso">
-        <joint>torso_j1</joint>
-        <mimicJoint>torso_j2</mimicJoint>
-        <multiplier>1.0</multiplier>
-        <!--offset>0.0</offset-->
-    </plugin>
-    
-<!--   
-    <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
+        
+    <!--plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
       <alwaysOn>1</alwaysOn>
-      <updateRate>60.0</updateRate>
+      <updateRate>100.0</updateRate>
       <robotNamespace>/</robotNamespace>
       <leftFrontJoint>front_left_wheel_joint</leftFrontJoint>
       <rightFrontJoint>front_right_wheel_joint</rightFrontJoint>
       <leftRearJoint>back_left_wheel_joint</leftRearJoint>
       <rightRearJoint>back_right_wheel_joint</rightRearJoint>
-      <wheelSeparation>1</wheelSeparation>
+      <wheelSeparation>0.2678</wheelSeparation>
       <wheelDiameter>${2*wheel_radius}</wheelDiameter>
-      <torque>1000</torque>
+      <torque>10</torque>
       <broadcastTF>1</broadcastTF>
       <odometryFrame>map</odometryFrame>
       <commandTopic>cmd_vel</commandTopic>
@@ -39,8 +31,9 @@
       <covariance_x>0.0001</covariance_x>
       <covariance_y>0.0001</covariance_y>
       <covariance_z>0.0001</covariance_z>
-      <covariance_yaw>0.0001</covariance_yaw>
-    </plugin> -->
+      <covariance_yaw>0.0001</covariance_yaw>O
+    </plugin--> 
+    
 
     <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
       <commandTopic>cmd_vel</commandTopic>
@@ -48,9 +41,33 @@
       <odometryFrame>odom</odometryFrame>
       <odometryRate>20.0</odometryRate>
       <robotBaseFrame>base_link</robotBaseFrame>
+      <joint_state_idel_sec>3.0</joint_state_idel_sec>
+      <recover_roll_velocity_p_gain>10.0</recover_roll_velocity_p_gain>
+      <recover_pitch_velocity_p_gain>10.0</recover_pitch_velocity_p_gain>
+      <recover_z_velocity_p_gain>50.0</recover_z_velocity_p_gain>
+      <x_velocity_limit_max>0.5</x_velocity_limit_max>
+      <x_velocity_limit_min>-0.5</x_velocity_limit_min>
+      <y_velocity_limit_max>0.5</y_velocity_limit_max>
+      <y_velocity_limit_min>-0.5</y_velocity_limit_min>
+      <rot_velocity_limit_max>0.5</rot_velocity_limit_max>
+      <rot_velocity_limit_min>-0.5</rot_velocity_limit_min>
+      <x_acceleration_limit_max>1.5</x_acceleration_limit_max>
+      <x_acceleration_limit_min>-1.5</x_acceleration_limit_min>
+      <y_acceleration_limit_max>1.0</y_acceleration_limit_max>
+      <y_acceleration_limit_min>-1.0</y_acceleration_limit_min>
+      <rot_acceleration_limit_max>0.5</rot_acceleration_limit_max>
+      <rot_acceleration_limit_min>-0.5</rot_acceleration_limit_min>
+      <tilt_angle_par_max_velocity>0</tilt_angle_par_max_velocity>
+    </plugin>
+    
+    <plugin name="mimic_torso" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+        <joint>torso_j1</joint>
+        <mimicJoint>torso_j2</mimicJoint>
+        <multiplier>1.0</multiplier>
+        <!--offset>0.0</offset-->
     </plugin>
   
-    <!--plugin name="mimic_right_j1a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+    <plugin name="mimic_right_j1a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
       <joint>right_hand_j1</joint>
       <mimicJoint>right_hand_j1a</mimicJoint>
       <multiplier>${th_palmprox_coupling}</multiplier>
@@ -125,7 +142,7 @@
       <mimicJoint>right_hand_j4c</mimicJoint>
       <multiplier>${middist_coupling}</multiplier>
       <sensitiveness>0.0</sensitiveness>
-    </plugin-->
+    </plugin>
 
   </gazebo>
 

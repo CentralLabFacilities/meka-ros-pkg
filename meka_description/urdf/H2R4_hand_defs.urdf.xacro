@@ -3,176 +3,180 @@
        xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
-       
-  <property name="M_PI" value="3.1415926535897931" />
-  <property name="palmprox_coupling" value="0.3" />
-  <property name="proxmid_coupling" value="0.3" />
-  <property name="middist_coupling" value="0.3" />
-  <property name="th_palmprox_coupling" value="0.4" />
-  <property name="th_proxdist_coupling" value="0.4" />
+
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="palmprox_coupling" value="0.3" />
+  <xacro:property name="proxmid_coupling" value="0.3" />
+  <xacro:property name="middist_coupling" value="0.3" />
+  <xacro:property name="th_palmprox_coupling" value="0.4" />
+  <xacro:property name="th_proxdist_coupling" value="0.4" />
  
-  <macro name="m3_r_palm" params="side parent reflect *origin use_mimic:=false">
+  <xacro:macro name="m3_palm" params="lr parent reflect *origin use_mimic:=false">
 
-  <joint name="palm_joint_right" type="fixed">
-    <origin xyz="0 0 -0.04414" rpy="0 0 0" />
-    <parent link="${parent}"/>
-    <child link="palm_right" />
-  </joint>
+     <joint name="palm_joint_${lr}" type="fixed">
+       <origin xyz="0 0 -0.04414" rpy="0 0 0" />
+       <parent link="${parent}"/>
+       <child link="palm_${lr}" />
+     </joint>
 
-     <link name="palm_right">
+     <link name="palm_${lr}">
       <inertial>
         <mass value="0.663" />
-	<origin xyz="0.001459 0.001619 -0.051312"/>
-	<inertia ixx="0.000873"
-	iyy="0.000597"
-	izz="0.000565"
-	ixy="0.000031"
-	ixz="-0.000008"
-	iyz="0.000016" />
+	    <origin xyz="0.001459 0.001619 -0.051312"/>
+	    <inertia ixx="0.000873"
+	    iyy="0.000597"
+	    izz="0.000565"
+	    ixy="0.000031"
+	    ixz="-0.000008"
+	    iyz="0.000016" />
       </inertial>
 
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="palm_geom_right">
-		      <mesh filename="package://${MESH}/H2R3/H2R3_RT8_palm_right.dae" />
+	      <geometry name="palm_geom_${lr}">
+		      <mesh filename="package://${MESH}/H2R3/H2R3_T8_palm_${lr}.dae" />
 	      </geometry>  
       </visual>
       <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="palm_collision_right">
-		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_RT8_palm_right.stl" />
+	      <geometry name="palm_collision_${lr}">
+		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_LT8_palm_${lr}.stl" />
 	      </geometry>
-      </collision>
-      -->  
+      </collision>      -->  
       <!-- primitive only -->
       <collision>
         <origin xyz="0.0112 0 -0.057" rpy="0.0 0.0 0.0 " />
         <geometry>
           <box size="0.04 0.0972 0.07" />
         </geometry>
-      </collision>
-      
+      </collision> 
       <collision>
-        <origin xyz="0.02 -0.06 -0.030" rpy="0.0 0.0 0.0 " />
+        <origin xyz="0.02 ${reflect*0.06} -0.030" rpy="0.0 0.0 0.0 " />
         <geometry>
           <box size="0.022 0.023 0.03" />
         </geometry>
-      </collision>  
-      
+      </collision>    
       <collision>
         <origin xyz="-0.0058 0 -0.072" rpy="0.0 -0.5235 0.0 " />
         <geometry>
           <box size="0.025 0.0972 0.047" />
         </geometry>
-      </collision>
-      
+      </collision>    
       <collision>
         <origin xyz="0 0.0 -0.0166" rpy="0 0 0.0 " />
         <geometry>
           <cylinder radius="0.02" length="0.0325" />
         </geometry>
-      </collision>
-      
+      </collision>      
       <collision>
-        <origin xyz="0 -0.02 -0.05" rpy="1.5707 0 0.0 " />
+        <origin xyz="0 ${reflect*0.02} -0.05" rpy="1.5707 0 0.0 " />
         <geometry>
           <cylinder radius="0.03" length="0.0572" />
         </geometry>
-      </collision>
-      
+      </collision>    
       <collision>
         <origin xyz="-0.0023 0.0 -0.1" rpy="1.5707 0 0.0 " />
         <geometry>
           <cylinder radius="0.013" length="0.08" />
         </geometry>
-      </collision>
-      
+      </collision>      
       <collision>
-        <origin xyz="0.0 0.029 -0.015" rpy="0.0 0.0 0.0 " />
+        <origin xyz="0.0 ${reflect*-0.029} -0.015" rpy="0.0 0.0 0.0 " />
         <geometry>
           <box size="0.055 0.02 0.01" />
         </geometry>
-      </collision>
-      
+      </collision>     
     </link>
 
-    <joint name="fts_frame_joint_right" type="fixed">
-      <parent link="${parent}"/>
-      <child link="m3loadx6_ma29_l0" />
-      <origin xyz="0.0 0.0 -0.055" rpy="0.0 ${M_PI} 0.0"/>
+    <xacro:if value="${lr == 'left'}">
+        <joint name="fts_frame_joint_${lr}" type="fixed">
+          <parent link="${parent}"/>
+          <child link="m3loadx6_ma30_l0" />
+          <origin xyz="0.0 0.0 -0.055" rpy="0.0 ${M_PI} 0.0"/>
+        </joint>
+
+        <link name="m3loadx6_ma30_l0"/>
+    </xacro:if>
+    
+    <xacro:if value="${lr == 'right'}">
+        <joint name="fts_frame_joint_${lr}" type="fixed">
+          <parent link="${parent}"/>
+          <child link="m3loadx6_ma29_l0" />
+          <origin xyz="0.0 0.0 -0.055" rpy="0.0 ${M_PI} 0.0"/>
+        </joint>
+
+        <link name="m3loadx6_ma29_l0"/>
+    </xacro:if>
+
+    <!-- this defines TCP Tool Center Point as described in: https://groups.google.com/forum/m/#!topic/moveit-users/VB7VWsgV9-g -->
+    <joint name="hand_${lr}_tool_frame_joint" type="fixed">
+        <parent link="${parent}"/>
+        <child link="hand_tool_frame_${lr}" />
+        <origin xyz="-0.02 0 -0.12" rpy="-1.5708 0 1.5708"/>
     </joint>
 
-    <link name="m3loadx6_ma29_l0"/>
+  <link name="hand_tool_frame_${lr}">
+    <!-- This is the coordinate system of the end effector (this is the position
+         used in IK); there is no actual arm part attached to this link -->
 
+    <!-- The fake geometry here is only present to work around https://github.com/ros-planning/moveit_core/issues/158 -->
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+      <material name="red" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.01"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="red" />
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0"
+        iyy="0.0" iyz="0.0"
+        izz="0.0" />
+    </inertial>
+  </link>
 
-      <!-- this defines TCP Tool Center Point as described in: https://groups.google.com/forum/m/#!topic/moveit-users/VB7VWsgV9-g -->
-    <joint name="hand_right_tool_frame_joint" type="fixed">
-      <parent link="${parent}"/>
-      <child link="hand_tool_frame_right" />
-      <origin xyz="-0.02 0 -0.12" rpy="-1.5708 0 1.5708"/>
-    </joint>
-
-    <link name="hand_tool_frame_right">
-      <!-- This is the coordinate system of the end effector (this is the position
-           used in IK); there is no actual arm part attached to this link -->
-
-      <!-- The fake geometry here is only present to work around https://github.com/ros-planning/moveit_core/issues/158 -->
-      <visual>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
-        <geometry>
-          <box size="0.01 0.01 0.01"/>
-        </geometry>
-        <material name="red" />
-      </visual>
-      <collision>
-        <origin rpy="0 0 0" xyz="0 0 -0.01"/>
-        <geometry>
-          <box size="0.001 0.001 0.001"/>
-        </geometry>
-        <material name="red" />
-      </collision>
-      <inertial>
-        <mass value="0.01" />
-        <origin xyz="0 0 0"/>
-        <inertia ixx="0.0" ixy="0.0" ixz="0.0"
-          iyy="0.0" iyz="0.0"
-          izz="0.0" />
-      </inertial>
-    </link>
 <!-- Start Thumb -->
-    <joint name="right_hand_j0" type="revolute">
-      <axis xyz="0 0 1" />
-      <origin xyz="-0.02 0.028 -0.03" rpy="0 0 ${-M_PI/2.0}" />
-      <parent link="palm_right"/>
-      <child link="thumb0_right"/>
+    <joint name="${lr}_hand_j0" type="revolute">
+      <axis xyz="0 0 ${reflect*-1}" />
+      <origin xyz="-0.02 ${reflect*-0.028} -0.03" rpy="0 0 ${reflect*M_PI/2.0}" />
+      <parent link="palm_${lr}"/>
+      <child link="thumb0_${lr}"/>
       <limit effort="100" velocity="${20.0*M_PI/180}" lower="${0.0*M_PI/180}" upper="${120.0*M_PI/180}" />
     </joint>
 
-    <link name="thumb0_right">
+    <link name="thumb0_${lr}">
       <inertial>
         <mass value="0.0117" />
-	<origin xyz="0.0 0.0 0.0"/>
-	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+	    <origin xyz="0.0 0.0 0.0"/>
+	    <inertia ixx="0.0"
+	    iyy="0.0"
+	    izz="0.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyz="0.0" />
       </inertial>
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="thumb0_geom_right">
-		      <mesh filename="package://${MESH}/H2R3/H2R3_RJ0_thumb_abductlink.dae" />
+	      <geometry name="thumb0_geom_${lr}">
+		      <mesh filename="package://${MESH}/H2R3/H2R3_thumb_abductlink.dae" />
 	      </geometry>  
       </visual>
-     <!-- meshes
+      <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="thumb0_collision_right">
-		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_RJ0_thumb_abductlink.stl" />
+	      <geometry name="thumb0_collision_${lr}">
+		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_thumb_abductlink.stl" />
 	      </geometry>
       </collision>
       -->  
@@ -202,70 +206,68 @@
         </geometry>
       </collision>
     </link>
-  
-        
+       
   <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j1" type="revolute">
+    <joint name="${lr}_hand_j1" type="revolute">
       <axis xyz="0 1 0" />
       <origin xyz="0 0 0" rpy="0 0 0" />
-      <parent link="palm_right" />
-      <child link="thumb_motor_right"/>
+      <parent link="palm_${lr}" />
+      <child link="thumb_motor_${lr}"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${170.0*M_PI/180.0}" />    
     </joint>
       
-    <link name="thumb_motor_right"> 
-        <inertial>
-          <mass value="2e-06"/>
-          <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
-        </inertial>
-      </link>
+    <link name="thumb_motor_${lr}"> 
+      <inertial>
+        <mass value="2e-06"/>
+        <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
+		  </inertial>
+    </link>
         
-    <joint name="right_hand_j1a" type="revolute">
+    <joint name="${lr}_hand_j1a" type="revolute">
       <axis xyz="0 -1 0"/>
       <limit effort="100" velocity="${75*M_PI/180}" lower="${0.0*M_PI/180}" upper="${85.0*M_PI/180}" />    
       <origin xyz="-0.018 0 0" rpy="0 0 0" />
-      <parent link="thumb0_right"/>
-      <child link="thumb1_right"/> 
-      <mimic joint="right_hand_j1" multiplier="${th_palmprox_coupling}"/>
+      <parent link="thumb0_${lr}"/>
+      <child link="thumb1_${lr}"/> 
+      <mimic joint="${lr}_hand_j1" multiplier="${th_palmprox_coupling}"/>
     </joint>
   </xacro:if>
   
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j1" type="revolute">
+    <joint name="${lr}_hand_j1" type="revolute">
       <axis xyz="0 -1 0"/>
       <limit effort="100" velocity="${75*M_PI/180}" lower="${0.0*M_PI/180}" upper="${85.0*M_PI/180}" />    
       <origin xyz="-0.018 0 0" rpy="0 0 0" />
-      <parent link="thumb0_right"/>
-      <child link="thumb1_right"/>
+      <parent link="thumb0_${lr}"/>
+      <child link="thumb1_${lr}"/>
     </joint>
   </xacro:unless>
     
-    <link name="thumb1_right">
+    <link name="thumb1_${lr}">
       <inertial>
         <mass value="0.0344" />
-	<origin xyz="0.0 0.0 0.0"/>
-	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+	    <origin xyz="0.0 0.0 0.0"/>
+	    <inertia ixx="0.0"
+	    iyy="0.0"
+	    izz="0.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyz="0.0" />
       </inertial>
       <visual>
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="thumb1_geom_right">
-		      <mesh filename="package://${MESH}/H2R3/H2R3_thumb_knuckle1.stl" />
+	      <geometry name="thumb1_geom_${lr}">
+		      <mesh filename="package://${MESH}/H2R3/H2R3_thumb_knuckle1.dae" />
 	      </geometry>  
       </visual>
        <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="thumb1_collision_right">
+	      <geometry name="thumb1_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_thumb_knuckle1.stl" />
 	      </geometry>
-      </collision>
-             -->  
+      </collision> -->  
       <!-- primitive only -->
       <collision>
         <origin xyz="-0.022 0 -0.00134" rpy="0.0 0.0 0.0 " />
@@ -288,26 +290,26 @@
     </link>
 
   <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j1b" type="revolute">
+    <joint name="${lr}_hand_j1b" type="revolute">
       <axis xyz="0 -1 0" />
       <origin xyz="-0.044 0 0" rpy="0 0 0" />
-      <parent link="thumb1_right" />
-      <child link="thumb2_right"/>
+      <parent link="thumb1_${lr}" />
+      <child link="thumb2_${lr}"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${0.0*M_PI/180}" upper="${85.0*M_PI/180}" />    
-			<mimic joint="right_hand_j1" multiplier="${th_proxdist_coupling}"/>
+			<mimic joint="${lr}_hand_j1" multiplier="${th_proxdist_coupling}"/>
     </joint>
   </xacro:if>
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j5" type="revolute">
+    <joint name="${lr}_hand_j5" type="revolute">
       <axis xyz="0 -1 0" />
       <origin xyz="-0.044 0 0" rpy="0 0 0" />
-      <parent link="thumb1_right" />
-      <child link="thumb2_right"/>
+      <parent link="thumb1_${lr}" />
+      <child link="thumb2_${lr}"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${0.0*M_PI/180}" upper="${85.0*M_PI/180}" />    
     </joint>
   </xacro:unless>   
       
-    <link name="thumb2_right">  
+    <link name="thumb2_${lr}">  
       <inertial>
         <mass value="0.01" />
 	<origin xyz="0.0 0.0 0.0"/>
@@ -321,64 +323,64 @@
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="thumb_knuckle2_geom_right">
+	      <geometry name="thumb_knuckle2_geom_${lr}">
 		      <mesh filename="package://${MESH}/H2R3/H2R3_thumb_knuckle2.dae" />
 	      </geometry>  
       </visual>
       
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="thumb_knuckle2_collision_right">
+	      <geometry name="thumb_knuckle2_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_thumb_knuckle2convexhull.stl" />
 	      </geometry>
       </collision>
     </link>
-    <joint name="right_hand_thumb_dummy" type="fixed">
+    <joint name="${lr}_hand_thumb_dummy" type="fixed">
       <origin xyz="-0.035 0 0" rpy="0 0 0" />
-      <parent link="thumb2_right" />
-      <child link="thumb_tip_right"/>
+      <parent link="thumb2_${lr}" />
+      <child link="thumb_tip_${lr}"/>
     </joint>
-    <link name="thumb_tip_right"/>
+    <link name="thumb_tip_${lr}"/>
     
 <!-- Start Index Finger -->
   <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j2" type="revolute">
+    <joint name="${lr}_hand_j2" type="revolute">
         <axis xyz="0 1 0" />
         <origin xyz="0 0 0" rpy="0 0 0" />
-        <parent link="palm_right" />
-        <child link="index_motor_right"/>
+        <parent link="palm_${lr}" />
+        <child link="index_motor_${lr}"/>
         <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${300.0*M_PI/180.0}" />    
       </joint>
       
-      <link name="index_motor_right"> 
+      <link name="index_motor_${lr}"> 
         <inertial>
           <mass value="2e-06"/>
           <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
         </inertial>
       </link>
         
-      <joint name="right_hand_j2a" type="revolute">
+      <joint name="${lr}_hand_j2a" type="revolute">
         <axis xyz="0 1 0" />
-        <origin xyz="0 0.028 -0.101" rpy="0 0 0" />
-        <parent link="palm_right" />
-        <child link="index0_right"/>
+        <origin xyz="0 ${reflect*-0.028} -0.101" rpy="0 0 0" />
+        <parent link="palm_${lr}" />
+        <child link="index0_${lr}"/>
         <limit effort="100" velocity="${50*M_PI/180}" lower="${-7.072*M_PI/180}" upper="${37.072*M_PI/180}" />    
-        <mimic joint="right_hand_j2" multiplier="${palmprox_coupling}"/>
+        <mimic joint="${lr}_hand_j2" multiplier="${palmprox_coupling}"/>
       </joint>
   </xacro:if>
   
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j2" type="revolute">
+    <joint name="${lr}_hand_j2" type="revolute">
        <axis xyz="0 1 0" />
       <origin xyz="0 0.028 -0.101" rpy="0 0 0" />
-      <parent link="palm_right" />
-      <child link="index0_right"/>
+      <parent link="palm_${lr}" />
+      <child link="index0_${lr}"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-7.072*M_PI/180}" upper="${37.072*M_PI/180}" />    
     </joint>
   </xacro:unless>
 
 
-    <link name="index0_right">
+    <link name="index0_${lr}">
       <inertial>
         <mass value="0.01" />
 	<origin xyz="0.0 0.0 0.0"/>
@@ -392,14 +394,14 @@
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="index0_geom_right">		      
+	      <geometry name="index0_geom_${lr}">		      
 		     <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle1.dae" />
 	      </geometry>  
       </visual>    
       <!-- meshes   
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="index0_collision_right">
+	      <geometry name="index0_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle1.stl" />
 	      </geometry>
       </collision>  -->  
@@ -425,26 +427,26 @@
     </link>
   
   <xacro:if value="${use_mimic}">
-      <joint name="right_hand_j2b" type="revolute">
+      <joint name="${lr}_hand_j2b" type="revolute">
         <axis xyz="0 1 0" />
         <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
         <origin xyz="0 0 -0.044" rpy="0 0 0" />
-        <parent link="index0_right"/>
-        <child link="index1_right"/>
-				<mimic joint="right_hand_j2" multiplier="${proxmid_coupling}"/>
+        <parent link="index0_${lr}"/>
+        <child link="index1_${lr}"/>
+				<mimic joint="${lr}_hand_j2" multiplier="${proxmid_coupling}"/>
       </joint>
     </xacro:if>
     <xacro:unless value="${use_mimic}">
-      <joint name="right_hand_j6" type="revolute">
+      <joint name="${lr}_hand_j6" type="revolute">
         <axis xyz="0 1 0" />
         <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
         <origin xyz="0 0 -0.044" rpy="0 0 0" />
-        <parent link="index0_right"/>
-        <child link="index1_right"/>
+        <parent link="index0_${lr}"/>
+        <child link="index1_${lr}"/>
       </joint>
      </xacro:unless>
 
-    <link name="index1_right"> 
+    <link name="index1_${lr}"> 
       <inertial>
         <mass value="0.0429" />
 	<origin xyz="0.0 0.0 0.0"/>
@@ -458,14 +460,14 @@
       <visual>
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="index1_geom_right">		      
+	      <geometry name="index1_geom_${lr}">		      
 		      <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle2.dae" />
 	      </geometry>  
       </visual>
       <!-- meshes 
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="index1_collision_right">
+	      <geometry name="index1_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle2.stl" />
 	      </geometry>
       </collision>
@@ -492,26 +494,26 @@
     </link>
 
   <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j2c" type="revolute">
+    <joint name="${lr}_hand_j2c" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
-      <parent link="index1_right"/>
-      <child link="index2_right"/>
-      <mimic joint="right_hand_j2" multiplier="${middist_coupling}"/>
+      <parent link="index1_${lr}"/>
+      <child link="index2_${lr}"/>
+      <mimic joint="${lr}_hand_j2" multiplier="${middist_coupling}"/>
     </joint>
   </xacro:if>
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j7" type="revolute">
+    <joint name="${lr}_hand_j7" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
-      <parent link="index1_right"/>
-      <child link="index2_right"/>
+      <parent link="index1_${lr}"/>
+      <child link="index2_${lr}"/>
     </joint>
   </xacro:unless>  
 
-    <link name="index2_right">
+    <link name="index2_${lr}">
       <inertial>
         <mass value="0.01" />
 	<origin xyz="0.0 0.0 0.0"/>
@@ -525,78 +527,78 @@
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="index2_geom_right">		      
+	      <geometry name="index2_geom_${lr}">		      
 		      <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle3.dae" />
 	      </geometry>  
       </visual>
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="index2_collision_right">
+	      <geometry name="index2_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle3convexhull.stl" />
 	      </geometry>
       </collision>
     </link>
-    <joint name="right_hand_index_dummy" type="fixed">
+    <joint name="${lr}_hand_index_dummy" type="fixed">
       <origin xyz="0 0.008 -0.025" rpy="0 0 0" />
-      <parent link="index2_right"/>
-      <child link="index_tip_right"/>
+      <parent link="index2_${lr}"/>
+      <child link="index_tip_${lr}"/>
     </joint>
-    <link name="index_tip_right"/>
+    <link name="index_tip_${lr}"/>
 <!-- Start Ring Finger -->
   <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j3" type="revolute">
+    <joint name="${lr}_hand_j3" type="revolute">
         <axis xyz="0 1 0" />
         <origin xyz="0 0 0" rpy="0 0 0" />
-        <parent link="palm_right" />
-        <child link="ring_motor_right"/>
+        <parent link="palm_${lr}" />
+        <child link="ring_motor_${lr}"/>
         <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${300.0*M_PI/180}" />    
       </joint>
-    <link name="ring_motor_right"> 
+    <link name="ring_motor_${lr}"> 
         <inertial>
           <mass value="2e-06"/>
           <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
         </inertial>
       </link>
-    <joint name="right_hand_j3a" type="revolute">
+    <joint name="${lr}_hand_j3a" type="revolute">
       <axis xyz="0 1 0" />
       <origin xyz="0 0 -0.101" rpy="0 0 0" />
-      <parent link="palm_right" />
-      <child link="ring0_right"/>
+      <parent link="palm_${lr}" />
+      <child link="ring0_${lr}"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-7.072*M_PI/180}" upper="${37.072*M_PI/180}" />    
-      <mimic joint="right_hand_j3" multiplier="${palmprox_coupling}"/>
+      <mimic joint="${lr}_hand_j3" multiplier="${palmprox_coupling}"/>
     </joint>
   </xacro:if>
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j3" type="revolute">
+    <joint name="${lr}_hand_j3" type="revolute">
       <axis xyz="0 1 0" />
       <origin xyz="0 0 -0.101" rpy="0 0 0" />
-      <parent link="palm_right" />
-      <child link="ring0_right"/>
+      <parent link="palm_${lr}" />
+      <child link="ring0_${lr}"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-7.072*M_PI/180}" upper="${37.072*M_PI/180}" />    
     </joint>
   </xacro:unless>
-    <link name="ring0_right">
+    <link name="ring0_${lr}">
       <inertial>
         <mass value="0.01" />
-	<origin xyz="0.0 0.0 0.0"/>
-	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+	    <origin xyz="0.0 0.0 0.0"/>
+	    <inertia ixx="0.0"
+	    iyy="0.0"
+	    izz="0.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyz="0.0" />
       </inertial>        
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="ring0_geom_right">
+	      <geometry name="ring0_geom_${lr}">
 		     <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle1.dae" />
 	      </geometry>  
       </visual> 
       <!-- meshes     
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="ring0_collision_right">
+	      <geometry name="ring0_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle1.stl" />
 	      </geometry>
       </collision>     
@@ -624,47 +626,47 @@
     </link>
 
     <xacro:if value="${use_mimic}">
-      <joint name="right_hand_j3b" type="revolute">
+      <joint name="${lr}_hand_j3b" type="revolute">
         <axis xyz="0 1 0" />
         <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
         <origin xyz="0 0 -0.044" rpy="0 0 0" />
-        <parent link="ring0_right"/>
-        <child link="ring1_right"/>
-				<mimic joint="right_hand_j3" multiplier="${proxmid_coupling}"/>
+        <parent link="ring0_${lr}"/>
+        <child link="ring1_${lr}"/>
+				<mimic joint="${lr}_hand_j3" multiplier="${proxmid_coupling}"/>
       </joint>
     </xacro:if>
     <xacro:unless value="${use_mimic}">
-      <joint name="right_hand_j8" type="revolute">
+      <joint name="${lr}_hand_j8" type="revolute">
         <axis xyz="0 1 0" />
         <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
         <origin xyz="0 0 -0.044" rpy="0 0 0" />
-        <parent link="ring0_right"/>
-        <child link="ring1_right"/>
+        <parent link="ring0_${lr}"/>
+        <child link="ring1_${lr}"/>
       </joint>
      </xacro:unless>
 
-    <link name="ring1_right">    
+    <link name="ring1_${lr}">    
       <inertial>
         <mass value="0.0429" />
-	<origin xyz="0.0 0.0 0.0"/>
-	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+	    <origin xyz="0.0 0.0 0.0"/>
+	    <inertia ixx="0.0"
+	    iyy="0.0"
+	    izz="0.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyz="0.0" />
       </inertial>       
       <visual>
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="ring1_geom_right">
+	      <geometry name="ring1_geom_${lr}">
 		      <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle2.dae" />
 	      </geometry>  
       </visual>
       <!-- meshes 
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="ring1_collision_right">
+	      <geometry name="ring1_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle2.stl" />
 	      </geometry>
       </collision>
@@ -691,112 +693,112 @@
     </link>
 
   <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j3c" type="revolute">
+    <joint name="${lr}_hand_j3c" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
-      <parent link="ring1_right"/>
-      <child link="ring2_right"/>
-      <mimic joint="right_hand_j3" multiplier="${middist_coupling}"/>
+      <parent link="ring1_${lr}"/>
+      <child link="ring2_${lr}"/>
+      <mimic joint="${lr}_hand_j3" multiplier="${middist_coupling}"/>
     </joint>
   </xacro:if>
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j9" type="revolute">
+    <joint name="${lr}_hand_j9" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
-      <parent link="ring1_right"/>
-      <child link="ring2_right"/>
+      <parent link="ring1_${lr}"/>
+      <child link="ring2_${lr}"/>
     </joint>
   </xacro:unless>
 
-    <link name="ring2_right">
+    <link name="ring2_${lr}">
       <inertial>
         <mass value="0.01" />
-	<origin xyz="0.0 0.0 0.0"/>
-	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+	    <origin xyz="0.0 0.0 0.0"/>
+	    <inertia ixx="0.0"
+	    iyy="0.0"
+	    izz="0.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyz="0.0" />
       </inertial>        
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="ring2_geom_right">
+	      <geometry name="ring2_geom_${lr}">
 		      <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle3.dae" />
 	      </geometry>  
       </visual>
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="ring2_collision_right">
+	      <geometry name="ring2_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle3convexhull.stl" />
 	      </geometry>
       </collision>
     </link>
-    <joint name="right_hand_ring_dummy" type="fixed">
+    <joint name="${lr}_hand_ring_dummy" type="fixed">
       <origin xyz="0 0.008 -0.025" rpy="0 0 0" />
-      <parent link="ring2_right"/>
-      <child link="ring_tip_right"/>
+      <parent link="ring2_${lr}"/>
+      <child link="ring_tip_${lr}"/>
     </joint>
-    <link name="ring_tip_right"/>
+    <link name="ring_tip_${lr}"/>
 <!-- Start Pinky Finger -->
  <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j4" type="revolute">
+    <joint name="${lr}_hand_j4" type="revolute">
         <axis xyz="0 1 0" />
         <origin xyz="0 0 0" rpy="0 0 0" />
-        <parent link="palm_right" />
-        <child link="pinky_motor_right"/>
+        <parent link="palm_${lr}" />
+        <child link="pinky_motor_${lr}"/>
         <limit effort="100" velocity="${50*M_PI/180}" lower="${0*M_PI/180}" upper="${300.0*M_PI/180}" />    
       </joint>
-    <link name="pinky_motor_right"> 
+    <link name="pinky_motor_${lr}"> 
         <inertial>
           <mass value="2e-06"/>
           <inertia ixx="1.1e-09" ixy="0" ixz="0" iyy="1.1e-09" iyz="0" izz="1.1e-09"/>
         </inertial>
       </link>
-    <joint name="right_hand_j4a" type="revolute">
+    <joint name="${lr}_hand_j4a" type="revolute">
       <axis xyz="0 1 0" />
-      <origin xyz="0 -0.028 -0.101" rpy="0 0 0" />
-      <parent link="palm_right" />
-      <child link="pinky0_right"/>
+      <origin xyz="0 ${reflect*0.028} -0.101" rpy="0 0 0" />
+      <parent link="palm_${lr}" />
+      <child link="pinky0_${lr}"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-7.072*M_PI/180}" upper="${37.072*M_PI/180}" />  
-      <mimic joint="right_hand_j4" multiplier="${palmprox_coupling}"/>
+      <mimic joint="${lr}_hand_j4" multiplier="${palmprox_coupling}"/>
     </joint>
   </xacro:if>
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j4" type="revolute">
+    <joint name="${lr}_hand_j4" type="revolute">
       <axis xyz="0 1 0" />
       <origin xyz="0 -0.028 -0.101" rpy="0 0 0" />
-      <parent link="palm_right" />
-      <child link="pinky0_right"/>
+      <parent link="palm_${lr}" />
+      <child link="pinky0_${lr}"/>
       <limit effort="100" velocity="${50*M_PI/180}" lower="${-7.072*M_PI/180}" upper="${37.072*M_PI/180}" />  
     </joint>  
   </xacro:unless>
 
-    <link name="pinky0_right">
+    <link name="pinky0_${lr}">
       <inertial>
         <mass value="0.01" />
-	<origin xyz="0.0 0.0 0.0"/>
-	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+	    <origin xyz="0.0 0.0 0.0"/>
+	    <inertia ixx="0.0"
+	    iyy="0.0"
+	    izz="0.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyz="0.0" />
       </inertial>        
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="pinky0_geom_right">
+	      <geometry name="pinky0_geom_${lr}">
 		     <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle1.dae" />
 	      </geometry>  
       </visual>      
       <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="pinky0_collision_right">
+	      <geometry name="pinky0_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle1.stl" />
 	      </geometry>
       </collision> -->  
@@ -822,46 +824,46 @@
     </link>
 
   <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j4b" type="revolute">
+    <joint name="${lr}_hand_j4b" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
-      <parent link="pinky0_right"/>
-      <child link="pinky1_right"/>
-      <mimic joint="right_hand_j4" multiplier="${proxmid_coupling}"/>
+      <parent link="pinky0_${lr}"/>
+      <child link="pinky1_${lr}"/>
+      <mimic joint="${lr}_hand_j4" multiplier="${proxmid_coupling}"/>
     </joint>
   </xacro:if>
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j10" type="revolute">
+    <joint name="${lr}_hand_j10" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.99*M_PI/180}" upper="${34.99*M_PI/180}" /> 
       <origin xyz="0 0 -0.044" rpy="0 0 0" />
-      <parent link="pinky0_right"/>
-      <child link="pinky1_right"/>
+      <parent link="pinky0_${lr}"/>
+      <child link="pinky1_${lr}"/>
     </joint>
  </xacro:unless>
-    <link name="pinky1_right">      
+    <link name="pinky1_${lr}">      
       <inertial>
         <mass value="0.0429" />
-	<origin xyz="0.0 0.0 0.0"/>
-	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+	    <origin xyz="0.0 0.0 0.0"/>
+	    <inertia ixx="0.0"
+	    iyy="0.0"
+	    izz="0.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyz="0.0" />
       </inertial>     
       <visual>
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="pinky1_geom_right">
+	      <geometry name="pinky1_geom_${lr}">
 		      <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle2.dae" />
 	      </geometry>  
       </visual>
        <!-- meshes
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="pinky1_collision_right">
+	      <geometry name="pinky1_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle2.stl" />
 	      </geometry>
       </collision>-->  
@@ -887,62 +889,62 @@
     </link>
 
   <xacro:if value="${use_mimic}">
-    <joint name="right_hand_j4c" type="revolute">
+    <joint name="${lr}_hand_j4c" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
-      <parent link="pinky1_right"/>
-      <child link="pinky2_right"/>
-			<mimic joint="right_hand_j4" multiplier="${middist_coupling}"/>
+      <parent link="pinky1_${lr}"/>
+      <child link="pinky2_${lr}"/>
+			<mimic joint="${lr}_hand_j4" multiplier="${middist_coupling}"/>
     </joint>
   </xacro:if>
   <xacro:unless value="${use_mimic}">
-    <joint name="right_hand_j11" type="revolute">
+    <joint name="${lr}_hand_j11" type="revolute">
       <axis xyz="0 1 0" />
       <limit effort="100" velocity="${1600*M_PI/180}" lower="${-34.21*M_PI/180}" upper="${34.213*M_PI/180}" /> 
       <origin xyz="0 0 -0.032" rpy="0 0 0" />
-      <parent link="pinky1_right"/>
-      <child link="pinky2_right"/>
+      <parent link="pinky1_${lr}"/>
+      <child link="pinky2_${lr}"/>
     </joint>
   </xacro:unless>
-    <link name="pinky2_right">
+    <link name="pinky2_${lr}">
       <inertial>
         <mass value="0.01" />
-	<origin xyz="0.0 0.0 0.0"/>
-	<inertia ixx="0.0"
-	iyy="0.0"
-	izz="0.0"
-	ixy="0.0"
-	ixz="0.0"
-	iyz="0.0" />
+	    <origin xyz="0.0 0.0 0.0"/>
+	    <inertia ixx="0.0"
+	    iyy="0.0"
+	    izz="0.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyz="0.0" />
       </inertial>        
       <visual>
 	      <material name="GreyC" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
-	      <geometry name="pinky2_geom_right">
+	      <geometry name="pinky2_geom_${lr}">
 		      <mesh filename="package://${MESH}/H2R3/H2R3_finger_knuckle3.dae" />
 	      </geometry>  
       </visual>
       <collision>
 	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
-	      <geometry name="pinky2_collision_right">
+	      <geometry name="pinky2_collision_${lr}">
 		      <mesh filename="package://${MESH_COLL}/H2R3/H2R3_finger_knuckle3convexhull.stl" />
 	      </geometry>
       </collision>
     </link>
-    <joint name="right_hand_pinky_dummy" type="fixed">
+    <joint name="${lr}_hand_pinky_dummy" type="fixed">
       <origin xyz="0 0.008 -0.025" rpy="0 0 0" />
-      <parent link="pinky2_right"/>
-      <child link="pinky_tip_right"/>
+      <parent link="pinky2_${lr}"/>
+      <child link="pinky_tip_${lr}"/>
     </joint>
-    <link name="pinky_tip_right"/>
-</macro>
+    <link name="pinky_tip_${lr}"/>
+</xacro:macro>
 
-  <macro name="m3_r_hand" params="side parent reflect use_mimic:=false *origin">
-    <m3_r_palm side="${side}" reflect="${reflect}" parent="${parent}" use_mimic="${use_mimic}">
-      <insert_block name="origin" />
-    </m3_r_palm>
-  </macro>
-
+  <xacro:macro name="m3_hand" params="lr parent reflect use_mimic:=false *origin">
+    <m3_palm lr="${lr}" reflect="${reflect}" parent="${parent}" use_mimic="${use_mimic}">
+      <xacro:insert_block name="origin" />
+    </m3_palm>
+    <m3_hand_transmission lr="${lr}"/>
+  </xacro:macro>
 
 </robot>

@@ -4,7 +4,7 @@
   <transmission name="zlift_j0_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="zlift_j0">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="zlift_j0_motor">
       <mechanicalReduction>1</mechanicalReduction>

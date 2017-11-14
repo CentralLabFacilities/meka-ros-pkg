@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<robot 
+  xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" 
+  xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller" 
+  xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+  
+  <macro name="m3_shoulder_transmission" params="lr">
+
+    <!-- Shoulder pan -->
+    <transmission name="${lr}_arm_t0" type="pr2_mechanism_model/SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${lr}_arm_a0" />
+      <joint name="${lr}_arm_j0">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+    <!-- Shoulder lift -->
+    <transmission name="${lr}_arm_t1" type="pr2_mechanism_model/SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${lr}_arm_a1" />
+      <joint name="${lr}_arm_j1">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+    <!-- Upperarm roll: internal fixed attchment point for upper arm -->
+    <transmission name="${lr}_arm_t2" type="pr2_mechanism_model/SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${lr}_arm_a2" />
+      <joint name="${lr}_arm_j2">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+  </macro>
+
+  <!-- ============================   Upper Arm   ============================ -->
+  <macro name="m3_upper_arm_transmission" params="lr">
+
+    <transmission name="${lr}_arm_t3" type="pr2_mechanism_model/SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${lr}_arm_a3">
+          <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${lr}_arm_j3">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+    <!-- Elbow flex -->
+    <transmission name="${lr}_arm_t4" type="pr2_mechanism_model/SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${lr}_arm_a4">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${lr}_arm_j4">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+  </macro>
+
+  <!-- ============================   Forearm   ============================ -->
+  <macro name="m3_forearm_transmission" params="lr">
+
+    <transmission name="${lr}_arm_t5" type="pr2_mechanism_model/SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${lr}_arm_a5">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${lr}_arm_j5">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+    <!-- Wrist flex -->
+    <transmission name="${lr}_arm_t6" type="pr2_mechanism_model/SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${lr}_arm_a6">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${lr}_arm_j6">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+  </macro>
+
+  <macro name="m3_arm_transmission" params="lr">
+    <m3_shoulder_transmission lr="${lr}"/>
+    <m3_upper_arm_transmission lr="${lr}"/>
+    <m3_forearm_transmission lr="${lr}"/>
+  </macro>
+
+</robot>

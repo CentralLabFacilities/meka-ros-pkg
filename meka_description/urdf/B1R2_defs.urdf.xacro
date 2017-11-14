@@ -7,7 +7,6 @@
   <property name="M_PI" value="3.1415926535897931" />
  
   <macro name="meka_base" params="side parent reflect *origin">
-
     
     <joint name="X" type="prismatic">
       <axis xyz="1 0 0" />

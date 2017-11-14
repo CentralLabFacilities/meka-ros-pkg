@@ -3,43 +3,31 @@
        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
-
-  <xacro:property name="M_PI" value="3.1415926535897931" />
-
-  <xacro:macro name="inertial_cuboid_with_pose" params="mass x_length y_length z_length *origin">
-    <inertial>
-      <xacro:insert_block name="origin"/>
-      <mass value="${mass}" />
-      <inertia ixx="${(1/12) * mass * (y_length*y_length + z_length*z_length)}" ixy="0.0" ixz="0.0"
-               iyy="${(1/12) * mass * (x_length*x_length + z_length*z_length)}" iyz="0.0"
-               izz="${(1/12) * mass * (x_length*x_length + y_length*y_length)}" />
-    </inertial>
-  </xacro:macro>
  
-  <xacro:macro name="meka_base" params="side parent reflect *origin">
+  <xacro:macro name="meka_base" params="parent *origin">
 
-     <joint name="fixed_base_joint" type="fixed">
-      <xacro:insert_block name="origin" /> 
-      <child link="fixed_base"/>
+    <joint name="fixed_base_joint" type="fixed">
+      <insert_block name="origin" /> 
       <parent link="${parent}"/>
+      <child link="fixed_base"/>
     </joint>
 
-  <link name="fixed_base">
-	  <xacro:inertial_cuboid_with_pose mass="120.0" x_length="0.6" y_length="0.4" z_length="0.5">
-      <origin xyz="-0.10 0 0.2" rpy="0 0 0" />
-    </xacro:inertial_cuboid_with_pose> 
+    <link name="fixed_base">
+	  <xacro:inertial_cuboid_with_pose mass="100.0" x_length="0.67" y_length="0.46" z_length="0.25">
+          <origin xyz="-0.0 0 0.20" rpy="0 0 0" />
+      </xacro:inertial_cuboid_with_pose> 
 	  <visual>
 		  <material name="GreyC" />
 		  <origin xyz="0 0 0" rpy="0 0 0" />
 		  <geometry name="b1r1_3_geom">
-			  <mesh filename="package://${MESH}/B1R1/meka_mobile_base+backpack.dae" /> <!-- B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.dae -->
+			  <mesh filename="package://${MESH}/B1R1/meka_mobile_base+backpack.dae" />
 		  </geometry>
 	  </visual>
 	  <visual>
 		  <material name="GreyC" />
 		  <origin xyz="0.17654 0 0.32141" rpy="0 0 0" />
 		  <geometry name="b1r1_3_geom">
-			  <mesh filename="package://${MESH}/B1R1/meka_zlift.dae" /> <!-- B1R1/MB1_00_000_meka_mobile_base+backpack+zlift.dae -->
+			  <mesh filename="package://${MESH}/B1R1/meka_zlift.dae" />
 		  </geometry>
 	  </visual>
 	  <collision>
@@ -55,25 +43,25 @@
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="0.23 0.12 0.165" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="0.23 0.12 0.265" rpy="0.0 0.0 0.0 " />
 		  <geometry>
 			  <cylinder length="0.325" radius="0.11" />
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="0.23 -0.12 0.165" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="0.23 -0.12 0.265" rpy="0.0 0.0 0.0 " />
 		  <geometry>
 			  <cylinder length="0.325" radius="0.11" />
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="-0.23 0.12 0.275" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="-0.23 0.12 0.375" rpy="0.0 0.0 0.0 " />
 		  <geometry>
 			  <cylinder length="0.55" radius="0.11" /> <!-- l 0.48 -->
 		  </geometry>
 	  </collision>
     <collision>
-		  <origin xyz="-0.23 -0.12 0.275" rpy="0.0 0.0 0.0 " />
+		  <origin xyz="-0.23 -0.12 0.375" rpy="0.0 0.0 0.0 " />
 		  <geometry>
 			  <cylinder length="0.55" radius="0.11" />  <!-- l 0.48 -->
 		  </geometry>
@@ -98,6 +86,18 @@
 		  </geometry>
 	  </collision>
   </link>
+  
+    <joint name="backpack_joint" type="fixed">
+      <insert_block name="origin" /> 
+      <parent link="fixed_base"/>
+      <child link="backpack"/>
+      <origin xyz="-0.185 0 0.36" rpy="0 0 0" />
+    </joint>
+    <link name="backpack">
+	  <xacro:inertial_cuboid_with_pose mass="10.0" x_length="0.3" y_length="0.46" z_length="0.22">
+          <origin xyz="0 0 0.0" rpy="0 0 0" />
+      </xacro:inertial_cuboid_with_pose> 
+    </link>
 
   </xacro:macro>
 

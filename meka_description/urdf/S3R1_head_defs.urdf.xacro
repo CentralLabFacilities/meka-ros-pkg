@@ -5,7 +5,7 @@
 
   <property name="M_PI" value="3.1415926535897931" />
 
-  <macro name="m3_neck" params="side parent reflect *origin">
+  <macro name="m3_neck" params="parent *origin">
 
      <joint name="head_j1" type="revolute">
       <axis xyz="0 0 1"/>
@@ -189,12 +189,10 @@
 	      </geometry>
       </collision>
     </link> -->
-    
-</macro>
+  </macro>
 
-
-  <macro name="m3_head" params="side parent reflect *origin">
-    <m3_neck side="${side}" reflect="${reflect}" parent="${parent}">
+  <macro name="m3_head" params="parent *origin">
+    <m3_neck parent="${parent}">
       <insert_block name="origin" />
     </m3_neck>
   </macro>

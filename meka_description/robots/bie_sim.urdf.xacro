@@ -5,9 +5,12 @@
        xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        name="meka" >
 
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="MESH" value="meka_description/meshes/mid_res" />
+  <xacro:property name="MESH_COLL" value="meka_description/meshes/low_res" />
+
   <!-- generic simulator_gazebo plugins for starting mechanism control, ros time, ros battery -->
   <xacro:include filename="$(find meka_description)/gazebo/gazebo.urdf.xacro" />
-  <!--xacro:include filename="$(find meka_description)/transmissions/body.transmission.xacro" /--> 
 
   <!-- Meka Basics -->
   <xacro:include filename="$(find meka_description)/urdf/MEKA_BASIC.urdf.xacro" />
@@ -16,24 +19,24 @@
   <xacro:include filename="$(find meka_description)/urdf/B1R2B_defs.urdf.xacro" />
 
   <!-- Meka Zlift -->
-  <xacro:include filename="$(find meka_description)/urdf/Z1R2B_defs.urdf.xacro" />
-  <xacro:include filename="$(find meka_description)/transmissions/Z1R2B_zlift.transmission.xacro" />
+  <xacro:include filename="$(find meka_description)/urdf/Z1R2_zlift_defs.urdf.xacro" />
+  <xacro:include filename="$(find meka_description)/transmissions/Z1R2_zlift.transmission.xacro" />
+
+  <!-- Meka Torso -->  
+  <xacro:include filename="$(find meka_description)/urdf/T2R3_torso_defs.urdf.xacro" /> 
+  <xacro:include filename="$(find meka_description)/transmissions/T2R3_torso.transmission.xacro" /> 
 
   <!-- Meka Arm -->
-  <!--xacro:include filename="$(find meka_description)/urdf/A2R4_r_arm_defs.urdf.xacro" /-->
-  <!--xacro:include filename="$(find meka_description)/urdf/A2R4_l_arm_defs.urdf.xacro" /-->
-  <!--xacro:include filename="$(find meka_description)/transmissions/A2R4_r_arm_defs.transmission.xacro" /-->
-  <!--xacro:include filename="$(find meka_description)/transmissions/A2R4_l_arm_defs.transmission.xacro" /-->
+  <xacro:include filename="$(find meka_description)/urdf/A2R4_arm_defs.urdf.xacro" />
+  <xacro:include filename="$(find meka_description)/transmissions/A2R4_arm_defs.transmission.xacro" />
 
   <!-- Meka Hand -->
-  <!--xacro:include filename="$(find meka_description)/urdf/H2R4_r_hand_defs.urdf.xacro" /--> 
-  <!--xacro:include filename="$(find meka_description)/urdf/H2R4_l_hand_defs.urdf.xacro" /-->
-  <!--xacro:include filename="$(find meka_description)/transmissions/H2R4_r_hand.transmission.xacro" /-->
-  <!--xacro:include filename="$(find meka_description)/transmissions/H2R4_l_hand.transmission.xacro" /-->
+  <xacro:include filename="$(find meka_description)/urdf/H2R4_hand_defs.urdf.xacro" /> 
+  <xacro:include filename="$(find meka_description)/transmissions/H2R4_hand.transmission.xacro" />
 
-  <!-- Meka Head>
+  <!-- Meka Head -->
   <xacro:include filename="$(find meka_description)/urdf/S3R1_head_defs.urdf.xacro" />
-  <xacro:include filename="$(find meka_description)/transmissions/S3R1_head.transmission.xacro" / -->
+  <xacro:include filename="$(find meka_description)/transmissions/S3R1_head.transmission.xacro" />
 
   <!-- Import asus>
   <xacro:include filename="$(find meka_description)/urdf/asus_camera.urdf.xacro" / -->   
@@ -42,13 +45,8 @@
     <origin xyz="0.12 0 0.06" rpy="0 0 0"/>
   </xacro:asus_camera--> 
 
-  <!-- Extra Wheels
+  <!-- Extra Wheels -->
   <xacro:include filename="$(find meka_description)/urdf/wheel_defs.urdf.xacro" />
-
-  <wheel fb="front" lr="right" parent="base_link" translateX="1" translateY="-1" flipY="-1"/>
-  <wheel fb="front" lr="left" parent="base_link" translateX="1" translateY="1" flipY="-1"/>
-  <wheel fb="back" lr="right" parent="base_link" translateX="-1" translateY="-1" flipY="-1"/>
-  <wheel fb="back" lr="left" parent="base_link" translateX="-1" translateY="1" flipY="-1"/> -->
 
 </robot>
   

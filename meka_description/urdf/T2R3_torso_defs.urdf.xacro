@@ -4,101 +4,18 @@
 	xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller" 
 	xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
 	xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
-
-	<xacro:property name="M_PI" value="3.1415926535897931" />
- 	<xacro:property name="MESH" value="meka_description/meshes/mid_res" />
- 	<xacro:property name="MESH_COLL" value="meka_description/meshes/low_res" />
-
- 	<xacro:arg name="hand_mimic" default="true"/> 
- 	<xacro:arg name="torso_mimic" default="true"/>
-
-  	<!-- synergy vector -->
-  	<xacro:property name="torso_coupling" value="1.0" />
-
-	<material name="GreyA">
-		<color rgba="0.3 0.3 0.3 1.0"/>
-	</material>
-	<material name="GreyB">
-		<color rgba="0.5 0.5 0.5 1.0"/>
-	</material>
-	<material name="GreyC">
-		<color rgba="0.7 0.7 0.7 1.0"/>
-	</material>
-
-	<xacro:macro name="inertial_cuboid_with_pose" params="mass x_length y_length z_length *origin">
-		<inertial>
-			<xacro:insert_block name="origin"/>
-			<mass value="${mass}" />
-			<inertia ixx="${(1/12) * mass * (y_length*y_length + z_length*z_length)}" ixy="0.0" ixz="0.0" iyy="${(1/12) * mass * (x_length*x_length + z_length*z_length)}" iyz="0.0" izz="${(1/12) * mass * (x_length*x_length + y_length*y_length)}" />
-		</inertial>
-	</xacro:macro>
-
-	<!-- john added transmissions -->
-	<m3_r_arm_transmission side="r" reflect="1" parent="upper"/>
-	<m3_l_arm_transmission side="l" reflect="1" parent="upper"/>
-
-	<!-- macro inserts -->
-	<m3_r_hand side="r" reflect="1" parent="handmount_RIGHT" use_mimic="$(arg hand_mimic)">
-		<origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-	</m3_r_hand>
-	<m3_l_hand side="l" reflect="1" parent="handmount_LEFT" use_mimic="$(arg hand_mimic)">
-		<origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-	</m3_l_hand>
-	<m3_head side="r" reflect="1" parent="upper">
-		<origin xyz="0.0 0.0 0.2757" rpy="0 0 0" />
-	</m3_head>
-	<m3_r_arm side="r" reflect="1" parent="upper">
-		<origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
-	</m3_r_arm>
-	<m3_l_arm side="l" reflect="1" parent="upper">
-		<origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
-	</m3_l_arm>
-
-	<link name="base_link">
-	    <collision>
-          <origin xyz="0 0 0" rpy="0 0 0" />
-          <geometry>
-            <box size="0.8 0.6 0.025"/>
-          </geometry>
-        </collision>
-	</link>
-
-	<joint name="laser_front_joint" type="fixed"> 
-	  <origin xyz="0.306 0.0 0.4" rpy="0 0 0" />
-      <child link="laser_front"/>
-      <parent link="base_link"/>
-    </joint>
-
-	<link name="laser_front"> 
-	</link>
 	
-	<joint name="laser_rear_joint" type="fixed"> 
-	  <origin xyz="-0.306 0.0 0.4" rpy="0 ${M_PI} 0" />
-      <child link="laser_rear"/>
-      <parent link="base_link"/>
-    </joint>
-
-	<link name="laser_rear"> 
-	</link>
-
-	<meka_base side="r" reflect="1" parent="base_link">
-		<origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-	</meka_base>
-
-	<meka_zlift side="r" reflect="1" parent="base_link">
-		<origin xyz="0.17513 0.0 0.43" rpy="0 0 0" />
-		<!-- 0.33 0.0 0.45 rpy="0 0.0236 0" -->
-	</meka_zlift>
-
-	<joint name="chest_joint" type="fixed">
-		<origin xyz="0.263 0.0 0.006" rpy="0 0 0" />
-		<parent link="zlift_link" />
+	<xacro:macro name="meka_torso" params="parent *origin">
+	
+    <joint name="chest_joint" type="fixed">
+        <insert_block name="origin" />
+		<parent link="${parent}" />
 		<child link="panplate" />
 	</joint>
 
 	<link name="panplate">
-		<xacro:inertial_cuboid_with_pose mass="4.0" x_length="0.6" y_length="0.4" z_length="0.5">
-			<origin xyz="0 0 0" rpy="0 0 0" />
+		<xacro:inertial_cuboid_with_pose mass="2.0" x_length="0.6" y_length="0.4" z_length="0.5">
+			<origin xyz="0 0 0.01" rpy="0 0 0" />
 		</xacro:inertial_cuboid_with_pose>
 		<visual>
 			<material name="GreyA" />
@@ -265,4 +182,6 @@
 		</collision>
 	</link>
 	
+	</xacro:macro>
+
 </robot>

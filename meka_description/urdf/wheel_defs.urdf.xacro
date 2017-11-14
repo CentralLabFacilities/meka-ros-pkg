@@ -4,40 +4,89 @@
   <!-- from https://github.com/fsuarez6/labrob -->
 
   <!-- Wheels -->
-  <xacro:property name="wheel_radius" value="0.25" /> 
-  <xacro:property name="wheel_height" value="0.1" />
-  <xacro:property name="wheel_mass" value="250" /> <!-- in kg-->
-  
-  <xacro:property name="base_x_origin_to_wheel_origin" value="0.25" />
-  <xacro:property name="base_y_origin_to_wheel_origin" value="0.3" />
-  <xacro:property name="base_z_origin_to_wheel_origin" value="0.0" />
-  
+  <xacro:property name="wheel_radius" value="0.055" /> 
+  <xacro:property name="wheel_height" value="0.02" />
+  <xacro:property name="wheel_mass" value="0.5" /> <!-- in kg-->
+      
   <xacro:macro name="cylinder_inertia" params="m r h">
     <inertia  ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0"
               iyy="${m*(3*r*r+h*h)/12}" iyz = "0"
               izz="${m*r*r/2}" /> 
   </xacro:macro>
   
-  <xacro:macro name="wheel" params="fb lr parent translateX translateY flipY"> <!--fb : front, back ; lr: left, right -->
+  <xacro:macro name="m3_caster_hub" params="l alpha fb lr parent" >
+    
+    <joint name="${fb}_${lr}_rotation_joint" type="continuous">
+      <origin xyz="${l*cos(alpha)} ${l*sin(alpha)} ${wheel_radius*2}" rpy="0 0 0" /> 
+      <axis xyz="0 0 1" />
+      <limit effort="6.5" velocity="10"/> <!-- alpha tested velocity and effort limits -->
+      <safety_controller  k_velocity="10" />
+      <dynamics damping="1.0" friction="0.0" />
+      <parent link="${parent}"/>
+      <child link="${fb}_${lr}_rotation_link" />
+    </joint>
+    
+    <link name="${fb}_${lr}_rotation_link">
+      <inertial>
+        <mass value="3.473082"/>
+        <inertia  ixx="0.012411765597" ixy="-0.000711733678" ixz="0.00050272983"
+                  iyy="0.015218160428" iyz="-0.000004273467" izz="0.011763977943" />
+      </inertial>
+    </link>
+    
+    <transmission name="${fb}_${lr}_rotation_joint_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${fb}_${lr}_rotation_joint" type="continuous">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${fb}_${lr}_rotation_joint_motor">
+        <mechanicalReduction>${-1 * 624/35 * 80/18}</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+  </xacro:macro>
+  
+  <xacro:macro name="m3_wheel" params="l alpha fb lr parent"> <!--fb : front, back ; lr: left, right -->
+    
+    <joint name="${fb}_${lr}_wheel_joint" type="continuous">
+      <xacro:unless value="$(arg _caster_hubs)">
+        <origin xyz="${l*cos(alpha)} ${l*sin(alpha)} ${wheel_radius}" rpy="0 0 0" /> 
+      </xacro:unless>
+      <xacro:if value="$(arg _caster_hubs)">
+        <origin xyz="0 0 ${-wheel_radius}" />
+      </xacro:if>
+      <axis xyz="0 1 0" rpy="0 0 0" />
+      <limit effort="7" velocity="15"/> <!-- alpha tested effort and velocity limits -->
+      <safety_controller  k_velocity="10" />
+      <dynamics damping="1.0" friction="0.0" />
+      <xacro:unless value="$(arg _caster_hubs)">
+        <parent link="${parent}"/>
+      </xacro:unless>
+      <xacro:if value="$(arg _caster_hubs)">
+        <parent link="${fb}_${lr}_rotation_link"/>
+      </xacro:if>
+      <child link="${fb}_${lr}_wheel"/>
+    </joint>
+ 
     <link name="${fb}_${lr}_wheel">
+      <inertial>
+        <mass value="${wheel_mass}" />
+        <origin xyz="0 0 0" />
+        <cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" h="${wheel_height}" />
+      </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="${flipY*M_PI/2} 0 0" /> 
+        <origin xyz="0 0 0" rpy="${-M_PI/2} 0 0" /> 
         <geometry>
           <cylinder length="${wheel_height}" radius="${wheel_radius}" />
         </geometry>
         <material name="DarkGray" />
       </visual>
       <collision>
-        <origin xyz="0 0 0" rpy="${flipY*M_PI/2} 0 0" />
+        <origin xyz="0 0 0" rpy="${-M_PI/2} 0 0" />
         <geometry>
           <cylinder length="${wheel_height}" radius="${wheel_radius}" />
         </geometry>
-      </collision>
-      <inertial>
-        <mass value="${wheel_mass}" />
-        <origin xyz="0 0 0" />
-        <cylinder_inertia  m="${wheel_mass}" r="${wheel_radius}" h="${wheel_height}" />
-      </inertial>
+      </collision>      
     </link>
 
     <gazebo reference="${fb}_${lr}_wheel">
@@ -50,24 +99,14 @@
       <turnGravityOff>false</turnGravityOff>
     </gazebo>
 
-    <joint name="${fb}_${lr}_wheel_joint" type="continuous">
-      <parent link="${parent}"/>
-      <child link="${fb}_${lr}_wheel"/>
-      <origin xyz="${translateX * base_x_origin_to_wheel_origin} ${translateY * base_y_origin_to_wheel_origin} ${base_z_origin_to_wheel_origin}" rpy="0 0 0" /> 
-      <axis xyz="0 1 0" rpy="0 0 0" />
-      <limit effort="100" velocity="100"/>
-      <joint_properties damping="0.0" friction="0.0"/>
-    </joint>
-
     <!-- Transmission is important to link the joints and the controller -->
     <transmission name="${fb}_${lr}_wheel_joint_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${fb}_${lr}_wheel_joint" type="continuous">
-          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       </joint>
       <actuator name="${fb}_${lr}_wheel_joint_motor">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
+        <mechanicalReduction>${624/35 * 80/18}</mechanicalReduction>
       </actuator>
     </transmission>
    
