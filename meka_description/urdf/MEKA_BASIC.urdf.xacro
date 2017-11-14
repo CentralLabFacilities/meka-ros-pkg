@@ -8,15 +8,6 @@
  	<xacro:arg name="hand_mimic" default="true"/> 
  	<xacro:arg name="torso_mimic" default="true"/>
  	
- 	<xacro:arg name="_head" default="true"/>
- 	<xacro:arg name="_r_arm" default="true"/>
- 	<xacro:arg name="_l_arm" default="true"/>
- 	<xacro:arg name="_r_hand" default="true"/>
- 	<xacro:arg name="_l_hand" default="true"/>
- 	<xacro:arg name="_torso" default="true"/>
- 	<xacro:arg name="_zlift" default="true"/>
- 	<xacro:arg name="_caster_hubs" default="true"/>
-
     <xacro:property name="base_link" value="base_link" /> 
 
     <xacro:macro name="inertial_cuboid_with_pose" params="mass x_length y_length z_length *origin">
@@ -43,12 +34,12 @@
 	</material>
 
     <link name="${base_link}">
-        <!--collision>
+        <collision>
           <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>
             <box size="0.8 0.6 0.025"/>
           </geometry>
-        </collision-->
+        </collision>
 	</link>
 
 	<joint name="laser_front_joint" type="fixed"> 
