@@ -25,7 +25,26 @@ from control_msgs.msg import FollowJointTrajectoryAction, \
     FollowJointTrajectoryGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
 
+from moveit_msgs.msg import CollisionObject, AttachedCollisionObject, PlanningScene
+
+from geometry_msgs.msg import Pose
+
+from shape_msgs.msg import SolidPrimitive
+
 JNT_TRAJ_SRV_SUFFIX = "_position_trajectory_controller/follow_joint_trajectory"
+
+# links that are allowed to be in collision with an attached object
+ALLOWED_TOUCH_LINKS = ["palm_left", "hand_tool_frame_left", "thumb0_left", "thumb1_left", 
+"thumb2_left", "index0_left", "index1_left", "index2_left", "ring0_left", 
+"ring1_left", "ring2_left", "pinky0_left", "pinky1_left", "pinky2_left", 
+"palm_right", "hand_tool_frame_right", "thumb0_right", "thumb1_right", 
+"thumb2_right", "index0_right", "index1_right", "index2_right", "ring0_right", 
+"ring1_right", "ring2_right", "pinky0_right", "pinky1_right", "pinky2_right"]
+
+
+# tool frames
+TOOL_FRAME_LEFT = 'hand_tool_frame_left'
+TOOL_FRAME_RIGHT = 'hand_tool_frame_right'
 
 
 class HandOver(object):
@@ -51,6 +70,9 @@ class HandOver(object):
         self.previous_force = {}
         self._r = rospy.Rate(100)
 
+        # store latest planning scene
+        self.current_planning_scene = None
+
         self.force_variation['left_arm'] = numpy.array([0.0, 0.0, 0.0])
         self.force_variation['right_arm'] = numpy.array([0.0, 0.0, 0.0])
         self.force_bias['left_arm'] = numpy.array([0.0, 0.0, 0.0])
@@ -62,6 +84,10 @@ class HandOver(object):
         self.sub_right = rospy.Subscriber("/meka_ros_pub/m3loadx6_ma29_l0/wrench", WrenchStamped, self.handle_right)
 
         self.sub_face = rospy.Subscriber("/face_detector/people_tracker_measurements_array", PositionMeasurementArray, self.face_callback)
+
+        # publisher & subscriber for planning scene
+        self.sub_ps = rospy.Subscriber("/planning_scene", PlanningScene, self.planning_scene_cb)
+        self.pub_ps = rospy.Publisher("/planning_scene", PlanningScene, queue_size=1000)
 
         self._as.start()
 
@@ -277,6 +303,95 @@ class HandOver(object):
 
         return success
 
+    def planning_scene_cb(self, planning_scene):
+
+        rospy.loginfo('got new planning scene')
+
+        # store new planning scene
+        self.current_planning_scene = planning_scene
+
+        # reset carrying
+        self._carrying['left_arm'] = False
+        self._carrying['right_arm'] = False
+        
+        # if an object is attached to one of the tool frames, set carrying accordingly
+        for a in planning_scene.robot_state.attached_collision_objects:
+            if a.link_name == TOOL_FRAME_LEFT and a.object.operation == CollisionObject.ADD:
+                self._carrying['left_arm'] = True 
+
+            if a.link_name == TOOL_FRAME_RIGHT and a.object.operation == CollisionObject.ADD:
+                self._carrying['right_arm'] = True 
+
+
+    def attach_object(self, group_name):
+
+        rospy.loginfo('attaching object to ' + group_name)
+
+        # select toolframe depending on group name
+        tool_frame = TOOL_FRAME_RIGHT if 'right' in group_name else TOOL_FRAME_LEFT
+
+        # pose for attached object in tool frame coordiantes
+        pose = Pose()
+
+        pose.position.z = 0.05
+        pose.orientation.w = 1.0
+
+        primitive = SolidPrimitive()
+
+        primitive.type = primitive.BOX
+        primitive.dimensions = [0.07, 0.07, 0.07]
+
+        o = CollisionObject()
+
+        o.header.frame_id = tool_frame
+        o.id = "handed_object"
+        o.primitives = [primitive]
+        o.primitive_poses = [pose]
+        o.operation = o.ADD
+
+        a = AttachedCollisionObject()
+
+        a.object = o
+
+        # allow collisions with hand links
+        a.touch_links = ALLOWED_TOUCH_LINKS
+
+        # attach object to tool frame
+        a.link_name = tool_frame
+
+        # don't delete old planning scene, if we didn't get one so far, create a new one
+        scene = self.current_planning_scene if self.current_planning_scene is not None else PlanningScene()
+
+        # add attached object to scene
+        scene.robot_state.attached_collision_objects.append(a)
+
+        # mark scene as changed
+        scene.is_diff = True
+        
+        self.pub_ps.publish(scene)
+
+    def detach_object(self, group_name):
+        
+        rospy.loginfo('detaching object from ' + group_name)
+
+        # at this point, we are garuanteed to have a planning scene
+        scene = self.current_planning_scene
+
+        # set operation for attached objects to remove --> they are detached
+        for a in scene.robot_state.attached_collision_objects:
+            a.object.operation = CollisionObject.REMOVE
+
+            # also add the to be removed objects to the collision objects --> they are removed from the world
+            scene.world.collision_objects.append(a.object)
+        
+
+        # mark scene and robot as changed
+        scene.robot_state.is_diff = True
+        scene.is_diff = True
+        
+        self.pub_ps.publish(scene)
+
+
     def execute_cb(self, goal):
         success = True
 
@@ -303,7 +418,7 @@ class HandOver(object):
                     if self._carrying[group_name] == False:
                     # close hand
                         if self.close_hand(group_name):
-                            self._carrying[group_name] = True
+                            self.attach_object(group_name)
                             #TODO: look_at as parameter
                             if not self.look_at(group_name):
                                 success = False
@@ -312,7 +427,7 @@ class HandOver(object):
                     else:
                         # open hand
                         if self.open_hand(group_name):
-                            self._carrying[group_name] = False
+                            self.detach_object(group_name)
                     # retreat
                     rospy.loginfo('retreating')
                     if not self.retreat(group_name):
@@ -346,7 +461,7 @@ class HandOver(object):
 if __name__ == '__main__':
 
     parser = OptionParser()
-    parser.add_option("--postures", help="Path to postures made available", default = "asdfsadf/vol/meka/nightly/share/meka_posture_execution/config/postures.yml",
+    parser.add_option("--postures", help="Path to postures made available", default = "/vol/meka/nightly/share/meka_posture_execution/config/postures.yml",
                       dest="posture_path")
 
     (opts, args_) = parser.parse_args()
