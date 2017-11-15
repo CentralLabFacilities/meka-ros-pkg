@@ -11,7 +11,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="${lr}_arm_a0" />
       <joint name="${lr}_arm_j0">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>${hw_interface}</hardwareInterface>
       </joint>
     </transmission>
 
@@ -20,7 +20,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="${lr}_arm_a1" />
       <joint name="${lr}_arm_j1">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>${hw_interface}</hardwareInterface>
       </joint>
     </transmission>
 
@@ -29,7 +29,7 @@
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="${lr}_arm_a2" />
       <joint name="${lr}_arm_j2">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>${hw_interface}</hardwareInterface>
       </joint>
     </transmission>
 
@@ -44,7 +44,7 @@
           <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="${lr}_arm_j3">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>${hw_interface}</hardwareInterface>
       </joint>
     </transmission>
 
@@ -55,7 +55,7 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="${lr}_arm_j4">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>${hw_interface}</hardwareInterface>
       </joint>
     </transmission>
 
@@ -70,7 +70,7 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="${lr}_arm_j5">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>${hw_interface}</hardwareInterface>
       </joint>
     </transmission>
 
@@ -81,7 +81,7 @@
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
       <joint name="${lr}_arm_j6">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>${hw_interface}</hardwareInterface>
       </joint>
     </transmission>
 

@@ -4,7 +4,7 @@
   <transmission name="torso_j0_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="torso_j0">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>${hw_interface}</hardwareInterface>
     </joint>
     <actuator name="torso_j0_motor">
       <mechanicalReduction>1</mechanicalReduction>
@@ -14,7 +14,7 @@
   <transmission name="torso_j1_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="torso_j1">
-      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <hardwareInterface>${hw_interface}</hardwareInterface>
     </joint>
     <actuator name="torso_j1_motor">
       <mechanicalReduction>1</mechanicalReduction>
