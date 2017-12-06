@@ -11,7 +11,7 @@
       <axis xyz="0 0 1" />
       <parent link="${parent}"/>
       <child link="zlift_link"/>
-      <limit lower="${0*M_PI/180}"  upper="${40.107*M_PI/180}"
+      <limit lower="${0*M_PI/180}"  upper="${38.9*M_PI/180}"
              effort="30" velocity="${34.8}" /> <!-- !!! this should be changed at some point !!! -->
 
       <dynamics damping="10.0" />
