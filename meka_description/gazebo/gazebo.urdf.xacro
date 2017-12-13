@@ -148,6 +148,85 @@
           <sensitiveness>0.0</sensitiveness>
         </plugin>
   </xacro:if>
+  
+  <xacro:if value="$(arg _l_hand)">
+        <plugin name="mimic_left_j1a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j1</joint>
+          <mimicJoint>left_hand_j1a</mimicJoint>
+          <multiplier>${th_palmprox_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j1b" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j1</joint>
+          <mimicJoint>left_hand_j1b</mimicJoint>
+          <multiplier>${th_proxdist_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j2a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j2</joint>
+          <mimicJoint>left_hand_j2a</mimicJoint>
+          <multiplier>${palmprox_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j2b" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j2</joint>
+          <mimicJoint>left_hand_j2b</mimicJoint>
+          <multiplier>${proxmid_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j2c" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j2</joint>
+          <mimicJoint>left_hand_j2c</mimicJoint>
+          <multiplier>${middist_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+       <plugin name="mimic_left_j3a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j3</joint>
+          <mimicJoint>left_hand_j3a</mimicJoint>
+          <multiplier>${palmprox_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j3b" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j3</joint>
+          <mimicJoint>left_hand_j3b</mimicJoint>
+          <multiplier>${proxmid_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j3c" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j3</joint>
+          <mimicJoint>left_hand_j3c</mimicJoint>
+          <multiplier>${middist_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j4a" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j4</joint>
+          <mimicJoint>left_hand_j4a</mimicJoint>
+          <multiplier>${palmprox_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j4b" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j4</joint>
+          <mimicJoint>left_hand_j4b</mimicJoint>
+          <multiplier>${proxmid_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+
+        <plugin name="mimic_left_j4c" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+          <joint>left_hand_j4</joint>
+          <mimicJoint>left_hand_j4c</mimicJoint>
+          <multiplier>${middist_coupling}</multiplier>
+          <sensitiveness>0.0</sensitiveness>
+        </plugin>
+  </xacro:if>
 
   </gazebo>
 
