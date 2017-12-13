@@ -1,24 +1,28 @@
 <?xml version="1.0"?>
 <robot>
 
-  <transmission name="head_j0_trans">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="head_j0">
-      <hardwareInterface>${hw_interface}</hardwareInterface>
-    </joint>
-    <actuator name="head_j0_motor">
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
+    <macro name="m3_head_transmission">  
 
-   <transmission name="head_j1_trans">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="head_j1">
-      <hardwareInterface>${hw_interface}</hardwareInterface>
-    </joint>
-    <actuator name="head_j1_motor">
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
+        <transmission name="head_j0_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="head_j0">
+              <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="head_j0_motor">
+              <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <transmission name="head_j1_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="head_j1">
+              <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="head_j1_motor">
+              <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        
+    </macro>
   
 </robot>

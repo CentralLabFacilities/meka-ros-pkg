@@ -65,48 +65,56 @@
 		<origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
 	</meka_base>
 	
+	<!-- zlift -->
 	<xacro:if value="$(arg _zlift)">
 	    <meka_zlift parent="${base_link}">
 		    <origin xyz="0.17513 0.0 0.43" rpy="0 0 0" />
 		    <!-- 0.33 0.0 0.45 rpy="0 0.0236 0" -->
 	    </meka_zlift>
-	</xacro:if>
+	    <m3_zlift_transmission />
+	    <!-- torso -->
+	    <xacro:if value="$(arg _torso)">
+	        <meka_torso parent="zlift_link">
+		        <origin xyz="0.263 0.0 0.006" rpy="0 0 0" />
+	        </meka_torso>
+	        <m3_torso_transmission />
 	
-	<xacro:if value="$(arg _torso)">
-	    <meka_torso parent="zlift_link">
-		    <origin xyz="0.263 0.0 0.006" rpy="0 0 0" />
-	    </meka_torso>
-	</xacro:if>
+	        <xacro:if value="$(arg _head)">
+	            <m3_head parent="upper">
+		            <origin xyz="0.0 0.0 0.2757" rpy="0 0 0" />
+	            </m3_head>
+	            <m3_head_transmission />
+	        </xacro:if>
 	
-	<xacro:if value="$(arg _head)">
-	    <m3_head parent="upper">
-		    <origin xyz="0.0 0.0 0.2757" rpy="0 0 0" />
-	    </m3_head>
-	</xacro:if>
+	        <xacro:if value="$(arg _r_arm)">
+	            <m3_arm side="R" lr="right" reflect="1" rotate="0" parent="upper">
+		            <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
+	            </m3_arm>
+	            <!-- transmissions inserted in arm urdf -->
+	            <xacro:if value="$(arg _r_hand)">
+	                <m3_hand lr="right" reflect="-1" parent="handmount_right" use_mimic="$(arg hand_mimic)">
+		                <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+	                </m3_hand>
+	            <!-- transmissions inserted in hand urdf -->
+	            </xacro:if>
+	        </xacro:if>
 	
-	<xacro:if value="$(arg _r_arm)">
-	    <m3_arm side="R" lr="right" reflect="1" rotate="0" parent="upper">
-		    <origin xyz="0.0 -0.18465 0.2337" rpy="0 0 0" />
-	    </m3_arm>
-	</xacro:if>
+	        <xacro:if value="$(arg _l_arm)">
+	            <m3_arm side="L" lr="left" reflect="-1" rotate="1" parent="upper">
+		            <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
+	            </m3_arm>
+	            <!-- transmissions inserted in arm urdf -->
 	
-	<xacro:if value="$(arg _l_arm)">
-	    <m3_arm side="L" lr="left" reflect="-1" rotate="1" parent="upper">
-		    <origin xyz="0.0 0.18465 0.2337" rpy="0 0 0" />
-	    </m3_arm>
-	</xacro:if>
-	
-	<xacro:if value="$(arg _l_hand)">
-	    <m3_hand lr="left" reflect="1" parent="handmount_left" use_mimic="$(arg hand_mimic)">
-		    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-	    </m3_hand>
+	            <xacro:if value="$(arg _l_hand)">
+	                <m3_hand lr="left" reflect="1" parent="handmount_left" use_mimic="$(arg hand_mimic)">
+		                <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+	                </m3_hand>
+	                <!-- transmissions inserted in hand urdf -->
+                </xacro:if>
+	        </xacro:if>
+	        
+        </xacro:if>
     </xacro:if>
-	
-	<xacro:if value="$(arg _r_hand)">
-	    <m3_hand lr="right" reflect="-1" parent="handmount_right" use_mimic="$(arg hand_mimic)">
-		    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
-	    </m3_hand>
-	</xacro:if>
 	
 	<xacro:if value="$(arg _caster_hubs)">
         <m3_caster_hub l="0.2678" alpha="${M_PI/6}" fb="front" lr="right" parent="${base_link}" />

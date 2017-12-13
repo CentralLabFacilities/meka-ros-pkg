@@ -5,13 +5,13 @@
        xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        name="meka" >
 
-    <xacro:arg name="_head" default="false"/>
-    <xacro:arg name="_r_arm" default="false"/>
-    <xacro:arg name="_l_arm" default="false"/>
-    <xacro:arg name="_r_hand" default="false"/>
-    <xacro:arg name="_l_hand" default="false"/>
-    <xacro:arg name="_torso" default="false"/>
-    <xacro:arg name="_zlift" default="false"/>
+    <xacro:arg name="_zlift" default="true"/>
+    <xacro:arg name="_torso" default="true"/>
+    <xacro:arg name="_head" default="true"/>
+    <xacro:arg name="_r_arm" default="true"/>
+    <xacro:arg name="_l_arm" default="true"/>
+    <xacro:arg name="_r_hand" default="true"/>
+    <xacro:arg name="_l_hand" default="true"/>
     <xacro:arg name="_caster_hubs" default="false"/>
 
   <xacro:property name="hw_interface" value="hardware_interface/PositionJointInterface" />

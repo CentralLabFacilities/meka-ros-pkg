@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot>
-
+<macro name="m3_zlift_transmission">  
   <transmission name="zlift_j0_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="zlift_j0">
@@ -10,6 +10,7 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
+</macro>  
   
 </robot>
 

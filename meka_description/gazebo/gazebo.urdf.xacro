@@ -42,22 +42,22 @@
       <odometryFrame>odom</odometryFrame>
       <odometryRate>20.0</odometryRate>
       <robotBaseFrame>base_link</robotBaseFrame>
-      <joint_state_idel_sec>3.0</joint_state_idel_sec>
-      <recover_roll_velocity_p_gain>10.0</recover_roll_velocity_p_gain>
-      <recover_pitch_velocity_p_gain>10.0</recover_pitch_velocity_p_gain>
-      <recover_z_velocity_p_gain>50.0</recover_z_velocity_p_gain>
-      <x_velocity_limit_max>2.0</x_velocity_limit_max>
-      <x_velocity_limit_min>-2.0</x_velocity_limit_min>
-      <y_velocity_limit_max>2.0</y_velocity_limit_max>
-      <y_velocity_limit_min>-2.0</y_velocity_limit_min>
-      <rot_velocity_limit_max>1.5</rot_velocity_limit_max>
-      <rot_velocity_limit_min>-1.5</rot_velocity_limit_min>
-      <x_acceleration_limit_max>2.0</x_acceleration_limit_max>
-      <x_acceleration_limit_min>-2.0</x_acceleration_limit_min>
-      <y_acceleration_limit_max>2.0</y_acceleration_limit_max>
-      <y_acceleration_limit_min>-2.0</y_acceleration_limit_min>
-      <rot_acceleration_limit_max>1.5</rot_acceleration_limit_max>
-      <rot_acceleration_limit_min>-1.5</rot_acceleration_limit_min>
+      <joint_state_idel_sec>2.0</joint_state_idel_sec>
+      <recover_roll_velocity_p_gain>1.0</recover_roll_velocity_p_gain>
+      <recover_pitch_velocity_p_gain>1.0</recover_pitch_velocity_p_gain>
+      <recover_z_velocity_p_gain>5.0</recover_z_velocity_p_gain>
+      <x_velocity_limit_max>4.0</x_velocity_limit_max>
+      <x_velocity_limit_min>-4.0</x_velocity_limit_min>
+      <y_velocity_limit_max>4.0</y_velocity_limit_max>
+      <y_velocity_limit_min>-4.0</y_velocity_limit_min>
+      <rot_velocity_limit_max>3.0</rot_velocity_limit_max>
+      <rot_velocity_limit_min>-3.0</rot_velocity_limit_min>
+      <x_acceleration_limit_max>3.0</x_acceleration_limit_max>
+      <x_acceleration_limit_min>-3.0</x_acceleration_limit_min>
+      <y_acceleration_limit_max>3.0</y_acceleration_limit_max>
+      <y_acceleration_limit_min>-3.0</y_acceleration_limit_min>
+      <rot_acceleration_limit_max>2.0</rot_acceleration_limit_max>
+      <rot_acceleration_limit_min>-2.0</rot_acceleration_limit_min>
       <tilt_angle_par_max_velocity>0</tilt_angle_par_max_velocity>
     </plugin>
     

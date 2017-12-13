@@ -15,6 +15,8 @@ zlift_controller:
     type: position_controllers/JointTrajectoryController
     joints: 
       - zlift_j0
+    pid_gains:
+      zlift_j0: {p: 100.0, i: 0.01, d: 10.0}
     gains:
       zlift_j0: {p: 100,  d: 1, i: 1, i_clamp: 1} 
 
@@ -23,6 +25,9 @@ body_controller:
     joints: 
       - torso_j0
       - torso_j1
+    pid_gains:
+      torso_j0: {p: 100.0, i: 0.01, d: 10.0}
+      torso_j1: {p: 100.0, i: 0.01, d: 10.0}
     gains:
       torso_j0: {p: 100,  d: 1, i: 1, i_clamp: 1}
       torso_j1: {p: 100,  d: 1, i: 1, i_clamp: 1}  
@@ -94,3 +99,10 @@ hand_l_controller:
       left_hand_j2: {p: 100,  d: 1, i: 1, i_clamp: 1}
       left_hand_j3: {p: 100,  d: 1, i: 1, i_clamp: 1}  
       left_hand_j4: {p: 100,  d: 1, i: 1, i_clamp: 1}  
+      
+gazebo_ros_control:
+  pid_gains:
+    zlift_j0: {p: 100.0, i: 0.01, d: 10.0}
+#    torso_j0: {p: 100.0, i: 0.01, d: 10.0}
+#    torso_j1: {p: 100.0, i: 0.01, d: 10.0}
+#    torso_j2: {p: 100.0, i: 0.01, d: 10.0}
