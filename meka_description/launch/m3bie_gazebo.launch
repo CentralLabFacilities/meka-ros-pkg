@@ -7,7 +7,7 @@
     <arg name="debug" value="false" />
     <arg name="gui" value="true" />
     <arg name="use_sim_time" value="true" />
-    <arg name="physics" value="dart"/>
+    <arg name="physics" value="bullet"/>
   </include>
 
   <!-- <node name="meka_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model meka" /> -->
@@ -20,14 +20,14 @@
   -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model meka -param robot_description"/> 
 
-  <rosparam command="load" file="$(find meka_description)/config/gazebo_controllers.yaml"/>
+  <rosparam file="$(find meka_description)/config/gazebo_controllers.yaml" command="load"/>
 
   <!-- Controllers that come up loaded -->
-  <node name="default_loaded_controllers_spawner" pkg="controller_manager" type="spawner" output="screen" args="joint_state_controller head_controller zlift_controller body_controller arm_r_controller hand_r_controller arm_l_controller hand_l_controller --timeout=60 --shutdown-timeout=1.0"></node>
+  <node name="default_loaded_controllers_spawner" pkg="controller_manager" type="spawner" output="screen" args="joint_state_controller head_position_trajectory_controller zlift_position_trajectory_controller torso_position_trajectory_controller right_arm_position_trajectory_controller left_arm_position_trajectory_controller right_hand_position_trajectory_controller left_hand_position_trajectory_controller --timeout=60 --shutdown-timeout=1.0"></node>
 
   <!-- Robot state publisher -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="30.0" />
+    <param name="publish_frequency" type="double" value="20.0" />
     <param name="tf_prefix" type="string" value="" />
   </node>
 
