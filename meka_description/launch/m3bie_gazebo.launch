@@ -1,8 +1,6 @@
 <launch>
 
-  <param name="robot_description" textfile="$(find meka_description)/robots/bie.xml"/>
-
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">=
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="paused" value="true" />
     <arg name="debug" value="false" />
     <arg name="gui" value="true" />
@@ -10,25 +8,8 @@
     <arg name="physics" value="bullet"/>
   </include>
 
-  <!-- <node name="meka_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model meka" /> -->
-  <!-- spawner tries to resolve all package urls in comments while xacro is not replacing xacro params in comments.
-    so we have to generate the urdf and remove all comments to be useable with the spawner
-    
-    > rosrun xacro xacro bie.urdf.xacro > bie.urdf      
-    > xmlstarlet ed -d '//comment()' bie.urdf > bie.xml
-
-  -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model meka -param robot_description"/> 
-
-  <rosparam file="$(find meka_description)/config/gazebo_controllers.yaml" command="load"/>
-
-  <!-- Controllers that come up loaded -->
-  <node name="default_loaded_controllers_spawner" pkg="controller_manager" type="spawner" output="screen" args="joint_state_controller head_position_trajectory_controller zlift_position_trajectory_controller torso_position_trajectory_controller right_arm_position_trajectory_controller left_arm_position_trajectory_controller right_hand_position_trajectory_controller left_hand_position_trajectory_controller --timeout=60 --shutdown-timeout=1.0"></node>
-
-  <!-- Robot state publisher -->
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="20.0" />
-    <param name="tf_prefix" type="string" value="" />
-  </node>
+  <include file="$(find meka_description)/launch/m3bie_gazebo_controllers.launch">
+  <include file="$(find meka_description)/launch/m3bie_gazebo_upload.launch">
+  
 
 </launch>
