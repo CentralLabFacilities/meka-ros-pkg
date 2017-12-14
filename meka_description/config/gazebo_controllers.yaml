@@ -100,9 +100,9 @@ left_hand_position_trajectory_controller:
       left_hand_j3: {p: 100,  d: 1, i: 1, i_clamp: 1}  
       left_hand_j4: {p: 100,  d: 1, i: 1, i_clamp: 1}  
       
-gazebo_ros_control:
-  pid_gains:
-    zlift_j0: {p: 100.0, i: 0.01, d: 10.0}
+#gazebo_ros_control:
+#  pid_gains:
+#    zlift_j0: {p: 100.0, i: 0.01, d: 10.0}
 #    torso_j0: {p: 100.0, i: 0.01, d: 10.0}
 #    torso_j1: {p: 100.0, i: 0.01, d: 10.0}
 #    torso_j2: {p: 100.0, i: 0.01, d: 10.0}

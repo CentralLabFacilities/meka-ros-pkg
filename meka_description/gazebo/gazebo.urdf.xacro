@@ -44,8 +44,8 @@
       <robotBaseFrame>base_link</robotBaseFrame>
       <joint_state_idel_sec>2.0</joint_state_idel_sec>
       <recover_roll_velocity_p_gain>1.0</recover_roll_velocity_p_gain>
-      <recover_pitch_velocity_p_gain>1.0</recover_pitch_velocity_p_gain>
-      <recover_z_velocity_p_gain>5.0</recover_z_velocity_p_gain>
+      <recover_pitch_velocity_p_gain>50.0</recover_pitch_velocity_p_gain>
+      <recover_z_velocity_p_gain>50.0</recover_z_velocity_p_gain>
       <x_velocity_limit_max>4.0</x_velocity_limit_max>
       <x_velocity_limit_min>-4.0</x_velocity_limit_min>
       <y_velocity_limit_max>4.0</y_velocity_limit_max>
