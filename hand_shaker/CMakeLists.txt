@@ -91,9 +91,6 @@ install(PROGRAMS
 )
 
 
-#install rosjava messages
-install(DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_MAVEN_DESTINATION}/org/ros/rosjava_messages/ 
-DESTINATION ${CATKIN_GLOBAL_MAVEN_DESTINATION}/org/ros/rosjava_messages)
 
 ## Mark executables and/or libraries for installation
 # install(TARGETS hand_shaker hand_shaker_node
