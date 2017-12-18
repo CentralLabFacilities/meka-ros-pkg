@@ -49,12 +49,12 @@
   <xacro:include filename="$(find meka_description)/urdf/S3R1_head_defs.urdf.xacro" />
   <xacro:include filename="$(find meka_description)/transmissions/S3R1_head.transmission.xacro" />
 
-  <!-- Import asus>
-  <xacro:include filename="$(find meka_description)/urdf/asus_camera.urdf.xacro" / -->   
+  <!-- Import asus-->
+  <xacro:include filename="$(find meka_description)/urdf/asus_camera.urdf.xacro" />   
 
-  <!--xacro:asus_camera name="xtion" parent="shell">
+  <xacro:asus_camera name="xtion" parent="shell">
     <origin xyz="0.12 0 0.06" rpy="0 0 0"/>
-  </xacro:asus_camera--> 
+  </xacro:asus_camera> 
 
   <!-- Extra Wheels -->
   <xacro:include filename="$(find meka_description)/urdf/wheel_defs.urdf.xacro" />
