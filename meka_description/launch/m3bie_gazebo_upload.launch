@@ -10,9 +10,9 @@
     > xmlstarlet ed -d '//comment()' bie.urdf > bie.xml
 
   -->
-  <!--node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model meka -param robot_description"/--> 
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model meka -param robot_description"/> 
    
-  <node name="spawn_meka_model" pkg="gazebo_ros" type="spawn_model" args="$(optenv ROBOT_INITIAL_POSE) -x 2 -y 2 -z 0.00 -urdf -model meka -param robot_description" respawn="false" output="screen"/> 
+  <!--node name="spawn_meka_model" pkg="gazebo_ros" type="spawn_model" args="$(optenv ROBOT_INITIAL_POSE) -x 2 -y 2 -z 0.00 -urdf -model meka -param robot_description" respawn="false" output="screen"/--> 
   
   <!-- Robot state publisher -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
