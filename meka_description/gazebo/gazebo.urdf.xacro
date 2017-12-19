@@ -7,7 +7,7 @@
 
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace></robotNamespace>
+      <robotNamespace>/meka_roscontrol</robotNamespace>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
       <alwaysOn>true</alwaysOn>
       <updateRate>30.0</updateRate>

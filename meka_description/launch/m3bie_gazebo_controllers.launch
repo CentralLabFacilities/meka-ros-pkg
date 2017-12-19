@@ -9,7 +9,7 @@
     <rosparam file="$(find meka_description)/config/gazebo_controllers.yaml" command="load"/>
 
     <!-- Controllers that come up loaded -->
-    <node name="default_loaded_controllers_spawner" pkg="controller_manager" type="spawner" output="screen" args="joint_state_controller head_position_trajectory_controller zlift_position_trajectory_controller torso_position_trajectory_controller right_arm_position_trajectory_controller left_arm_position_trajectory_controller right_hand_position_trajectory_controller left_hand_position_trajectory_controller --timeout=60 --shutdown-timeout=1.0"></node>
+    <node ns="/meka_roscontrol" name="default_loaded_controllers_spawner" pkg="controller_manager" type="spawner" output="screen" args="joint_state_controller head_position_trajectory_controller zlift_position_trajectory_controller torso_position_trajectory_controller right_arm_position_trajectory_controller left_arm_position_trajectory_controller right_hand_position_trajectory_controller left_hand_position_trajectory_controller --timeout=60 --shutdown-timeout=1.0"></node>
 
 
 </launch>
