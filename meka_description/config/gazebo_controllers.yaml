@@ -52,6 +52,23 @@ meka_roscontrol:
           right_arm_j4: {p: 100,  d: 1, i: 1, i_clamp: 1}
           right_arm_j5: {p: 100,  d: 1, i: 1, i_clamp: 1}
           right_arm_j6: {p: 100,  d: 1, i: 1, i_clamp: 1}   
+        constraints:
+          goal_time: 2.5
+          stopped_velocity_tolerance: 0.2
+          right_arm_j0:
+            goal: 10.0  
+          right_arm_j1:
+            goal: 10.0
+          right_arm_j2:
+            goal: 10.0
+          right_arm_j3:
+            goal: 10.0
+          right_arm_j4:
+            goal: 10.0
+          right_arm_j5:
+            goal: 10.0
+          right_arm_j6:
+            goal: 10.0
 
     right_hand_position_trajectory_controller:
         type: position_controllers/JointTrajectoryController
@@ -67,6 +84,19 @@ meka_roscontrol:
           right_hand_j2: {p: 100,  d: 1, i: 1, i_clamp: 1}
           right_hand_j3: {p: 100,  d: 1, i: 1, i_clamp: 1}  
           right_hand_j4: {p: 100,  d: 1, i: 1, i_clamp: 1}  
+        constraints:
+          goal_time: 2.5                   # Defaults to zero
+          stopped_velocity_tolerance: 0.2 # Defaults to 0.01
+          right_hand_j0:
+            goal: 10.0      
+          right_hand_j1:
+            goal: 10.0           
+          right_hand_j2:
+            goal: 10.0       
+          right_hand_j3:
+            goal: 10.0       
+          right_hand_j4:
+            goal: 10.0
         
     left_arm_position_trajectory_controller:
         type: position_controllers/JointTrajectoryController
@@ -85,7 +115,24 @@ meka_roscontrol:
           left_arm_j3: {p: 100,  d: 1, i: 1, i_clamp: 1}  
           left_arm_j4: {p: 100,  d: 1, i: 1, i_clamp: 1}
           left_arm_j5: {p: 100,  d: 1, i: 1, i_clamp: 1}
-          left_arm_j6: {p: 100,  d: 1, i: 1, i_clamp: 1}   
+          left_arm_j6: {p: 100,  d: 1, i: 1, i_clamp: 1} 
+        constraints:
+          goal_time: 2.5                   # Defaults to zero
+          stopped_velocity_tolerance: 0.2 # Defaults to 0.01
+          left_arm_j0:
+            goal: 10.0       
+          left_arm_j1:
+            goal: 10.0       
+          left_arm_j2:
+            goal: 10.0       
+          left_arm_j3:
+            goal: 10.0       
+          left_arm_j4:
+            goal: 10.0       
+          left_arm_j5:
+            goal: 10.0       
+          left_arm_j6:
+            goal: 10.0     
 
     left_hand_position_trajectory_controller:
         type: position_controllers/JointTrajectoryController
@@ -101,7 +148,19 @@ meka_roscontrol:
           left_hand_j2: {p: 100,  d: 1, i: 1, i_clamp: 1}
           left_hand_j3: {p: 100,  d: 1, i: 1, i_clamp: 1}  
           left_hand_j4: {p: 100,  d: 1, i: 1, i_clamp: 1}  
-          
+        constraints:
+          goal_time: 2.5                   # Defaults to zero
+          stopped_velocity_tolerance: 0.2 # Defaults to 0.01
+          left_hand_j0:
+            goal: 10.0       
+          left_hand_j1:
+            goal: 10.0           
+          left_hand_j2:
+            goal: 10.0       
+          left_hand_j3:
+            goal: 10.0       
+          left_hand_j4:
+            goal: 10.0  
 #    #gazebo_ros_control:
 #    #  pid_gains:
 #    #    zlift_j0: {p: 100.0, i: 0.01, d: 10.0}
