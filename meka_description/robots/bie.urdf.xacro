@@ -12,7 +12,7 @@
     <xacro:arg name="_l_hand" default="true"/>
     <xacro:arg name="_torso" default="true"/>
     <xacro:arg name="_zlift" default="true"/>
-    <xacro:arg name="_caster_hubs" default="true"/>
+    <xacro:arg name="_caster_hubs" default="false"/>
     
   <xacro:property name="hw_interface" value="hardware_interface/PositionJointInterface" />
 

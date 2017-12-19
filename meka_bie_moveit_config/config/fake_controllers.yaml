@@ -47,6 +47,12 @@ controller_list:
       - left_hand_j2
       - left_hand_j3
       - left_hand_j4
+  - name: fake_wheel_controller
+    joints:
+      - back_left_wheel_joint
+      - back_right_wheel_joint
+      - front_left_wheel_joint
+      - front_right_wheel_joint
   - name: fake_head_controller
     joints:
       - head_j1
