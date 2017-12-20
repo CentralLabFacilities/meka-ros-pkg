@@ -20,16 +20,20 @@
      </joint>
 
      <link name="palm_${lr}">
-      <inertial>
+       <xacro:inertial_cuboid_with_pose mass="0.663" x_length="1.1" y_length="1.11" z_length="1.06">
+			<origin xyz="0.001459 0.001619 -0.051312"/> 
+	   </xacro:inertial_cuboid_with_pose>
+      <!--inertial>
+        <origin xyz="0.001459 0.001619 -0.051312"/> 
+        
         <mass value="0.663" />
-	    <origin xyz="0.001459 0.001619 -0.051312"/>
 	    <inertia ixx="0.000873"
 	    iyy="0.000597"
 	    izz="0.000565"
 	    ixy="0.000031"
 	    ixz="-0.000008"
 	    iyz="0.000016" />
-      </inertial>
+      </inertial-->
 
       <visual>
 	      <material name="GreyC" />
@@ -137,7 +141,7 @@
       <material name="red" />
     </collision>
     <inertial>
-      <mass value="0.01" />
+      <mass value="1.01" />
       <origin xyz="0 0 0"/>
       <inertia ixx="0.0" ixy="0.0" ixz="0.0"
         iyy="0.0" iyz="0.0"

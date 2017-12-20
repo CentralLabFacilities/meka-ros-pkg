@@ -54,7 +54,12 @@
 
     <joint name="${lr}_arm_j1" type="revolute">
       <axis xyz="-1 0 0"/>
-     <limit effort="40" velocity="${30*M_PI/180}" lower="${-24*M_PI/180}" upper="${150*M_PI/180}" />    
+      <xacro:if value="${lr == 'left'}">
+        <limit effort="40" velocity="${30*M_PI/180}" lower="${-150*M_PI/180}" upper="${24*M_PI/180}" /> 
+      </xacro:if>
+      <xacro:if value="${lr == 'right'}">
+        <limit effort="40" velocity="${30*M_PI/180}" lower="${-24*M_PI/180}" upper="${150*M_PI/180}" />  
+      </xacro:if>  
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="shoulderupper_${lr}"/>
       <child link="shoulderpitch_${lr}"/>
@@ -78,7 +83,7 @@
       </visual>
       <!-- meshes
       <collision>
-	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
+	      <origin xyz="0 0 0" rpy="0.0 0.0 ${rotate*M_PI} " />
 	      <geometry name="shoulderpitch_${lr}_collision">
 		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT2_shoulderPitch.stl" />
 	      </geometry>
@@ -86,7 +91,7 @@
       -->  
       <!-- primitive only -->
       <collision>
-        <origin xyz="0.0 ${reflect*-0.0256} -0.04" rpy="-0.58 0.0 0.0 " />
+        <origin xyz="0.0 ${reflect*-0.0256} -0.04" rpy="${reflect*-0.58} 0.0 0.0 " />
         <geometry>
           <box size="0.09 0.07 0.072" />
         </geometry>
@@ -177,6 +182,7 @@
     <link name="elbowclevis_${lr}">
       <inertial>       
         <mass value="0.223" />
+        <!--<origin xyz="${0.5*((reflect+1)*ual_xyz1+(1-reflect)*uar_xyz1)} ${0.5*((reflect+1)*ual_xyz2+(1-reflect)*uar_xyz2)} ${0.5*((reflect+1)*ual_xyz3+(1-reflect)*uar_xyz3)}" />-->
         <origin xyz="-0.000002 ${reflect*0.000278} -0.026124"/>
 	    <inertia ixx="0.000470" ixy="0.000000" ixz="0.000000"
 	             iyy="0.000233" iyz="0.000019"
@@ -191,7 +197,7 @@
       </visual>
       <!-- meshes 
       <collision>
-	      <origin xyz="0 0 0" rpy="0.0 0.0 0.0 " />
+	      <origin xyz="0 0 0" rpy="0.0 0.0 ${rotate*M_PI}  " />
 	      <geometry name="elbowclevis_${lr}_collision">
 		      <mesh filename="package://${MESH_COLL}/A2R3/A2R3_RT4_elbow.stl" />
 	      </geometry>
@@ -231,7 +237,12 @@
 
     <joint name="${lr}_arm_j4" type="revolute">
 	    <axis xyz="0 0 -1" />
-      <limit effort="4" velocity="${150*M_PI/180}" lower="${-19.7*M_PI/180}" upper="${199.7*M_PI/180}" /> 
+      <xacro:if value="${lr == 'left'}">
+        <limit effort="4" velocity="${150*M_PI/180}" lower="${-190.7*M_PI/180}" upper="${19.7*M_PI/180}" />
+      </xacro:if>
+      <xacro:if value="${lr == 'right'}">
+        <limit effort="4" velocity="${150*M_PI/180}" lower="${-19.7*M_PI/180}" upper="${190.7*M_PI/180}" /> 
+      </xacro:if>
       <origin xyz="0 0 -0.27747" rpy="0 0 0" />
       <parent link="elbowclevis_${lr}"/>
       <child link="wrist_${lr}"/>

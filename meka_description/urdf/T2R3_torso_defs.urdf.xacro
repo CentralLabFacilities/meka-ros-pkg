@@ -51,11 +51,14 @@
 	</joint>
 
 	<link name="torso">
-		<inertial>
+		<xacro:inertial_cuboid_with_pose mass="4.411" x_length="0.1" y_length="0.24" z_length="0.25">
+			<origin xyz="0.00011774 0.0038073 -0.0522753" />
+	    </xacro:inertial_cuboid_with_pose>
+		<!--inertial>
 			<mass value="4.411" />
 			<origin xyz="0.00011774 0.0038073 -0.0522753" />
 			<inertia ixx="0.026360" ixy="-0.0000024" ixz="-0.0000508" iyy="0.0134266" iyz="0.0006839" izz="0.0229879" />
-		</inertial>
+		</inertial-->
 		<visual>
 			<material name="GreyC" />
 			<origin xyz="0 0 0" rpy="0 0 0 " />
