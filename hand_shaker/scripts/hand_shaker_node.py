@@ -11,7 +11,7 @@ import time
 
 import actionlib
 from actionlib import SimpleActionClient
-from hand_shaker.msg import ShakeHandAction, ShakeHandGoal, ShakeHandFeedback, ShakeHandResult
+from hand_shaker_msgs.msg import ShakeHandAction, ShakeHandGoal, ShakeHandFeedback, ShakeHandResult
 
 from meka_posture.meka_posture import MekaPosture
 from meka_stiffness_control.stiffness_control import MekaStiffnessControl

@@ -14,16 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   meka_stiffness_control
   message_generation
+  hand_over_msgs
 )
-
-
-add_action_files(FILES HandOver.action)
-
-generate_messages(   
-  DEPENDENCIES
-  std_msgs
-  actionlib_msgs
-) 
 
 
 ###################################
@@ -38,7 +30,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hand_over
-  CATKIN_DEPENDS message_runtime actionlib actionlib_msgs geometry_msgs meka_posture trajectory_msgs control_msgs std_msgs meka_stiffness_control
+  CATKIN_DEPENDS message_runtime actionlib actionlib_msgs geometry_msgs meka_posture trajectory_msgs control_msgs std_msgs meka_stiffness_control hand_over_msgs
 #  DEPENDS system_lib
 )
 

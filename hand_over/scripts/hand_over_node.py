@@ -11,7 +11,7 @@ import time
 
 import actionlib
 from actionlib import SimpleActionClient
-from hand_over.msg import HandOverAction, HandOverGoal, HandOverFeedback, HandOverResult
+from hand_over_msgs.msg import HandOverAction, HandOverGoal, HandOverFeedback, HandOverResult
 
 from meka_posture_execution.posture_execution import MekaPostureExecution
 

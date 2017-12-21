@@ -13,17 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   control_msgs
   std_msgs
   meka_stiffness_control
-  message_generation
+  hand_shaker_msgs
 )
-
-
-add_action_files(FILES ShakeHand.action)
-
-generate_messages(   
-  DEPENDENCIES
-  std_msgs
-  actionlib_msgs
-) 
 
 
 ###################################
@@ -38,7 +29,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hand_shaker
-  CATKIN_DEPENDS message_runtime actionlib actionlib_msgs geometry_msgs meka_posture trajectory_msgs control_msgs std_msgs meka_stiffness_control
+  CATKIN_DEPENDS message_runtime actionlib actionlib_msgs geometry_msgs meka_posture trajectory_msgs control_msgs std_msgs meka_stiffness_control hand_shaker_msgs
 #  DEPENDS system_lib
 )
 
