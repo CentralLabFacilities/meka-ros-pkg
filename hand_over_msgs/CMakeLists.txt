@@ -32,7 +32,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hand_over
-  CATKIN_DEPENDS message_runtime actionlib_msgs std_msgs 
+  CATKIN_DEPENDS actionlib_msgs std_msgs 
 #  DEPENDS system_lib
 )
 
