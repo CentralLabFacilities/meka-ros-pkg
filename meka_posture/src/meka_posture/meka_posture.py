@@ -116,6 +116,9 @@ class MekaPosture(object):
                     # store the message
                     self.add_posture(group_name, posture_name, traj, strategy)
                     if(with_mirrored):
+                        #only do mirroring if posture has handedness
+                        if "arm" not in posture_name: 
+                            continue
                         if (group_name == 'left_arm'):
                             group_name_mirrored = 'right_arm'
                         elif (group_name == 'right_arm'):
