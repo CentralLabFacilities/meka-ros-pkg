@@ -194,6 +194,15 @@
         <joint name="left_arm_j5" value="0.212963" />
         <joint name="left_arm_j6" value="0.0214055" />
     </group_state>
+    <group_state name="pre_handover" group="left_arm">
+        <joint name="right_arm_j0" value="-0.20" />
+        <joint name="right_arm_j1" value="-0.06" />
+        <joint name="right_arm_j2" value="0.31" />
+        <joint name="right_arm_j3" value="0.37" />
+        <joint name="right_arm_j4" value="-1.74" />
+        <joint name="right_arm_j5" value="-0.12" />
+        <joint name="right_arm_j6" value="0.10" />
+    </group_state>
     <group_state name="pre_grasp" group="right_arm">
         <joint name="right_arm_j0" value="-0.8009" />
         <joint name="right_arm_j1" value="0.0282" />
