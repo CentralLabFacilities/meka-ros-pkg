@@ -11,11 +11,9 @@
       </joint>
 
       <link name="${name}_linkgz">
-        <inertial>
-          <mass value="0.200" />
-          <origin xyz="0 0 0" rpy="0 0 0" />
-          <inertia ixx="5.8083e-4" ixy="0" ixz="0" iyy="3.0833e-5" iyz="0" izz="5.9083e-4" />
-        </inertial>
+		<xacro:inertial_cuboid_with_pose mass="0.2" x_length="0.05" y_length="0.15" z_length="0.05">
+			<origin xyz="0 0 0.0" rpy="0 0 0" />
+		</xacro:inertial_cuboid_with_pose>
         <visual>
           <origin xyz="0 0 0" rpy="0 0 0" />
           <geometry>

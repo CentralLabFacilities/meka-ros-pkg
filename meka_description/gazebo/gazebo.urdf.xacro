@@ -37,15 +37,15 @@
     
 
     <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
-      <commandTopic>cmd_vel</commandTopic>
+      <commandTopic>smooth_cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
       <odometryFrame>odom</odometryFrame>
       <odometryRate>20.0</odometryRate>
       <robotBaseFrame>base_link</robotBaseFrame>
       <joint_state_idel_sec>2.0</joint_state_idel_sec>
-      <recover_roll_velocity_p_gain>1.0</recover_roll_velocity_p_gain>
+      <recover_roll_velocity_p_gain>50.0</recover_roll_velocity_p_gain>
       <recover_pitch_velocity_p_gain>50.0</recover_pitch_velocity_p_gain>
-      <recover_z_velocity_p_gain>50.0</recover_z_velocity_p_gain>
+      <recover_z_velocity_p_gain>1.0</recover_z_velocity_p_gain>
       <x_velocity_limit_max>4.0</x_velocity_limit_max>
       <x_velocity_limit_min>-4.0</x_velocity_limit_min>
       <y_velocity_limit_max>4.0</y_velocity_limit_max>
@@ -58,7 +58,7 @@
       <y_acceleration_limit_min>-3.0</y_acceleration_limit_min>
       <rot_acceleration_limit_max>2.0</rot_acceleration_limit_max>
       <rot_acceleration_limit_min>-2.0</rot_acceleration_limit_min>
-      <tilt_angle_par_max_velocity>0</tilt_angle_par_max_velocity>
+      <tilt_angle_par_max_velocity>1</tilt_angle_par_max_velocity>
     </plugin>
     
     <xacro:if value="$(arg _torso)">
@@ -234,7 +234,7 @@
     <sensor type="gpu_ray" name="front_laser_sim">
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
-      <update_rate>40</update_rate>
+      <update_rate>30</update_rate>
       <ray>
         <scan>
           <horizontal>
@@ -255,7 +255,7 @@
           <stddev>0.005</stddev>
         </noise>
       </ray>
-      <plugin name="laser_front_sick" filename="libgazebo_ros_gpu_laser.so">
+      <plugin name="laser_front_hokuyo" filename="libgazebo_ros_gpu_laser.so">
         <topicName>/scan_front</topicName>
         <frameName>laser_front</frameName>
       </plugin>
@@ -278,16 +278,16 @@
         </scan>
         <range>
           <min>0.2</min>
-          <max>8.0</max>
+          <max>25.0</max>
           <resolution>0.005759587</resolution>
         </range>
         <noise>
           <type>gaussian</type>
           <mean>0.0</mean>
-          <stddev>0.015</stddev>
+          <stddev>0.03</stddev>
         </noise>
       </ray>
-      <plugin name="laser_front_sick" filename="libgazebo_ros_gpu_laser.so">
+      <plugin name="laser_rear_sick" filename="libgazebo_ros_gpu_laser.so">
         <topicName>/scan_rear</topicName>
         <frameName>laser_rear</frameName>
       </plugin>

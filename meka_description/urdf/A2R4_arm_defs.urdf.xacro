@@ -322,13 +322,9 @@
     </joint>
     
     <link name="w_differential_${lr}">
-      <inertial>
-        <mass value="0.278" />
-        <origin xyz="0 0 0" />
-        <inertia ixx="0" ixy="0" ixz="0"
-                 iyy="0" iyz="0"
-                 izz="0" />
-      </inertial>
+		<xacro:inertial_cuboid_with_pose mass="1.5" x_length="0.1" y_length="0.1" z_length="0.2">
+			<origin xyz="0 0 0.0" rpy="0 0 0" />
+		</xacro:inertial_cuboid_with_pose>
       <visual>
 	      <material name="GreyB" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />
@@ -354,13 +350,9 @@
     </joint>
     
     <link name="handmount_${lr}">
-      <inertial>
-        <mass value="0.093" />
-        <origin xyz="0 0 0" />
-        <inertia ixx="0" ixy="0" ixz="0"
-                 iyy="0" iyz="0"
-                 izz="0" />
-      </inertial>
+		<xacro:inertial_cuboid_with_pose mass="0.5" x_length="0.2" y_length="0.2" z_length="0.1">
+			<origin xyz="0 0 0.0" rpy="0 0 0" />
+		</xacro:inertial_cuboid_with_pose>
       <visual>
 	      <material name="GreyA" />
 	      <origin xyz="0 0 0" rpy="0 0 0 " />

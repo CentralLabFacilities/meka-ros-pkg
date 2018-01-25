@@ -106,11 +106,9 @@
 	</joint>
 
 	<link name="mid">
-		<inertial>
-			<mass value="4.934" />
-			<origin xyz="0.001179 -0.002993 0.046259"/>
-			<inertia ixx="0.041106" iyy="0.026009" izz="0.025902" ixy="0.000135" ixz="0.000505" iyz="0.002396" />
-		</inertial>
+		<xacro:inertial_cuboid_with_pose mass="5.0" x_length="0.2" y_length="0.4" z_length="0.5">
+			<origin xyz="0 0 0.01" rpy="0 0 0" />
+		</xacro:inertial_cuboid_with_pose>
 		<visual>
 			<material name="GreyB" />
 			<origin xyz="0 0 0" rpy="0 0 0" />
@@ -155,11 +153,9 @@
 	</joint>
 
 	<link name="upper">
-		<inertial>
-			<mass value="6.534" />
-			<origin xyz="0.008700 0.011470 0.129740"/>
-			<inertia ixx="0.069760" iyy="0.048010" izz="0.040590" ixy="-0.000400" ixz="0.001300" iyz="0.005100" />
-		</inertial>
+		<xacro:inertial_cuboid_with_pose mass="3.0" x_length="0.2" y_length="0.4" z_length="0.6">
+			<origin xyz="0 0 0.01" rpy="0 0 0" />
+		</xacro:inertial_cuboid_with_pose>
 		<visual>
 			<material name="GreyC" />
 			<origin xyz="0 0 0" rpy="0 0 0" />

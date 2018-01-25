@@ -8,6 +8,7 @@
     <xacro:arg name="_zlift" default="true"/>
     <xacro:arg name="_torso" default="true"/>
     <xacro:arg name="_head" default="true"/>
+    <xacro:arg name="_xtion" default="true"/>
     <xacro:arg name="_r_arm" default="true"/>
     <xacro:arg name="_l_arm" default="true"/>
     <xacro:arg name="_r_hand" default="true"/>
@@ -42,7 +43,7 @@
   <xacro:include filename="$(find meka_description)/transmissions/A2R4_arm_defs.transmission.xacro" />
 
   <!-- Meka Hand -->
-  <xacro:include filename="$(find meka_description)/urdf/H2R4_hand_defs.urdf.xacro" /> 
+  <xacro:include filename="$(find meka_description)/urdf/H2R4_hand_defs.urdf.xacro" />
   <xacro:include filename="$(find meka_description)/transmissions/H2R4_hand.transmission.xacro" />
 
   <!-- Meka Head -->
@@ -50,14 +51,17 @@
   <xacro:include filename="$(find meka_description)/transmissions/S3R1_head.transmission.xacro" />
 
   <!-- Import asus-->
+  <xacro:if value="$(arg _head)">
+  <xacro:if value="$(arg _xtion)">
   <xacro:include filename="$(find meka_description)/urdf/asus_camera.urdf.xacro" />   
 
   <xacro:asus_camera name="xtion" parent="shell">
     <origin xyz="0.12 0 0.06" rpy="0 0 0"/>
-  </xacro:asus_camera> 
-
+  </xacro:asus_camera>
+  </xacro:if>
+  </xacro:if>
   <!-- Extra Wheels -->
-  <xacro:include filename="$(find meka_description)/urdf/wheel_defs.urdf.xacro" />
+  <!--<xacro:include filename="$(find meka_description)/urdf/wheel_defs.urdf.xacro" />-->
 
 </robot>
   
