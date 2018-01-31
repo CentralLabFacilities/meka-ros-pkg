@@ -43,8 +43,8 @@ ALLOWED_TOUCH_LINKS = ["palm_left", "hand_tool_frame_left", "thumb0_left", "thum
 
 
 # tool frames
-TOOL_FRAME_LEFT = 'hand_tool_frame_left'
-TOOL_FRAME_RIGHT = 'hand_tool_frame_right'
+TOOL_FRAME_LEFT = 'handmount_left'
+TOOL_FRAME_RIGHT = 'handmount_right'
 
 
 class HandOver(object):
@@ -86,7 +86,7 @@ class HandOver(object):
         self.sub_face = rospy.Subscriber("/face_detector/people_tracker_measurements_array", PositionMeasurementArray, self.face_callback)
 
         # publisher & subscriber for planning scene
-        self.sub_ps = rospy.Subscriber("/planning_scene", PlanningScene, self.planning_scene_cb)
+        self.sub_ps = rospy.Subscriber("/move_group/monitored_planning_scene", PlanningScene, self.planning_scene_cb)
         self.pub_ps = rospy.Publisher("/planning_scene", PlanningScene, queue_size=1000)
 
         self._as.start()
@@ -305,7 +305,7 @@ class HandOver(object):
 
     def planning_scene_cb(self, planning_scene):
 
-        rospy.loginfo('got new planning scene')
+        rospy.logdebug('got new planning scene with ' + str(len(planning_scene.robot_state.attached_collision_objects)) + ' attached objects')
 
         # store new planning scene
         self.current_planning_scene = planning_scene
@@ -316,11 +316,13 @@ class HandOver(object):
         
         # if an object is attached to one of the tool frames, set carrying accordingly
         for a in planning_scene.robot_state.attached_collision_objects:
-            if a.link_name == TOOL_FRAME_LEFT and a.object.operation == CollisionObject.ADD:
+            if a.link_name == TOOL_FRAME_LEFT:
                 self._carrying['left_arm'] = True 
 
-            if a.link_name == TOOL_FRAME_RIGHT and a.object.operation == CollisionObject.ADD:
+            if a.link_name == TOOL_FRAME_RIGHT:
                 self._carrying['right_arm'] = True 
+                
+        rospy.logdebug(self._carrying)
 
 
     def attach_object(self, group_name):
