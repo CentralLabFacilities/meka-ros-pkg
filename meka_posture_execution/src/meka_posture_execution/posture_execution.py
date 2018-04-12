@@ -20,6 +20,7 @@ from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectoryPoint
 
 from meka_posture.meka_posture import MekaPosture
+from meka_posture_execution_msgs.srv import *
 
 from functools import partial
 
@@ -28,7 +29,7 @@ JNT_TRAJ_SRV_SUFFIX = "_position_trajectory_controller/follow_joint_trajectory"
 
 class MekaPostureExecution(object):
     
-    def __init__(self, name):        
+    def __init__(self, name=''):        
         try:
             rospy.init_node('meka_posture_execution', anonymous=True, log_level=rospy.DEBUG)
         except rospy.exceptions.ROSException:
@@ -120,7 +121,7 @@ class MekaPostureExecution(object):
                         self._set_up_action_client(group_name)
                     except:
                         rospy.logerr("Could not set up action client for %s.", group_name)
-                        return
+                        return False
 
                 self._movement_finished[group_name] = False
                 self._client[group_name].send_goal(goal, done_cb=partial(self.on_done, group_name))
@@ -131,6 +132,11 @@ class MekaPostureExecution(object):
 
     def load_postures(self, path):
         self._meka_posture.load_postures(path,1)
+
+    def handle_ros(self, req):
+        rospy.loginfo('Group: %s Posture: %s' % (req.group_name, req.posture))
+
+        return ExecutePostureResponse(self.execute(req.group_name, req.posture))
         
     def handle(self, event):
         rospy.logdebug("Received event: %s" % event)
@@ -148,6 +154,11 @@ class MekaPostureExecution(object):
 
         self.execute(des_jnt, des_pos)
     
+    def moveit_pose(self, req):
+        rospy.loginfo('Executing named target group: %s & target: %s' % (req.group_name, req.target))
+
+        return ExecuteNamedTargetResponse(self._meka_posture.named_target(req.group_name, req.target))
+
     def execute_rpc(self, request):
         rospy.logdebug("Received request: %s" % request)
 
@@ -164,14 +175,21 @@ class MekaPostureExecution(object):
             time.sleep(4)
         return True
         
+    def get_postures_ros(self, req):
+        group = req.group_name if req.group_name is not '' else None 
         
-    def get_postures(self, ev):
+        rospy.loginfo('Getting postures for %s' % group)
+        
+        d = self._meka_posture.list_postures(group)
+        return GetPosturesResponse(d)
+        
+    def get_postures(self, ev=None):
         print "called get postures"
         d = self._meka_posture.list_postures()
         return json.dumps(d)
         
         
-def main():
+if __name__ == "__main__":
     FORMAT = "%(levelname)s %(asctime)-15s %(name)s %(module)s - %(message)s"
     logging.basicConfig(format=FORMAT)
 
@@ -187,41 +205,15 @@ def main():
     
     (opts, args_) = parser.parse_args()
         
-    meka_posture_exec = MekaPostureExecution("whatever")
+    meka_posture_exec = MekaPostureExecution()
     
     meka_posture_exec.load_postures(opts.posture_path)
     
     time.sleep(1)
-    #meka_posture_exec.execute("head", "nodding_twice");
-    
 
     print "Postures:"
-    print meka_posture_exec.get_postures("bla")
+    print meka_posture_exec.get_postures()
     
     rospy.logdebug("current ver")
     
     rospy.spin()
-    #while True:
-    #    time.sleep(1)
-    
-if __name__ == "__main__":
-    main()
-    
-    #meka_posture_exec = MekaPostureExecution("whatever")
-    
-    #parser = OptionParser()
-    #parser.add_option("--joints", help="Path to joints made available", default = sys.path[0]+"/../../cfg/joints.yml",
-        #dest="joint_path")
-    #parser.add_option("--postures", help="Path to postures made available", default = sys.path[0]+"/../../cfg/postures.yml",
-        #dest="posture_path")
-    #parser.add_option("--scope", help="Scope to listen to for remote calls", default = "/meka/posture_execution",
-        #dest="scope")
-    
-    #(opts, args_) = parser.parse_args()
-    
-    #meka_posture_exec.load_postures(opts.posture_path)
-    #print meka_posture_exec._meka_posture.list_postures("right_arm")
-    #meka_posture_exec.execute("right_arm", "zero")
-    #rospy.sleep(4)
-    #meka_posture_exec.execute("right_arm", "pointing_right",0.5)
-    #rospy.sleep(4)

@@ -6,6 +6,8 @@ import genpy
 import copy
 import rospy
 import os.path
+import moveit_commander
+
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from control_msgs.msg import FollowJointTrajectoryAction, \
 FollowJointTrajectoryGoal
@@ -21,6 +23,17 @@ class MekaPosture(object):
         
         self._name = name
         self._postures = {}
+
+    def named_target(self, group, target):
+        rospy.logdebug('Calling moveit! group: %s & target: %s' % (group, target))
+        try:
+            mg = moveit_commander.MoveGroupCommander(group)
+            mg.set_named_target(target)
+            plan = mg.plan()
+            return(mg.execute(plan))
+        except Exception:
+            return False
+        
 
     def add_posture(self, group_name, posture_name, trajectory, strategy="keep"):
         """

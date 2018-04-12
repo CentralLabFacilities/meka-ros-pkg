@@ -1,0 +1,4 @@
+string group_name
+string posture
+---
+bool success
