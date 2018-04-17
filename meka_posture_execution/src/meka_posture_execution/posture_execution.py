@@ -128,6 +128,7 @@ class MekaPostureExecution(object):
                 self.all_done = False;
             else:
                 rospy.logerr("No goal found for posture %s in group  %s.", posture_name, group_name)
+                return False
         return True
 
     def load_postures(self, path):
