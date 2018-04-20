@@ -1,4 +1,0 @@
-# if empty, all postures available will be returned
-string group_name
----
-string[] postures

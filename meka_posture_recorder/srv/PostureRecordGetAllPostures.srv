@@ -1,5 +1,0 @@
----
-meka_posture_recorder/PostureRecordErrorCodes error_code
-meka_posture_recorder/PostureRecordPosture[]  postures
-float64[] overall_time_from_start
-
