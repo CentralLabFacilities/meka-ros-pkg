@@ -13,7 +13,7 @@ import actionlib
 from actionlib import SimpleActionClient
 from hand_over_msgs.msg import HandOverAction, HandOverGoal, HandOverFeedback, HandOverResult
 
-from meka_posture_execution.posture_execution import MekaPostureExecution
+from posture_execution.posture_execution import PostureExecution
 
 from meka_stiffness_control.stiffness_control import MekaStiffnessControl
 
@@ -59,7 +59,7 @@ class HandOver(object):
 
         self._as = actionlib.SimpleActionServer(self._action_name, HandOverAction,
                                                 execute_cb=self.execute_cb, auto_start=False)
-        self._meka_posture = MekaPostureExecution("posture_exec")
+        self._meka_posture = PostureExecution("posture_exec")
         self._meka_posture._posture_when_done=""
         self._stiffness_control = MekaStiffnessControl("stiffness_control")
 
