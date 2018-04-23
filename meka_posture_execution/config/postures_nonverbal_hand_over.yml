@@ -179,6 +179,59 @@ head:
         secs: 5
       velocities: []
 left_arm:
+  open:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - left_hand_j0
+    - left_hand_j2
+    - left_hand_j3
+    - left_hand_j4
+    - left_hand_j1
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+      - 1.35820415002705968
+      - 0.160011718754829
+      - 0.04992418332867426
+      - 0.05997995792206172
+      - 0.1592405701581761
+      time_from_start:
+        nsecs: 0
+        secs: 1
+      velocities: []
+
+  close:
+    header:
+      frame_id: ''
+      seq: 0
+      stamp:
+        nsecs: 0
+        secs: 0
+    joint_names:
+    - left_hand_j0
+    - left_hand_j1
+    - left_hand_j2
+    - left_hand_j3
+    - left_hand_j4
+    points:
+    - accelerations: []
+      effort: []
+      positions:
+      - 1.9
+      - 2.5
+      - 4.0
+      - 4.0
+      - 4.0
+      time_from_start:
+        nsecs: 500000000
+        secs: 1
+      velocities: []
   right_arm_hand_over_retreat:
     header:
       frame_id: ''
