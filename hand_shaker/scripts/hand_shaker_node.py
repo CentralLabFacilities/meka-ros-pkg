@@ -13,7 +13,7 @@ import actionlib
 from actionlib import SimpleActionClient
 from hand_shaker_msgs.msg import ShakeHandAction, ShakeHandGoal, ShakeHandFeedback, ShakeHandResult
 
-from meka_posture.meka_posture import MekaPosture
+from posture_execution.posture_execution import PostureExecution
 from meka_stiffness_control.stiffness_control import MekaStiffnessControl
 
 from geometry_msgs.msg import WrenchStamped
@@ -36,7 +36,7 @@ class HandShaker(object):
 
         self._as = actionlib.SimpleActionServer(self._action_name, ShakeHandAction,
                                                 execute_cb=self.execute_cb, auto_start=False)
-        self._meka_posture = MekaPosture("posture_exec")
+        self._meka_posture = PostureExecution("posture_exec")
         self._stiffness_control = MekaStiffnessControl("stiffness_control")
 
         self._client = {}
