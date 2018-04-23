@@ -1,4 +1,0 @@
-#! /usr/bin/env python
-import meka_posture_execution.posture_execution_rsb as pe
-if __name__ == '__main__':
-    pe.main()
