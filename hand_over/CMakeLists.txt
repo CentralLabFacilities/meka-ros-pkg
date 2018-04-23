@@ -30,7 +30,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES hand_over
-  CATKIN_DEPENDS message_runtime actionlib actionlib_msgs geometry_msgs meka_posture trajectory_msgs control_msgs std_msgs meka_stiffness_control hand_over_msgs
+  CATKIN_DEPENDS message_runtime actionlib actionlib_msgs geometry_msgs posture trajectory_msgs control_msgs std_msgs meka_stiffness_control hand_over_msgs
 #  DEPENDS system_lib
 )
 
