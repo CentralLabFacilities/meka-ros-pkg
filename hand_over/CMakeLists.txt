@@ -8,7 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   actionlib_msgs
   geometry_msgs
-  meka_posture
+  posture
   trajectory_msgs
   control_msgs
   std_msgs
