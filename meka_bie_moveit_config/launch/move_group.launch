@@ -50,7 +50,7 @@
 		      
     <!-- MoveGroup capabilities to load -->
     <param unless="$(arg augmented)" name="capabilities" value="move_group/MoveGroupCartesianPathService
-    				      move_group/MoveGroupExecuteService
+    				      move_group/MoveGroupExecuteTrajectoryAction
     				      move_group/MoveGroupKinematicsService
     				      move_group/MoveGroupMoveAction
     				      move_group/MoveGroupPlanService
@@ -60,7 +60,7 @@
     				      move_group/ClearOctomapService
   				      " />
     <param if="$(arg augmented)" name="capabilities" value="move_group/MoveGroupCartesianPathService
-    				      move_group/MoveGroupExecuteService
+    				      move_group/MoveGroupExecuteTrajectoryAction
     				      move_group/MoveGroupKinematicsService
                                       move_group/MoveGroupAugmentedPickPlaceAction
     				      move_group/MoveGroupMoveAction
