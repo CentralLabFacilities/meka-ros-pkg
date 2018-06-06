@@ -273,8 +273,6 @@
     <passive_joint name="right_hand_j4c" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="bicep_left" link2="bicep_right" reason="Never" />
-    <disable_collisions link1="bicep_left" link2="dummy_1" reason="Never" />
-    <disable_collisions link1="bicep_left" link2="dummy_2" reason="Never" />
     <disable_collisions link1="bicep_left" link2="elbowclevis_left" reason="Adjacent" />
     <disable_collisions link1="bicep_left" link2="elbowclevis_right" reason="Never" />
     <disable_collisions link1="bicep_left" link2="handmount_left" reason="Never" />
@@ -298,8 +296,6 @@
     <disable_collisions link1="bicep_left" link2="thumb2_left" reason="Never" />
     <disable_collisions link1="bicep_left" link2="w_differential_left" reason="Never" />
     <disable_collisions link1="bicep_left" link2="wrist_left" reason="Never" />
-    <disable_collisions link1="bicep_right" link2="dummy_1" reason="Never" />
-    <disable_collisions link1="bicep_right" link2="dummy_2" reason="Never" />
     <disable_collisions link1="bicep_right" link2="elbowclevis_left" reason="Never" />
     <disable_collisions link1="bicep_right" link2="elbowclevis_right" reason="Adjacent" />
     <disable_collisions link1="bicep_right" link2="handmount_right" reason="Never" />
@@ -323,105 +319,6 @@
     <disable_collisions link1="bicep_right" link2="thumb2_right" reason="Never" />
     <disable_collisions link1="bicep_right" link2="w_differential_right" reason="Never" />
     <disable_collisions link1="bicep_right" link2="wrist_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="dummy_2" reason="Adjacent" />
-    <disable_collisions link1="dummy_1" link2="dummy_3" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="elbowclevis_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="elbowclevis_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="handmount_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="handmount_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="index0_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="index0_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="index1_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="index1_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="index2_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="index2_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="mid" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="neck_pan" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="palm_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="palm_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="panplate" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="pinky0_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="pinky0_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="pinky1_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="pinky1_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="pinky2_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="pinky2_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="ring0_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="ring0_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="ring1_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="ring1_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="ring2_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="ring2_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="shell" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="shoulderpitch_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="shoulderpitch_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="shoulderupper_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="shoulderupper_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="thumb0_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="thumb0_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="thumb1_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="thumb1_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="thumb2_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="thumb2_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="torso" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="upper" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="w_differential_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="w_differential_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="wrist_left" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="wrist_right" reason="Never" />
-    <disable_collisions link1="dummy_1" link2="zlift_link" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="dummy_3" reason="Adjacent" />
-    <disable_collisions link1="dummy_2" link2="elbowclevis_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="elbowclevis_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="handmount_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="handmount_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="index0_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="index0_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="index1_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="index1_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="index2_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="index2_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="mid" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="neck_pan" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="palm_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="palm_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="panplate" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="pinky0_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="pinky0_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="pinky1_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="pinky1_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="pinky2_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="pinky2_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="ring0_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="ring0_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="ring1_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="ring1_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="ring2_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="ring2_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="shell" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="shoulderpitch_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="shoulderpitch_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="shoulderupper_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="shoulderupper_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="thumb0_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="thumb0_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="thumb1_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="thumb1_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="thumb2_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="thumb2_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="torso" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="upper" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="w_differential_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="w_differential_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="wrist_left" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="wrist_right" reason="Never" />
-    <disable_collisions link1="dummy_2" link2="zlift_link" reason="Never" />
-    <disable_collisions link1="dummy_3" link2="mid" reason="Never" />
-    <disable_collisions link1="dummy_3" link2="neck_pan" reason="Never" />
-    <disable_collisions link1="dummy_3" link2="panplate" reason="Never" />
-    <disable_collisions link1="dummy_3" link2="torso" reason="Never" />
-    <disable_collisions link1="dummy_3" link2="upper" reason="Never" />
-    <disable_collisions link1="dummy_3" link2="zlift_link" reason="Adjacent" />
     <disable_collisions link1="elbowclevis_left" link2="elbowclevis_right" reason="Never" />
     <disable_collisions link1="elbowclevis_left" link2="handmount_left" reason="Never" />
     <disable_collisions link1="elbowclevis_left" link2="index0_left" reason="Never" />
