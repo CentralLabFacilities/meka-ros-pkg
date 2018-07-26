@@ -1,0 +1,10 @@
+<launch>
+    <node pkg="tf" type="static_transform_publisher" name="floka_static_broadcaster" args="0 0 0 0 0 0 1 base_link floka_BASE_LINK 100" />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub" >
+      <param name="publish_frequency" value="100"/> 
+      <remap from="robot_description" to="/floka_urdf" />
+      <remap from="joint_states" to="/xsc3/joint_states" />
+    </node>
+</launch>
+
