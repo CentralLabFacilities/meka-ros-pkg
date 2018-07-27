@@ -60,7 +60,11 @@
          <child link="floka_base_link"/>
        </joint>
      </xacro:macro>
-     
+
+     <xacro:arg name="robot_components_namespace" default="xsc3"/>
+     <xacro:include filename="$(find flobi_description)/xacro/floka_gazebo_sim.urdf.xacro"/>
+     <xacro:floka_gazebo_sim robot_components_namespace="$(arg robot_components_namespace)"/>
+
   </xacro:if>
 
   <!-- Extra Wheels -->
