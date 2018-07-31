@@ -51,21 +51,21 @@
   <xacro:include filename="$(find meka_description)/transmissions/S3R1_head.transmission.xacro" /> -->
 
   <!-- Floka Head -->
-  <xacro:if value="$(arg _head)">
+  <!-- <xacro:if value="$(arg _head)">
      <xacro:include filename="$(find flobi_description)/robots/floka.urdf" />
      <xacro:macro name="m3_head" params="parent *origin">
        <joint name="floka_base_joint_meka" type="fixed">
-         <xacro:insert_block name="origin" /> <!-- transform from parent link to this joint frame -->
+         <xacro:insert_block name="origin" /> 
          <parent link="${parent}"/>
          <child link="floka_base_link"/>
        </joint>
      </xacro:macro>
-
+ -->
      <!--<xacro:arg name="robot_components_namespace" default="xsc3"/>
      <xacro:include filename="$(find flobi_description)/xacro/floka_gazebo_sim.urdf.xacro"/>
      <xacro:floka_gazebo_sim robot_components_namespace="$(arg robot_components_namespace)"/> -->
-
-  </xacro:if>
+<!--
+  </xacro:if> -->
 
   <!-- Extra Wheels -->
   <!--<xacro:include filename="$(find meka_description)/urdf/wheel_defs.urdf.xacro" />-->
