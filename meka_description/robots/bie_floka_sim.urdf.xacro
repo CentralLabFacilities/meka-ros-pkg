@@ -61,9 +61,9 @@
        </joint>
      </xacro:macro>
 
-     <xacro:arg name="robot_components_namespace" default="xsc3"/>
+     <!--<xacro:arg name="robot_components_namespace" default="xsc3"/>
      <xacro:include filename="$(find flobi_description)/xacro/floka_gazebo_sim.urdf.xacro"/>
-     <xacro:floka_gazebo_sim robot_components_namespace="$(arg robot_components_namespace)"/>
+     <xacro:floka_gazebo_sim robot_components_namespace="$(arg robot_components_namespace)"/> -->
 
   </xacro:if>
 
