@@ -7,7 +7,7 @@
 
     <xacro:arg name="_zlift" default="true"/>
     <xacro:arg name="_torso" default="true"/>
-    <xacro:arg name="_head" default="true"/>
+    <xacro:arg name="_head" default="false"/>
     <xacro:arg name="_xtion" default="true"/>
     <xacro:arg name="_r_arm" default="true"/>
     <xacro:arg name="_l_arm" default="true"/>

@@ -1,0 +1,575 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /Status1
+        - /RobotModel1
+      Splitter Ratio: 0.5
+    Tree Height: 567
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+    Name: Tool Properties
+    Splitter Ratio: 0.588679016
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Experimental: false
+    Name: Time
+    SyncMode: 0
+    SyncSource: ""
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.0299999993
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 10
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        floka_BASE_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_EYES_LEFT_BROW_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_EYES_LEFT_LID_LOWER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_EYES_LEFT_LID_UPPER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_EYES_LEFT_LR_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        floka_EYES_LEFT_UD_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_EYES_RIGHT_BROW_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_EYES_RIGHT_LID_LOWER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_EYES_RIGHT_LID_UPPER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_EYES_RIGHT_LR_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        floka_EYES_RIGHT_UD_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_LIP_CENTER_LOWER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_LIP_CENTER_UPPER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_LIP_LEFT_LOWER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_LIP_LEFT_UPPER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_LIP_RIGHT_LOWER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_LIP_RIGHT_UPPER_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_NECK_PAN_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        floka_NECK_ROLL_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        floka_NECK_TILT_LINK:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        floka_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Name: RobotModel
+      Robot Description: floka_urdf
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        backpack:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        bicep_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        bicep_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        elbowclevis_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        elbowclevis_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        fixed_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hand_tool_frame_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        hand_tool_frame_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        handmount_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        handmount_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index0_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index0_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index1_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index1_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index2_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index2_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index_motor_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        index_motor_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        index_tip_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        index_tip_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        laser_front:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        laser_rear:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        m3loadx6_ma29_l0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        m3loadx6_ma30_l0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        mid:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        palm_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        palm_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        panplate:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky0_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky0_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky1_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky1_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky2_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky2_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky_motor_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        pinky_motor_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        pinky_tip_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        pinky_tip_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ring0_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring0_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring1_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring1_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring2_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring2_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_motor_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ring_motor_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ring_tip_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ring_tip_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        shoulderpitch_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        shoulderpitch_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        shoulderupper_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        shoulderupper_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb0_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb0_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb1_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb1_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb2_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb2_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_motor_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        thumb_motor_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        thumb_tip_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        thumb_tip_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        torso:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        upper:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        w_differential_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        w_differential_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        zlift_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Default Light: true
+    Fixed Frame: base_link
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Topic: /initialpose
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 3.21365643
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.0599999987
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:
+        X: -0.114004247
+        Y: -0.208161876
+        Z: 0.364141792
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.0500000007
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.00999999978
+      Pitch: 0.640398145
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+      Yaw: 0.455397576
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 846
+  Hide Left Dock: false
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd000000040000000000000153000002bcfc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005800fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000035000002bc000000bb00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000002bcfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730100000035000002bc0000009700fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004b00000003efc0100000002fb0000000800540069006d00650100000000000004b00000023a00fffffffb0000000800540069006d0065010000000000000450000000000000000000000244000002bc00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: false
+  Width: 1200
+  X: 56
+  Y: 31
