@@ -3,7 +3,7 @@
   <name>meka_description</name>
   <version>0.0.1</version>
   <description>Meka description</description>
-  <maintainer email="smeyerz@techfak.uni-bielefeld.de">Sebastian M. z. Borgsen</maintainer>
+  <maintainer email="semeyerz@techfak.uni-bielefeld.de">Sebastian M. z. Borgsen</maintainer>
   <license>BSD</license>
   <url type="website">https://github.com/CentralLabFacilities/meka-ros-pkg.git</url>
 
