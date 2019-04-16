@@ -21,6 +21,8 @@ import threading
 
 from rospy.exceptions import ROSException
 
+from httplib import CannotSendRequest, ResponseNotReady
+
 DEFAULT_NODE_NAME = "meka_ros_publisher"
 DEFAULT_PUBLISHER_SCOPE = "/meka_ros_pub"
 DEFAULT_HZ = 1
@@ -321,7 +323,7 @@ class MekaRosPublisher(object):
                     self.comps[req.component] = comp 
                 break
             except (CannotSendRequest,ResponseNotReady):
-                print "Response not ready, retrying.."
+                rospy.logwarn( "Response not ready, retrying. Retries remaining: " + str(retries))
                 retries -= 1
                 time.sleep(1.0)
         
