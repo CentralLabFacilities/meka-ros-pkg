@@ -22,7 +22,7 @@
   <arg name="enable_color"        default="true"/>
 
   <arg name="fisheye_fps"         default="30"/>
-  <arg name="depth_fps"           default="60"/>
+  <arg name="depth_fps"           default="30"/>
   <arg name="infra_fps"           default="30"/>
   <arg name="color_fps"           default="30"/>
   <arg name="gyro_fps"            default="400"/>
@@ -73,7 +73,7 @@
       <arg name="enable_accel"             value="$(arg enable_accel)"/>
 
       <arg name="filters"                  value="$(arg filters)"/>
-      <arg name="clip_distance"                  value="2"/>
+      <arg name="clip_distance"                  value="1.6"/>
       <arg name="pointcloud_texture_stream"                  value="RS2_STREAM_ANY"/>
     </include>
   </group>
