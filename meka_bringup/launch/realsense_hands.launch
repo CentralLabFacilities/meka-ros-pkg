@@ -77,4 +77,11 @@
       <arg name="pointcloud_texture_stream"                  value="RS2_STREAM_ANY"/>
     </include>
   </group>
+
+  <arg name="node_start_delay" default="5.0" />  
+    <node pkg="dynamic_reconfigure" type="dynparam" name="dynamic_reconfigure_hands" args="set /realsense_hands/Stereo_Module Visual_Preset 2" output="screen" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' ">
+
+  </node>
+
+
 </launch>
