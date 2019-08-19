@@ -217,7 +217,7 @@ class M3Dashboard(Dashboard):
         button = QPushButton("Stiffness controller (beta)")
 
         self.stiffness_pub = rospy.Publisher("/" + prefix + "/" + suffix, Float64MultiArray, queue_size=1)
-        group_names = ["right_arm", "left_arm", "right_hand", "left_hand", "head", "torso", "zlift"]
+        group_names = ["right_arm", "left_arm", "right_hand", "left_hand", "torso", "zlift"]
         # slider for each group
         joint_names = [ "right_arm_j0",
                         "right_arm_j1",
@@ -243,8 +243,6 @@ class M3Dashboard(Dashboard):
                         "left_hand_j2",
                         "left_hand_j3",
                         "left_hand_j4",
-                        "head_j0",
-                        "head_j1",
                         "torso_j0",
                         "torso_j1",
                         "zlift_j0"]

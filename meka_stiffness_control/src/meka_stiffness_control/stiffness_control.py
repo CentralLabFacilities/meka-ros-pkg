@@ -50,8 +50,6 @@ class MekaStiffnessControl(object):
                              "left_hand_j2",
                              "left_hand_j3",
                              "left_hand_j4",
-                             "head_j0",
-                             "head_j1",
                              "torso_j0",
                              "torso_j1",
                              "zlift_j0"]
