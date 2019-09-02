@@ -1,7 +1,7 @@
 <launch>
 
-    <node pkg="tf2_tools" type="static_transform_publisher" name="camVrCorrector" args="0.00 0.00 0.00   0.00 0.00 3.14 vr_cam usb_cam"/>
-    <node pkg="tf2_tools" type="static_transform_publisher" name="markerToRobot" args="0.00 0.23 0.20   3.14 0.00 1.56 base_link vr_marker"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="camVrCorrector" args="0.00 0.00 0.00   0.00 0.00 3.14 vr_cam usb_cam"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="markerToRobot" args="0.00 0.23 0.20   3.14 0.00 1.56 base_link vr_marker"/>
 
     <node pkg="bart_ros" type="bart_ros_node" name="bart" cwd="node" output="screen">
       <!-- set a parameter for the node -->
