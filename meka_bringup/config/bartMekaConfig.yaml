@@ -1,0 +1,29 @@
+%YAML:1.0
+
+
+# Marker tracker settings
+config: !!MarkerTrackerConfig
+    debugging: 0
+    debug_images: 0
+    useMedianFlow: 0
+    decayTime: 1000
+    minContourLengthAllowed: 10.0
+    roiScalePrior: 1.3
+    roiScaleRefinement: 1.3
+    minMarkerSizeInPixels: 8
+    maxNumberOfMarkers: 1
+    markerSizePixels: [100, 100]
+    markerSize: [0.084, 0.084]
+    dejitterEpsilon: 5
+    dejitterDamping: 0.05
+    markerBodies: !!MarkerBody
+        - name: "noCube"
+          isStatic: 1
+          markers:
+              - { id:1,  size:0.18, position:[0.0, 0, 0],  orientation:[0.0, 0.0, 0.0, 0.0] }
+
+    cameras: 
+        - name: "default"
+          isStatic: 0
+          calibrationUrl: "logiCalib.yaml"
+

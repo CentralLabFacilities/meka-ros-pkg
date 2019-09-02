@@ -1,0 +1,22 @@
+<launch>
+
+    <node pkg="tf2_tools" type="static_transform_publisher" name="camVrCorrector" args="0.00 0.00 0.00   0.00 0.00 3.14 vr_cam usb_cam"/>
+    <node pkg="tf2_tools" type="static_transform_publisher" name="markerToRobot" args="0.00 0.23 0.20   3.14 0.00 1.56 base_link vr_marker"/>
+
+    <node pkg="bart_ros" type="bart_ros_node" name="bart" cwd="node" output="screen">
+      <!-- set a parameter for the node -->
+      <param name="config_url" value="$(find meka_bringup)/config/bartMekaConfig.yaml" />
+      <param name="timeout_ms" value="100" />
+      <param name="scales" value="8" />
+      <param name="downscale_factor" value="0.8" />
+      <param name="log_statistics" value="false" />
+      <param name="use_ros_camera_calibration" value="false" />
+      <param name="publish_tf" value="true" />
+      <param name="tf_timeout" value="10000" />
+
+      <!-- nodes can have their own remap args -->
+      <remap from="/bart/input" to="/usb_cam/image_raw"/>
+      <remap from="/bart/input/camera_info" to="/usb_cam/camera_info"/>
+    </node>
+
+</launch>
