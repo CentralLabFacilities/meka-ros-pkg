@@ -51,8 +51,7 @@ class MekaStiffnessControl(object):
                              "left_hand_j3",
                              "left_hand_j4",
                              "torso_j0",
-                             "torso_j1",
-                             "zlift_j0"]
+                             "torso_j1"]
         self._stiffness_dict = OrderedDict((name, 1.0) for name in self._joint_names)
         self._pub = rospy.Publisher("/" + self._prefix + "/" + STIFFNESS_CONTROLLER, Float64MultiArray, queue_size=1)
         threading.Thread(None, rospy.spin)

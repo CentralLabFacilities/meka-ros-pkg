@@ -25,4 +25,3 @@ stiffness_control:
   - left_hand_j4_stiffness
   - torso_j0_stiffness
   - torso_j1_stiffness
-  - zlift_j0_stiffness
