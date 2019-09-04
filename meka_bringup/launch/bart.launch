@@ -1,7 +1,7 @@
 <launch>
 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="camVrCorrector" args="0.00 0.00 0.00   0.00 0.00 3.14 vr_cam usb_cam"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="markerToRobot" args="0.00 0.23 0.20   3.14 0.00 1.56 base_link vr_marker"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="camVrCorrector" args="0.00 0.00 0.00   0.00 0.00 3.1415926 vr_cam usb_cam"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="vrMarkerPos" args="0.02 0.23 0.20   3.11 0.0100 1.55 base_link vr_marker"/>
 
     <node pkg="bart_ros" type="bart_ros_node" name="bart" cwd="node" output="screen">
       <!-- set a parameter for the node -->
@@ -13,6 +13,8 @@
       <param name="use_ros_camera_calibration" value="false" />
       <param name="publish_tf" value="true" />
       <param name="tf_timeout" value="10000" />
+      <param name="calc_tf_once" value="true" />
+      <param name="smoothing_window_len" value="100" />
 
       <!-- nodes can have their own remap args -->
       <remap from="/bart/input" to="/usb_cam/image_raw"/>

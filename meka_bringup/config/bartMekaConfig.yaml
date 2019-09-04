@@ -20,7 +20,7 @@ config: !!MarkerTrackerConfig
         - name: "noCube"
           isStatic: 1
           markers:
-              - { id:1,  size:0.18, position:[0.0, 0, 0],  orientation:[0.0, 0.0, 0.0, 0.0] }
+              - { id:1,  size:0.175, position:[0.0, 0, 0],  orientation:[0.0, 0.0, 0.0, 0.0] }
 
     cameras: 
         - name: "default"
