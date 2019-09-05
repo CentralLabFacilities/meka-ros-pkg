@@ -313,7 +313,7 @@ class MekaRosPublisher(object):
                 
         values = []
         
-        retries = 3
+        retries = 50
         
         while retries > 0:
             try:
@@ -323,9 +323,9 @@ class MekaRosPublisher(object):
                     self.comps[req.component] = comp 
                 break
             except (CannotSendRequest,ResponseNotReady):
-                rospy.logwarn( "Response not ready, retrying. Retries remaining: " + str(retries))
+                rospy.logwarn_throttle(1, "Response not ready for "+ str(req.component) +", retrying. Retries remaining: " + str(retries))
                 retries -= 1
-                time.sleep(1.0)
+                time.sleep(0.10)
         
         if retries == 0:
             print "Retries exausted, returning.."
