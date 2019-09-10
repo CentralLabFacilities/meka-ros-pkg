@@ -22,7 +22,7 @@
     <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen"> </node>
 
     <!-- camera driver -->
-    <node pkg="nodelet" type="nodelet" name="settings" args="load ximea_camera/RosNodelet $(arg manager_name)">
+    <node pkg="nodelet" type="nodelet" name="settings" args="load ximea_camera/RosNodelet $(arg manager_name)" respawn="true">
       <!-- configure driver -->
       <param name="serial" type="int" value="$(arg serial)" />
       <param name="name" type="string" value="$(arg name)" />
