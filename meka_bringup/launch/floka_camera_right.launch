@@ -1,4 +1,7 @@
 <launch>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="eye_cam_static_tf_pub" args="0.00 0.00 0.00   -1.57071 0.0 -1.57 floka_EYES_RIGHT_UD_LINK eye_right_optical_frame"/>
+
   <group ns="floka">
     <include file="$(find meka_bringup)/launch/floka_camera_.launch">
       <arg name="name" value="eye_right" />
