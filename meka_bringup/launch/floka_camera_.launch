@@ -1,0 +1,52 @@
+<launch>
+  <!-- required parameters: -->
+  <arg name="name"/>
+  <arg name="serial"/>
+  
+  <!-- configuration of resolution etc. -->
+  <!-- NOTE: a calibration file for that specific combintion has to be captured! -->
+  <arg name="width"    default="1440" />
+  <arg name="height"   default="1440" />
+  <arg name="offset_x" default="328" />
+  <arg name="offset_y" default="210" />
+  <arg name="scale"    default="0.5" />
+
+  <!-- derive calibration filename, DO NOT manually change this! -->
+  <arg name="camera_calibration" default="file://$(find flobi_description)/camera/calib_id$(arg serial)_w$(arg width)_h$(arg height)_x$(arg offset_x)_y$(arg offset_y)_s$(arg scale).yaml" />
+
+  <arg name="manager_name" default="ximea_nodelet_manager_$(arg name)" />
+
+  <group ns="$(arg name)">
+
+    <!-- nodelet manager -->
+    <node pkg="nodelet" type="nodelet" name="$(arg manager_name)" args="manager" output="screen"> </node>
+
+    <!-- camera driver -->
+    <node pkg="nodelet" type="nodelet" name="settings" args="load ximea_camera/RosNodelet $(arg manager_name)">
+      <!-- configure driver -->
+      <param name="serial" type="int" value="$(arg serial)" />
+      <param name="name" type="string" value="$(arg name)" />
+      <param name="calibration" type="string" value="$(arg camera_calibration)" />
+      <param name="cams_on_bus" type="int" value="1" />
+      <param name="use_cam_timestamp" type="bool" value="false" />
+      <param name="image_data_format" type="string" value="XI_RAW8" />
+      <param name="allocated_bandwidth" type="double" value="0.95" />
+      <!-- misc parameters -->
+      <param name="framerate" type="double" value="48.0" />
+      <param name="aeag" type="bool" value="0" />
+      <param name="exposure" type="int" value="9974" />
+      <param name="gain" type="int" value="6" />
+      <param name="acq_timing_mode" type="int" value="1" />
+      <param name="width" type="int" value="1440" />
+      <param name="height" type="int" value="1440" />
+      <param name="offsetX" type="int" value="328" />
+      <param name="offsetY" type="int" value="210" />
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="gpu_nodelet" args="load imagepipeline_gpu/gpu_nodelet $(arg manager_name)" output="screen">
+      <param name="image_scale" type="double" value="$(arg scale)"/>
+    </node>
+
+  </group>
+
+</launch>
