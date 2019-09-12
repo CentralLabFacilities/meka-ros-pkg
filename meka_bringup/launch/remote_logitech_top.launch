@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="tf2_ros" type="static_transform_publisher" name="usb_cam_top_tf" args="1.01, 0.12, 2.84    -3.01, -0.045, 3.138 base_link usb_cam_top"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="usb_cam_top_tf" args="0.95, 0.09, 2.84    -3.02, 0.036, 3.073 base_link usb_cam_top"/>
 
   <node name="usb_cam_top" pkg="usb_cam" type="usb_cam_node" output="screen" >
     <param name="video_device" value="/dev/v4l/by-path/pci-0000:00:14.0-usb-0:8:1.0-video-index0" />
