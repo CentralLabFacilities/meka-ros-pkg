@@ -3,6 +3,7 @@
 import rospy
 from geometry_msgs.msg import WrenchStamped
 from trajectory_msgs.msg import JointTrajectory
+from trajectory_msgs.msg import JointTrajectoryPoint
 from collections import deque
 from std_msgs.msg import Float32
 import numpy as np
@@ -19,11 +20,13 @@ window_size = 15
 step_size = 0.01
 wrench_queue = deque(maxlen=window_size*2)
 arm_queue = deque(maxlen=window_size*2)
-current_command = None
-last_command = None
+current_command = JointTrajectoryPoint() #7*[0]+
+current_command.positions = 7*[0]
+last_command = JointTrajectoryPoint() #7*[0]
+last_command.positions = 7*[0]
 arm_avg = 0
-last_receive_time = None
-arm_state_pos = None
+last_receive_time = rospy.Time.now()
+arm_state_pos = 7*[0]
 
 def _on_new_force_torque(wrench):
     global window_size
