@@ -1,7 +1,7 @@
 xsc3_server:
   humotion:
     configuration: {breath_amplitude: 1.0, breath_period: 4.5, eyeblink_blocked_time: 10.989,
-      eyeblink_duration: 0.2574, eyeblink_periodic_distribution_lower: 99.90000000000002,
+      eyeblink_duration: 0.0, eyeblink_periodic_distribution_lower: 99.90000000000002,
       eyeblink_periodic_distribution_upper: 99.90000000000002, eyeblink_probability_after_saccade: 0.2,
       eyelids_follow_eyemotion: true, limit_acceleration_eye: 80000.0, limit_acceleration_neck: 1089.0,
       limit_mr_neck: 0.882, limit_omr_eye: 0.855, limit_velocity_eye: 700.0, limit_velocity_neck: 364.0,
