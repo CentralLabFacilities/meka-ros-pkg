@@ -19,11 +19,15 @@ lockstate = Lock()
 rospy.init_node('force_helper')
 pub_force = rospy.Publisher('/force_helper', WrenchStamped, queue_size=1)
 pub_arm = rospy.Publisher('/force_helper/arm', Float32, queue_size=1)
+pub_raw = rospy.Publisher('/force_helper/raw', Float32, queue_size=1)
+pub_result = rospy.Publisher('/force_helper/result', Float32, queue_size=1)
 
 # hyperparameters
 window_size = 15
+command_window_size = 200
 step_size = 0.01
 wrench_queue = deque(maxlen=window_size*2)
+command_queue = deque(maxlen=window_size*2)
 
 sq = [-0.10714, -0.07143, -0.03571 ,0, 0.03571, 0.07143, 0.10714]
 sq = [-0.03297, -0.02747, -0.02198, -0.01648, -0.01099, -0.00549, 0, 0.00549, 0.01099, 0.01648, 0.02198, 0.02747, 0.03297]
@@ -139,17 +143,26 @@ def _on_arm_timer(event):
     lockstate.release()
     if(rospy.Time.now() > last_receive_time + current_command.time_from_start*2):
         vel =0
+    vel = np.clip(vel*2,0,1.0)
+    command_queue.append(vel)
     lockcomm.release()
 
-    n = 0.7
-    arm_avg = (n*arm_avg+(1-n)* np.clip(vel*12,0,1))
+    n = 0.9
+    N=20
+    arm_avg = ((N-1)*arm_avg+vel )/N
+    arm_avg = sum(command_queue) / len(command_queue) 
+    if (arm_avg < vel):
+        arm_avg = vel
     lockxyz.acquire()
     val = np.linalg.norm(np.array([np.clip(filtered_x, -99, 99), np.clip(filtered_y, -99, 99)])) # , filtered_z*0.5])) #* (0.5+arm_avg)
     lockxyz.release()
     #rospy.loginfo(arm_avg)
-    val = val / (0.5+arm_avg)
 
-    pub_arm.publish(val)
+    pub_arm.publish(arm_avg)
+    pub_raw.publish(val)
+    
+    val = val / (0.5+arm_avg)
+    pub_result.publish(val)
 
 def _on_new_arm_state(state):
     global arm_state_pos
