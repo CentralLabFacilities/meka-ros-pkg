@@ -139,11 +139,11 @@ def _on_arm_timer(event):
         return
 
     lockstate.acquire()
-    vel = np.linalg.norm(np.subtract(arm_state_pos,current_command.positions))/current_command.time_from_start.to_sec()
+    vel = 0.5 + 1.5* np.linalg.norm(np.subtract(arm_state_pos,current_command.positions))/current_command.time_from_start.to_sec()
     lockstate.release()
     if(rospy.Time.now() > last_receive_time + current_command.time_from_start*2):
         vel =0
-    vel = np.clip(vel*2,0,1.0)
+    vel = np.clip(vel,0,1.0)
     command_queue.append(vel)
     lockcomm.release()
 
@@ -177,5 +177,5 @@ arm_traj_sub = rospy.Subscriber('/meka_roscontrol/right_arm_position_trajectory_
 
 arm_sate_sub = rospy.Subscriber('/meka_roscontrol/right_arm_position_trajectory_controller/state', JointTrajectoryControllerState, _on_new_arm_state)
 
-rospy.Timer(rospy.Duration(0.01), _on_arm_timer, oneshot=False)
+rospy.Timer(rospy.Duration(0.02), _on_arm_timer, oneshot=False)
 rospy.spin()
