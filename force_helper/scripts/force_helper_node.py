@@ -164,5 +164,5 @@ arm_traj_sub = rospy.Subscriber('/meka_roscontrol/right_arm_position_trajectory_
 
 arm_sate_sub = rospy.Subscriber('/meka_roscontrol/right_arm_position_trajectory_controller/state', JointTrajectoryControllerState, _on_new_arm_state)
 
-rospy.Timer(rospy.Duration(0.03), _on_arm_timer, oneshot=False)
+rospy.Timer(rospy.Duration(0.01), _on_arm_timer, oneshot=False)
 rospy.spin()
